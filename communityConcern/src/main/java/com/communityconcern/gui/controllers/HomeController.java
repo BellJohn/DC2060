@@ -11,12 +11,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/home")
 public class HomeController {
 	@GetMapping
-	public ModelAndView initPage(ModelAndView model, HttpServletRequest request) {
-		System.out.println("Reached controller");
+	public ModelAndView initPage(HttpServletRequest request) {
+		System.out.println("Reached Home Controller");
 		ModelAndView mv = new ModelAndView("home");
 		mv.addObject("homePage","http://localhost:8080/CommunityConcern/home");
-		
-		
+		mv.addObject("currentPage","home");
 		return mv;
 	}
 }
