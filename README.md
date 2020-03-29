@@ -43,6 +43,7 @@ Installation:
 - Clone the github repo locally.
 - Open cmd and navigate to the application
 - Compile the war file with the command 'mvn clean install -DskipTests'
+
 (example output:
 	D:\Development\Aston\DC2060\DC2060\reachout>dir                           <-- executing 'dir' to show you where I am in my directory and what files I can see'
 	Volume in drive D has no label.
@@ -64,6 +65,7 @@ Installation:
                6 Dir(s)  380,064,186,368 bytes free
 
 	D:\Development\Aston\DC2060\DC2060\reachout>mvn clean install -DskipTests  				<-- executing maven compile
+	
 	....... BUNCH OF STUFF REMOVED FOR BREVITY .......
 	[INFO] --- maven-install-plugin:2.4:install (default-install) @ reachout ---
     [INFO] Installing D:\Development\Aston\DC2060\DC2060\reachout\target\ReachOut.war to C:\Users\John\.m2\repository\com\aston\dc2060\reachout\0.0.1-SNAPSHOT\reachout-0.0.1-SNAPSHOT.war
@@ -76,6 +78,7 @@ Installation:
 	[INFO] Finished at: 2020-03-29T17:53:31+01:00
 	[INFO] ------------------------------------------------------------------------
 )
+
 
 - Navigate into new target directory and check there are two compiled files. ReachOut.war and Reachout-class.jar 
 We only need the file ReachOut.war later
