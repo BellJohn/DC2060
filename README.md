@@ -22,6 +22,7 @@ Installation:
 - Install Apache Maven as per the instructions at the address listed
 (you can test it is correctly installed by opening CMD and running the command 'mvn -version'
 (example output:
+	
 	D:\Development\Aston\DC2060\DC2060\reachout>mvn -version
 	Apache Maven 3.6.1 (d66c9c0b3152b2e69ee9bac180bb8fcc8e6af555; 2019-04-04T20:00:29+01:00)
 	Maven home: C:\Users\John\apache-maven-3.6.1\bin\..
@@ -46,6 +47,7 @@ Installation:
 
 (example output:
 	D:\Development\Aston\DC2060\DC2060\reachout>dir                           <-- executing 'dir' to show you where I am in my directory and what files I can see'
+	
 	Volume in drive D has no label.
 	Volume Serial Number is 1800-472A
 
