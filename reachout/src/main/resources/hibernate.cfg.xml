@@ -12,7 +12,7 @@
 
 		<!-- Database connection settings -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://localhost/reachout_out</property>
+		<property name="connection.url">jdbc:mysql://localhost/reach_out</property>
 		<property name="connection.username">reach</property>
 		<property name="connection.password">reach_pass</property>
 

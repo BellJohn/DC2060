@@ -16,13 +16,14 @@
 					<li class="nav-item active"><a class="nav-link" href="#">Link
 							<span class="sr-only">(current)</span>
 					</a></li>
-					<li class="nav-item"><a class="nav-link" href="${homePage}">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="home">Home</a></li>
 
 				</ul>
 				<ul class="navbar-nav ml-md-auto">
 					<li class="nav-item active"><a class="nav-link" href="#">Link
 							<span class="sr-only">(current)</span>
 					</a></li>
+					<li class="nav-item"><a class="nav-link" href="signup">Sign Up</a></li>
 				</ul>
 			</div>
 		</nav>

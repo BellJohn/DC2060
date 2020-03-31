@@ -106,4 +106,20 @@ We only need the file ReachOut.war later
 
 
 
-	
+
+== Misc ==
+
+- If you receive the following exception from the mysql database then you need to edit your mysql config file.
+java.sql.SQLException: The server timezone value <Whatever your pc is set to> is unrecognized or represents more than one timezone. You must configure either the server or JDBC driver.... etc.
+Mine was stored at C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
+Add the following line to the bottom and reboot mysql
+default-time-zone='+00:00'
+
+
+
+
+== Development ==
+
+- Logging in jUnits
+Log at INFO level. This will be caught by the test log4j config, everything else is suppressed as the supporting libraries like spring and hibernate log a LOT of stuff we don't care about for tests
+

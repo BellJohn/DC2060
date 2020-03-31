@@ -12,4 +12,10 @@
 		<property name="prefix" value="/WEB-INF/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-</beans>
+
+	<bean id="loginUrlAuthenticationEntryPoint"
+		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<constructor-arg name="loginFormUrl"
+			value="/userLogin" />
+	</bean>
+</beans> 
