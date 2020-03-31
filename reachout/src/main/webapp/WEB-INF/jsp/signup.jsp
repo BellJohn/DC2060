@@ -48,8 +48,7 @@
 									<div class="controls">
 										<input type="password" id="password" name="password"
 											placeholder="" class="input-xlarge">
-										<p class="help-block">Password should be at least 4
-											characters</p>
+										<p class="help-block">Please provide a password</p>
 									</div>
 								</div>
 
@@ -60,7 +59,7 @@
 									<div class="controls">
 										<input type="password" id="password_confirm"
 											name="password_confirm" placeholder="" class="input-xlarge">
-										<p class="help-block">Please confirm password</p>
+										<p class="help-block">Please confirm your password</p>
 									</div>
 								</div>
 
