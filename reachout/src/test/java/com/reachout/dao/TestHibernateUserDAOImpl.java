@@ -20,8 +20,8 @@ public class TestHibernateUserDAOImpl {
 	static final Logger logger = LogManager.getLogger(TestHibernateUserDAOImpl.class);
 	User user = new User("TestUsername", "TestEmail@Email.com", "TestPassword");
 
-	// @BeforeEach
-	// @AfterEach
+	 @BeforeEach
+	 @AfterEach
 	public void setupAndTearDown() throws Exception {
 		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
 			ArrayList<User> currentEnrolledUsers = (ArrayList<User>) userDao.getAllUsers();
