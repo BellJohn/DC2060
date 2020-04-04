@@ -5,7 +5,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-public abstract class HibernateDAO {
+public abstract class HibernateDAO implements AutoCloseable {
 
 	private SessionFactory sessionFactory;
 
@@ -18,6 +18,11 @@ public abstract class HibernateDAO {
 
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
+	}
+	
+	@Override
+	public void close() throws Exception {
+		this.getSessionFactory().close();
 	}
 
 }

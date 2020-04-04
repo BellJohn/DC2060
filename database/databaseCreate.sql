@@ -2,7 +2,7 @@ create database if not exists reach_out;
 
 CREATE USER 'reach'@'localhost' IDENTIFIED BY 'reach_pass';
 CREATE USER 'reach'@'%' IDENTIFIED BY 'reach_pass';
-GRANT ALL PRIVILEGES on reach_out.* TO 'reach'@'%';
+GRANT ALL PRIVILEGES on reach_out.* TO 'reach'@'localhost';
 
 DROP TABLE IF EXISTS reach_out.USERS;
 

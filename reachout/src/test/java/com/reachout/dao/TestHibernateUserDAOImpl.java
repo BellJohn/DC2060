@@ -16,37 +16,50 @@ import org.junit.jupiter.api.Test;
 import com.reachout.models.User;
 
 public class TestHibernateUserDAOImpl {
-	
+
 	static final Logger logger = LogManager.getLogger(TestHibernateUserDAOImpl.class);
 	User user = new User("TestUsername", "TestEmail@Email.com", "TestPassword");
-	
-	@BeforeEach
-	@AfterEach
-	public void setupAndTearDown() {
-		HibernateUserDAOImpl userDao = new HibernateUserDAOImpl();
-		ArrayList<User> currentEnrolledUsers = (ArrayList<User>) userDao.getAllUsers();
-		for (User user : currentEnrolledUsers) {
-			logger.info("Deleting user with ID: " + user.getId());
-			assertTrue(userDao.deleteUserById(user.getId()));
+
+	// @BeforeEach
+	// @AfterEach
+	public void setupAndTearDown() throws Exception {
+		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
+			ArrayList<User> currentEnrolledUsers = (ArrayList<User>) userDao.getAllUsers();
+			for (User user : currentEnrolledUsers) {
+				logger.info("Deleting user with ID: " + user.getId());
+				assertTrue(userDao.deleteUserById(user.getId()));
+			}
 		}
 	}
 
 	@Test
-	public void testSave() {
-		HibernateUserDAOImpl userDao = new HibernateUserDAOImpl();
-		assertTrue(userDao.saveUser(user));
-
-		// Try and put the same user in again. Should fail for a CVE
-		Assertions.assertThrows(PersistenceException.class, () -> {
+	public void testSave() throws Exception {
+		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
 			assertTrue(userDao.saveUser(user));
-		});
+
+			// Try and put the same user in again. Should fail for a CVE
+			Assertions.assertThrows(PersistenceException.class, () -> {
+				assertTrue(userDao.saveUser(user));
+			});
+		}
 	}
 
 	@Test
-	public void testUpdate() {
-		HibernateUserDAOImpl userDao = new HibernateUserDAOImpl();
-		assertTrue(userDao.saveUser(user));
-		user.setEmail("notthesameemail@test.com");
-		assertTrue(userDao.updateUser(user));
+	public void testUpdate() throws Exception {
+		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
+			assertTrue(userDao.saveUser(user));
+			user.setEmail("notthesameemail@test.com");
+			assertTrue(userDao.updateUser(user));
+		}
+	}
+
+	@Test
+	public void loopTest() throws Exception {
+		for (int i = 0; i < 500; i++) {
+			setupAndTearDown();
+			testSave();
+			setupAndTearDown();
+			testUpdate();
+		}
 	}
 }

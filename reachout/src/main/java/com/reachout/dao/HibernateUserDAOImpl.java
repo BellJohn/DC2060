@@ -57,16 +57,16 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public boolean deleteUserById(int userID) {
-		try (Session session = this.getSessionFactory().openSession();) {
+		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
-			Query query = session.createQuery("DELETE FROM User WHERE USERS_ID = :userId");
-			query.setParameter("userId", userID);
-			if (query.executeUpdate() != 1) {
-				session.getTransaction().rollback();
-				return false;
+			User userToDelete = session.get(User.class, userID);
+			session.delete(userToDelete);
+			if (session.get(User.class, userID) == null) {
+				session.getTransaction().commit();
+				return true;
 			}
-			session.getTransaction().commit();
-			return true;
+			session.getTransaction().rollback();
+			return false;
 		}
 
 	}
@@ -102,6 +102,7 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 
 	/**
 	 * Search the database for a user with a given username
+	 * 
 	 * @param username
 	 * @return
 	 */
