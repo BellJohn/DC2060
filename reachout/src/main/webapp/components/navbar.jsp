@@ -25,8 +25,8 @@
 				<sec:authentication var="princ" property="principal" />
 				<c:choose>
 					<c:when test="${princ=='anonymousUser'}">
-						<div class="button-group">
-							<ul class="navbar-nav ml-md-auto">
+						<div class="ml-auto button-group">
+							<ul class="navbar-nav">
 								<li class="nav-item"><a class="nav-link" href="login">Login</a></li>
 								<li class="nav-item"><a class="nav-link" href="signup">Sign
 										Up</a></li>
@@ -35,8 +35,8 @@
 					</c:when>
 					<c:otherwise>
 						<!-- Logged In -->
-						<div class="button-group">
-							<ul class="navbar-nav ml-md-auto">
+						<div class="ml-auto button-group">
+							<ul class="navbar-nav">
 								<li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
 								<li class="nav-item"><a class="nav-link" href="logout">Logout</a></li>
 							</ul>
