@@ -27,7 +27,7 @@ public class TestHibernateUserDAOImpl {
 		ArrayList<User> currentEnrolledUsers = (ArrayList<User>) userDao.getAllUsers();
 		for (User user : currentEnrolledUsers) {
 			logger.info("Deleting user with ID: " + user.getId());
-			assertTrue(userDao.deleteUserById(1));
+			assertTrue(userDao.deleteUserById(user.getId()));
 		}
 	}
 

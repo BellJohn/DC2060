@@ -4,9 +4,9 @@ CREATE USER 'reach'@'localhost' IDENTIFIED BY 'reach_pass';
 CREATE USER 'reach'@'%' IDENTIFIED BY 'reach_pass';
 GRANT ALL PRIVILEGES on reach_out.* TO 'reach'@'%';
 
-DROP TABLE IF EXISTS reach_out.users;
+DROP TABLE IF EXISTS reach_out.USERS;
 
-CREATE TABLE reach_out.users (
+CREATE TABLE reach_out.USERS (
   `USERS_ID` int(11) NOT NULL,
   `USERS_USERNAME` varchar(100) NOT NULL,
   `USERS_EMAIL` varchar(100) NOT NULL,

@@ -11,7 +11,7 @@ mkdir -p $DIR/download
 git clone https://github.com/BellJohn/DC2060.git $DIR/download >> ${LOG} 2>&1
 if [[ -e ${DIR}/download/reachout ]]; then
         cd ${DIR}/download/reachout
-        mvn clean install -DskipTests > $DIR/mavenLog.log 2>&1
+        mvn clean install > $DIR/mavenLog.log 2>&1
         cat ${DIR}/mavenLog.log >> ${LOG}
 else
         echo "ERROR DOWNLOAD FAILED"
