@@ -19,14 +19,19 @@
 			error-page="/accessDenied" />
 		<security:intercept-url pattern="/home"
 			access="permitAll" />
+			<security:intercept-url pattern="/"
+			access="permitAll" />
 		<security:intercept-url pattern="/signup"
+			access="permitAll" />
+		<security:intercept-url pattern="/login"
 			access="permitAll" />
 		<security:intercept-url pattern="/accessDenied"
 			access="permitAll" />
 
 		<security:intercept-url pattern="/*"
 			access="isAuthenticated()" />
-		<security:form-login login-page="/home"
+		<security:form-login login-page="/login"
+			default-target-url="/home"
 			login-processing-url="/j_spring_security_check"
 			authentication-success-handler-ref="successHandler"
 			authentication-failure-handler-ref="failureHandler"
@@ -46,7 +51,10 @@
 	<!-- if user authentication is successful then AppSuccessHandler will redirect 
 		to page based on role -->
 	<bean id="successHandler"
-		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler" />
+		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
+		<constructor-arg name="defaultTargetUrl"
+			value="/profile" />
+	</bean>
 
 	<!-- if user authentication is unsuccessful then failureHandler will redirect 
 		to access denied page -->

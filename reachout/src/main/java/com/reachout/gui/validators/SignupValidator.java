@@ -4,6 +4,7 @@
 package com.reachout.gui.validators;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,42 +26,72 @@ public class SignupValidator {
 	 * confirmation. Returns a result with the true/false (pass/fail) and reasons
 	 * for failure
 	 * 
-	 * @param data
+	 * @param userData
 	 * @return
 	 */
-	public static ValidationResult validateSignupForm(String[] data) {
+	public static ValidationResult validateSignupForm(Map<String, String> userData) {
 		ValidationResult result = new ValidationResult();
-		if (data == null) {
+		// Ensure not null
+		if (userData == null) {
 			result.setOutcome(false);
 			result.addError("No data supplied", null);
 			return result;
 		}
-		if (data.length != 4) {
+		// Ensure there are as many entries as we expect
+		// TODO update to static field in User object
+		if (userData.size() != 4) {
 			result.setOutcome(false);
-			result.addError("Wrong number of entries provided", Arrays.deepToString(data));
+			result.addError("Wrong number of entries provided", userData.toString());
+			return result;
 		}
-		for (String datum : data) {
+		// Check for null or empty keys
+		boolean badKeyOrValue = false;
+		for (String datum : userData.keySet()) {
 			if (datum == null || StringUtils.isEmpty(datum)) {
 				result.setOutcome(false);
-				result.addError("Empty value", datum);
+				result.addError("Empty key", datum);
+				badKeyOrValue = true;
 			} else if (StringUtils.containsWhitespace(datum)) {
 				result.setOutcome(false);
-				result.addError("Data contained whitespace", datum);
+				result.addError("Key contained whitespace", datum);
+				badKeyOrValue = true;
 			}
 		}
-		if (data[1] != null) {
-			System.out.println("email: " + data[1]);
+		if (badKeyOrValue) {
+			return result;
+		}
+		// Check for null or empty values
+		for (String datum : userData.keySet()) {
+			if (userData.get(datum) == null || StringUtils.isEmpty(userData.get(datum))) {
+				result.setOutcome(false);
+				result.addError("Empty value for key", datum);
+				badKeyOrValue = true;
+			} else if (StringUtils.containsWhitespace(datum)) {
+				result.setOutcome(false);
+				result.addError("Value contained whitespace", datum);
+				badKeyOrValue = true;
+			}
+		}
+		if (badKeyOrValue) {
+			return result;
+		}
+		// Check individual components:
+
+		// Does email fit email REGEX?
+		if (userData.get("email") != null) {
+			String email = userData.get("email");
 			Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-			Matcher matcher = pattern.matcher(data[1]);
+			Matcher matcher = pattern.matcher(email);
 			if (!matcher.matches()) {
 				result.setOutcome(false);
-				result.addError("Email is not of valid form", data[1]);
+				result.addError("Email is not of valid form", email);
 			}
 		}
 
-		if (!data[2].equals(data[3])) {
+		//Ensure passwords match
+		if (!userData.get("password").equals(userData.get("passwordConfirm"))) {
 			result.setOutcome(false);
-			result.addError("Passwords do not match", "[" + data[2] + "][" + data[3] + "]");
+			result.addError("Passwords do not match", "[" + userData.get("password") + "][" + userData.get("passwordConfirm") + "]");
 		}
 		return result;
 	}

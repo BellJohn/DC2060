@@ -1,5 +1,8 @@
 package com.reachout.gui.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
@@ -7,12 +10,14 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.gui.validators.SignupValidator;
 import com.reachout.gui.validators.ValidationResult;
@@ -30,10 +35,17 @@ public class SignupController {
 	public ModelAndView initPage(HttpServletRequest request) {
 
 		// Test to see if the user is logged in
-		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		if (!(auth instanceof AnonymousAuthenticationToken)) {
-//		        return new ModelAndView("/accessDenied");
-//		}
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		SystemUser sysUser = null;
+		if (auth instanceof UserDetails) {
+			sysUser = (SystemUser) auth;
+			System.out.println("logged in as : " + auth.getName());
+			System.out.println("details: " + auth.getDetails());
+			System.out.println("details: " + auth.getDetails());
+			//Should not be able to reach this page. Send them to home
+			ModelAndView mv = new ModelAndView("home");
+			mv.addObject("user", sysUser.getUsername());
+		}
 		logger.debug("Reached SignUp Controller");
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
@@ -49,19 +61,20 @@ public class SignupController {
 	 */
 	@PostMapping
 	public ModelAndView signup(HttpServletRequest request) {
-
+		boolean saveUserSuccess = false;
 		String username = request.getParameter("username");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String passwordConfirm = request.getParameter("password_confirm");
 		// TODO This is pretty rubbish was of collating the data, going to be a pain to
 		// expand later. Maybe build custom newUser data type?
-		String[] data = new String[4];
-		data[0] = username;
-		data[1] = email;
-		data[2] = password;
-		data[3] = passwordConfirm;
-		ValidationResult result = SignupValidator.validateSignupForm(data);
+		Map<String, String> userData = new HashMap<>();
+		userData.put("username", username);
+		userData.put("email", email);
+		userData.put("password", password);
+		userData.put("passwordConfirm", passwordConfirm);
+
+		ValidationResult result = SignupValidator.validateSignupForm(userData);
 		// If we failed the validation, log some reasons why to the console for now
 		if (!result.getOutcome()) {
 			for (String s : result.getErrors().keySet()) {
@@ -71,16 +84,25 @@ public class SignupController {
 			// Otherwise, build a new User and populate the db
 			User newUser = new User(username, email, password);
 			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+
 			try {
-				if (!userDAO.saveUser(newUser)) {
+				saveUserSuccess = userDAO.saveUser(newUser);
+				if (!saveUserSuccess) {
 					// Something went wrong building the user
 					logger.error("Unable to save the user");
+					result.setOutcome(false);
 				}
 			} catch (Exception e) {
 				result.addError("Duplicate Username", "This username is already taken");
-				logger.error("Unable to save the user", e);
-
+				result.setOutcome(false);
+				logger.error("Unable to save the user: This username is already taken");
 			}
+		}
+		// If we saved the new user, we should log them in
+		if (saveUserSuccess) {
+
+			// SystemUser sysUser = new SystemUser(username, passwordConfirm,
+			// passwordConfirm);
 		}
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);

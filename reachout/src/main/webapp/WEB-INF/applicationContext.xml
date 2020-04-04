@@ -16,6 +16,6 @@
 	<bean id="loginUrlAuthenticationEntryPoint"
 		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<constructor-arg name="loginFormUrl"
-			value="/userLogin" />
+			value="/login" />
 	</bean>
 </beans> 
