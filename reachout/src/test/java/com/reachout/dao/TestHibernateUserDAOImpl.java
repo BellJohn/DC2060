@@ -53,13 +53,4 @@ public class TestHibernateUserDAOImpl {
 		}
 	}
 
-	@Test
-	public void loopTest() throws Exception {
-		for (int i = 0; i < 500; i++) {
-			setupAndTearDown();
-			testSave();
-			setupAndTearDown();
-			testUpdate();
-		}
-	}
 }
