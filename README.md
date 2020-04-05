@@ -5,6 +5,7 @@ Tech Stack:
 
 - XAMPP Web Server (primarily for the tomcat host) https://www.apachefriends.org/index.html
 - MySQL Database https://dev.mysql.com/downloads/installer/ (You can make use of the packaged mysql/maria db in XAMPP, I just like MySQL Workbench as a db access tool and installed it all in one go)
+	- Mac users, install MySQL for OS X from here https://dev.mysql.com/downloads/mysql/
 - Java 8
 - Maven WebApp
 
@@ -42,7 +43,7 @@ Installation:
 
 == Compilation ==
 - Clone the github repo locally.
-- Open cmd and navigate to the application
+- Open cmd and navigate to the application (the reachout/ folder)
 - Compile the war file with the command 'mvn clean install -DskipTests'
 
 (example output:
@@ -82,7 +83,7 @@ Installation:
 )
 
 
-- Navigate into new target directory and check there are two compiled files. ReachOut.war and Reachout-class.jar 
+- Navigate into new target/ directory and check there are two compiled files. ReachOut.war and Reachout-class.jar 
 We only need the file ReachOut.war later
 
 == Deployment ==
