@@ -18,6 +18,7 @@
 					<c:when test="${empty postSent}">
 						<div class="signup-form">
 							<form action="" method="POST">
+							<sec:csrfInput/>
 								<fieldset>
 									<div id="legend">
 										<legend class="">Register</legend>
@@ -81,6 +82,10 @@
 							<c:when test="${postResult}">
 								<h3>A confirmation email has been sent to the address
 									provided: ${emailAddress}</h3>
+									</br>
+									</br>
+									<h4>In the meantime, why not check out your new <a href="profile">profile!</a></h4>
+									<p>It could probably do with some details about you.</p>
 							</c:when>
 							<c:otherwise>
 								<h3>Something was wrong with the data you provided!</h3>

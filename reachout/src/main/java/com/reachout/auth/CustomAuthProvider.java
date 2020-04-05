@@ -2,6 +2,7 @@ package com.reachout.auth;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,15 +17,20 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String username = authentication.getName();
-		String password = authentication.getCredentials().toString();
+		logger.debug("In custom auth filter");
+		UsernamePasswordAuthenticationToken authToken = (UsernamePasswordAuthenticationToken) authentication;
+
+		String username = String.valueOf(authToken.getPrincipal());
+		String password = String.valueOf(authToken.getCredentials());
+
 		User foundUser = searchForValidUser(username, password);
 		if (foundUser != null) {
 			SystemUser userForContext = new SystemUser(foundUser);
 			// use the credentials
 			// and authenticate against the third-party system
-			return new UsernamePasswordAuthenticationToken(userForContext, username, userForContext.getAuthorities());
+			return new UsernamePasswordAuthenticationToken(username, password, userForContext.getAuthorities());
 		} else {
+			logger.debug("Found no user, returning null for auth");
 			return null;
 		}
 	}
@@ -34,11 +40,14 @@ public class CustomAuthProvider implements AuthenticationProvider {
 			logger.debug("Login denied for user: " + username);
 			return null;
 		}
-
+		logger.debug("Logging in user " + username + "  with pass: " + password);
 		// Check to see if the user is valid
-		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-		User userFound = userDAO.selectUser(username);
-
+		User userFound = null;
+		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
+			userFound = userDAO.selectUser(username);
+		} catch (HibernateException e) {
+			logger.error("Unable to close the resource for HibernateUserDAOImpl", e);
+		}
 		// Either we found nothing or the password wasn't valid
 		if (userFound == null || !userFound.getPassword().equals(password)) {
 			logger.debug("Invalid password provided for user : " + username);
@@ -51,7 +60,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return authentication.equals(UsernamePasswordAuthenticationToken.class);
+		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
 	}
 
 }
