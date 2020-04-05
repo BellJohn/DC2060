@@ -15,3 +15,7 @@
 	crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/cc.css" />
 
+<link rel="stylesheet" 
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	
+	>

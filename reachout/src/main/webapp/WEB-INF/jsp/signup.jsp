@@ -16,61 +16,65 @@
 			<div class="col-sm-4">
 				<c:choose>
 					<c:when test="${empty postSent}">
-						<form class="form form-horizontal" action='' method="POST">
-							<fieldset>
-								<div id="legend">
-									<legend class="">Register</legend>
-								</div>
-								<div class="control-group">
-									<!-- Username -->
-									<label class="control-label" for="username">Username</label>
-									<div class="controls">
-										<input type="text" id="username" name="username"
-											placeholder="" class="input-xlarge">
-										<p class="help-block">Username can contain any letters or
-											numbers, without spaces</p>
+						<div class="signup-form">
+							<form action="" method="POST">
+								<fieldset>
+									<div id="legend">
+										<legend class="">Register</legend>
 									</div>
-								</div>
-
-								<div class="control-group">
-									<!-- E-mail -->
-									<label class="control-label" for="email">E-mail</label>
-									<div class="controls">
-										<input type="text" id="email" name="email" placeholder=""
-											class="input-xlarge">
-										<p class="help-block">Please provide your E-mail</p>
+									<h2>Sign Up</h2>
+									<p>Please fill in this form to create an account!</p>
+									<hr>
+									<div class="control-group">
+										<!-- Username -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+											</div>
+											<input type="text" class="form-control" name="username" id="username" placeholder="Username" required="required">
+										</div>
 									</div>
-								</div>
-
-								<div class="control-group">
-									<!-- Password-->
-									<label class="control-label" for="password">Password</label>
-									<div class="controls">
-										<input type="password" id="password" name="password"
-											placeholder="" class="input-xlarge">
-										<p class="help-block">Please provide a password</p>
+									<div class="control-group">
+										<!-- E-mail -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1"><i class="fa fa-paper-plane"></i></span>
+											</div>
+											<input type="email" class="form-control" name="email" id="email" placeholder="Email Address" required="required">
+										</div>
 									</div>
-								</div>
-
-								<div class="control-group">
-									<!-- Password -->
-									<label class="control-label" for="password_confirm">Password
-										(Confirm)</label>
-									<div class="controls">
-										<input type="password" id="password_confirm"
-											name="password_confirm" placeholder="" class="input-xlarge">
-										<p class="help-block">Please confirm your password</p>
+									<div class="control-group">
+										<!-- Password-->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1"><i class="fa fa-lock"></i></span>
+											</div>
+											<input type="password" class="form-control" name="password" id="password" placeholder="Password" required="required">
+										</div>
 									</div>
-								</div>
-
-								<div class="control-group">
-									<!-- Button -->
-									<div class="controls">
-										<button class="btn btn-success">Register</button>
+									<div class="control-group">
+										<!-- Terms and Conditions Checkbox -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-lock"></i>
+													<i class="fa fa-check"></i>
+												</span>
+											</div>
+											<input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="Confirm Password" required="required">
+										</div>
 									</div>
-								</div>
-							</fieldset>
-						</form>
+									<div class="control-group">
+										<label class="checkbox-inline"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
+									</div>
+									<div class="control-group">
+										<!-- Button -->
+										<button class="btn btn-primary btn-lg">Sign Up</button>
+									</div>
+								</fieldset>
+							</form>
+							<div class="text-center">Already have an account? <a href="login">Login here</a></div>
+						</div>
 					</c:when>
 					<c:otherwise>
 						<c:choose>
