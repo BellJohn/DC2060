@@ -41,7 +41,7 @@
 						<div class="control-group">
 							<!-- Button -->
 							<div class="controls">
-								<button class="btn btn-success">Login</button>
+								<button class="btn btn-primary">Login</button>
 							</div>
 						</div>
 					</fieldset>
