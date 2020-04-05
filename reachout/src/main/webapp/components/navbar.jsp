@@ -4,7 +4,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<nav
-			class="navbar navbar-expand-lg navbar-light bg-light navbar-dark bg-dark static-top">
+			class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#bs-example-navbar-collapse-1">
