@@ -23,6 +23,7 @@
 				</c:if>
 				<form class="form form-horizontal"
 					action="<c:url value='j_spring_security_check'/>" method="POST">
+						<sec:csrfInput/>
 					<fieldset>
 						<div id="legend">
 							<legend class="">Login</legend>

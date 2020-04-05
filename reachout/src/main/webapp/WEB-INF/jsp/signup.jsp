@@ -17,6 +17,7 @@
 				<c:choose>
 					<c:when test="${empty postSent}">
 						<form class="form form-horizontal" action='' method="POST">
+						<sec:csrfInput/>
 							<fieldset>
 								<div id="legend">
 									<legend class="">Register</legend>
