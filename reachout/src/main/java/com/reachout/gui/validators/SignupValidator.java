@@ -3,8 +3,8 @@
  */
 package com.reachout.gui.validators;
 
-import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,11 +23,12 @@ public class SignupValidator {
 
 	/**
 	 * Passed a data array containing username, email address, password and password
-	 * confirmation. Returns a result with the true/false (pass/fail) and reasons
+	 * confirmation. 
+	 * </br>Returns a result with the outcome set to true/false (pass/fail) and reasons
 	 * for failure
 	 * 
 	 * @param userData
-	 * @return
+	 * @return ValidationResult
 	 */
 	public static ValidationResult validateSignupForm(Map<String, String> userData) {
 		ValidationResult result = new ValidationResult();
@@ -44,37 +45,13 @@ public class SignupValidator {
 			result.addError("Wrong number of entries provided", userData.toString());
 			return result;
 		}
-		// Check for null or empty keys
-		boolean badKeyOrValue = false;
-		for (String datum : userData.keySet()) {
-			if (datum == null || StringUtils.isEmpty(datum)) {
-				result.setOutcome(false);
-				result.addError("Empty key", datum);
-				badKeyOrValue = true;
-			} else if (StringUtils.containsWhitespace(datum)) {
-				result.setOutcome(false);
-				result.addError("Key contained whitespace", datum);
-				badKeyOrValue = true;
-			}
-		}
-		if (badKeyOrValue) {
+
+		// If we go false back, more errors have been added which will affect further validation.
+		// Return now
+		if (!checkForNullOrEmpty(userData, result)) {
 			return result;
 		}
-		// Check for null or empty values
-		for (String datum : userData.keySet()) {
-			if (userData.get(datum) == null || StringUtils.isEmpty(userData.get(datum))) {
-				result.setOutcome(false);
-				result.addError("Empty value for key", datum);
-				badKeyOrValue = true;
-			} else if (StringUtils.containsWhitespace(datum)) {
-				result.setOutcome(false);
-				result.addError("Value contained whitespace", datum);
-				badKeyOrValue = true;
-			}
-		}
-		if (badKeyOrValue) {
-			return result;
-		}
+
 		// Check individual components:
 
 		// Does email fit email REGEX?
@@ -88,11 +65,47 @@ public class SignupValidator {
 			}
 		}
 
-		//Ensure passwords match
+		// Ensure passwords match
 		if (!userData.get("password").equals(userData.get("passwordConfirm"))) {
 			result.setOutcome(false);
-			result.addError("Passwords do not match", "[" + userData.get("password") + "][" + userData.get("passwordConfirm") + "]");
+			result.addError("Passwords do not match",
+					"[" + userData.get("password") + "][" + userData.get("passwordConfirm") + "]");
 		}
 		return result;
+	}
+
+	/**
+	 * Checks each element within the entry set provided.
+	 * </br>
+	 * If a key or value is null, empty or contains whitespace then add to list of errors
+	 * @param userDataEntries
+	 * @param result
+	 * @return true if no errors found. false otherwise
+	 */
+	private static boolean checkForNullOrEmpty(Map<String, String> userDataEntries, ValidationResult result) {
+		final int numErrorsBefore = result.getErrors().size();
+
+		// Check for null or empty keys or values
+		for (Entry<String, String> datum : userDataEntries.entrySet()) {
+			// Keys
+			if (datum.getKey() == null || StringUtils.isEmpty(datum.getKey())) {
+				result.setOutcome(false);
+				result.addError("Empty key", datum.getKey());
+			} else if (StringUtils.containsWhitespace(datum.getKey())) {
+				result.setOutcome(false);
+				result.addError("Key contained whitespace", datum.getKey());
+			}
+			// Values
+			if (datum.getValue() == null || StringUtils.isEmpty(datum.getValue())) {
+				result.setOutcome(false);
+				result.addError("Empty value for key", datum.getKey());
+			} else if (StringUtils.containsWhitespace(datum.getValue())) {
+				result.setOutcome(false);
+				result.addError("Value contained whitespace", datum.getValue());
+			}
+		}
+
+		return result.getErrors().size() == numErrorsBefore;
+
 	}
 }

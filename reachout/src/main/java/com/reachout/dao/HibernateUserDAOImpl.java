@@ -2,15 +2,20 @@ package com.reachout.dao;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.reachout.models.User;
 
 public class HibernateUserDAOImpl extends HibernateDAO {
+
+	Logger logger = LogManager.getLogger(HibernateUserDAOImpl.class);
 
 	/**
 	 * <p>
@@ -108,12 +113,14 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 */
 	public User selectUser(String username) {
 		try (Session session = this.getSessionFactory().openSession()) {
-			session.beginTransaction();
 			Query query = session.createQuery("SELECT user FROM User user WHERE USERS_USERNAME = :username",
 					User.class);
 			query.setParameter("username", username);
 			return (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug("Searched for user with username [" + username + "]. Found none");
 		}
+		return null;
 	}
 
 }

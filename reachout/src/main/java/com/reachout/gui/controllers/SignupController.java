@@ -3,11 +3,11 @@ package com.reachout.gui.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,9 +39,6 @@ public class SignupController {
 		SystemUser sysUser = null;
 		if (auth instanceof UserDetails) {
 			sysUser = (SystemUser) auth;
-			System.out.println("logged in as : " + auth.getName());
-			System.out.println("details: " + auth.getDetails());
-			System.out.println("details: " + auth.getDetails());
 			//Should not be able to reach this page. Send them to home
 			ModelAndView mv = new ModelAndView("home");
 			mv.addObject("user", sysUser.getUsername());
@@ -83,9 +80,9 @@ public class SignupController {
 		} else {
 			// Otherwise, build a new User and populate the db
 			User newUser = new User(username, email, password);
-			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+			
 
-			try {
+			try(HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
 				saveUserSuccess = userDAO.saveUser(newUser);
 				if (!saveUserSuccess) {
 					// Something went wrong building the user
@@ -103,6 +100,11 @@ public class SignupController {
 
 			// SystemUser sysUser = new SystemUser(username, passwordConfirm,
 			// passwordConfirm);
+			try {
+				request.login(username, password);
+			} catch (ServletException e) {
+				logger.error(e.getStackTrace());
+			}
 		}
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);

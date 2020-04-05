@@ -1,5 +1,8 @@
 package com.reachout.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -52,5 +55,22 @@ public class TestHibernateUserDAOImpl {
 			assertTrue(userDao.updateUser(user));
 		}
 	}
+	
+	@Test
+	public void testSelectExists() {
+		try(HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()){
+			assertTrue(userDao.saveUser(user));
+			User userFound = userDao.selectUser(user.getUsername());
+			assertNotNull(userFound);
+			assertEquals(userFound.getEmail(), user.getEmail());
+		}
+	}
 
+	@Test
+	public void testSelectDoesNotExist() {
+		try(HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()){
+			User userFound = userDao.selectUser(user.getUsername());
+			assertNull(userFound);
+		}
+	}
 }

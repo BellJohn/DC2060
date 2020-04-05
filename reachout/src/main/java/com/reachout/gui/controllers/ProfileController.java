@@ -23,18 +23,16 @@ public class ProfileController {
 	public ModelAndView initPage(HttpServletRequest request) {
 		// Test to see if the user is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		SystemUser sysUser = null;
+		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
-			sysUser = (SystemUser) auth.getPrincipal();
+			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
-			// This user should not be able to get here. Send them home
-			logger.debug("UNAUTHORISED USER ACCESS TO PROFILE");
-			return new ModelAndView("home");
+			username =  (String) auth.getPrincipal();
 		}
 		logger.debug("Reached profile Controller");
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
-		mv.addObject("user", sysUser.getUsername());
+		mv.addObject("user", username);
 		return mv;
 	}
 }

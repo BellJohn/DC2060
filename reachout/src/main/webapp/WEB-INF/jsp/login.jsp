@@ -15,7 +15,14 @@
 			<div class="col-sm-4"></div>
 			<div class="col-sm-4">
 
-				<form class="form form-horizontal" action='j_spring_security_check' method="POST">
+				<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
+					<font color="red"> Your login attempt was not successful due
+						to <br /> <br /> <c:out
+							value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
+					</font>
+				</c:if>
+				<form class="form form-horizontal"
+					action="<c:url value='j_spring_security_check'/>" method="POST">
 					<fieldset>
 						<div id="legend">
 							<legend class="">Login</legend>
