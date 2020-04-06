@@ -27,9 +27,8 @@
 						<sec:csrfInput />
 						<fieldset>
 							<div id="legend">
-								<legend class="">Login</legend>
+								<legend class=""><h2>Login</h2></legend>
 							</div>
-							<h2>Login</h2>
 							<p>Please enter your login details below.</p>
 							<hr>
 							<div class="control-group">
@@ -62,6 +61,7 @@
 							</div>
 						</fieldset>
 					</form>
+					<div class="text-center">Don't have an account? <a href="signup">Sign Up Here</a></div>
 				</div>
 
 			</div>
