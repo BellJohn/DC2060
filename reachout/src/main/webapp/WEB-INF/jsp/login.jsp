@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-GB">
+
 <head>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<title>Login</title>
-<%@ include file="/components/stylesheets.jsp"%>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	<title>Login</title>
+	<%@ include file="/components/stylesheets.jsp"%>
 
 </head>
 
@@ -17,43 +18,51 @@
 
 				<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
 					<font color="red"> Your login attempt was not successful due
-						to <br /> <br /> <c:out
-							value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
+						to <br /> <br />
+						<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
 					</font>
 				</c:if>
-				<form class="form form-horizontal"
-					action="<c:url value='j_spring_security_check'/>" method="POST">
-						<sec:csrfInput/>
-					<fieldset>
-						<div id="legend">
-							<legend class="">Login</legend>
-						</div>
-						<div class="control-group">
-							<!-- Username -->
-							<label class="control-label" for="username">Username</label>
-							<div class="controls">
-								<input type="text" id="username" name="username" placeholder=""
-									class="input-xlarge">
+				<div class="signup-form">
+					<form action="<c:url value='j_spring_security_check'/>" method="POST">
+						<sec:csrfInput />
+						<fieldset>
+							<div id="legend">
+								<legend class="">Login</legend>
 							</div>
-						</div>
-
-						<div class="control-group">
-							<!-- Password-->
-							<label class="control-label" for="password">Password</label>
-							<div class="controls">
-								<input type="password" id="password" name="password"
-									placeholder="" class="input-xlarge">
-								<p class="help-block">Please provide a password</p>
+							<h2>Login</h2>
+							<p>Please enter your login details below.</p>
+							<hr>
+							<div class="control-group">
+								<!-- Username -->
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1">
+											<i class="fa fa-user"></i>
+										</span>
+									</div>
+									<input type="text" class="form-control" name="username" id="username"
+										placeholder="Username" required="required">
+								</div>
 							</div>
-						</div>
-						<div class="control-group">
-							<!-- Button -->
-							<div class="controls">
-								<button class="btn btn-primary">Login</button>
+							<div class="control-group">
+								<!-- Password-->
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1">
+											<i class="fa fa-lock"></i>
+										</span>
+									</div>
+									<input type="password" class="form-control" name="password" id="password"
+										placeholder="Password" required="required">
+								</div>
 							</div>
-						</div>
-					</fieldset>
-				</form>
+							<div class="control-group">
+								<!-- Button -->
+								<button class="btn btn-primary btn-lg">Login</button>
+							</div>
+						</fieldset>
+					</form>
+				</div>
 
 			</div>
 			<div class="col-sm-4"></div>
@@ -61,4 +70,5 @@
 	</div>
 
 </body>
+
 </html>
