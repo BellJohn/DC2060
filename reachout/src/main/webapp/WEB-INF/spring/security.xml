@@ -40,7 +40,8 @@
 			authentication-failure-handler-ref="failureHandler"
 			authentication-failure-url="/login" username-parameter="username"
 			password-parameter="password" />
-			<security:logout logout-url="/logout" />
+		<security:logout logout-success-url="/home"
+			logout-url="/perform_logout" delete-cookies="JSESSIONID" />
 	</security:http>
 
 	<security:authentication-manager>
