@@ -40,9 +40,10 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 
 	/**
 	 * Deletes a specified user from the database
-	 * 
-	 * @param user
-	 * @return
+	 * </br>
+	 *  
+	 * @param user being deleted
+	 * @return true if deletion succeeded. False otherwise
 	 */
 	public boolean deleteUser(User user) {
 		try (Session session = this.getSessionFactory().openSession()) {

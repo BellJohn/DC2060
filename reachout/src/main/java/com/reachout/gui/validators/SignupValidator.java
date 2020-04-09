@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
  */
 public class SignupValidator {
 
-	private static final String EMAIL_PATTERN = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+	private static final String EMAIL_PATTERN =  "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
 
 	private SignupValidator() {
 	}
@@ -48,7 +48,7 @@ public class SignupValidator {
 
 		// If we go false back, more errors have been added which will affect further validation.
 		// Return now
-		if (!checkForNullOrEmpty(userData, result)) {
+		if (!checkForNullEmptyOrWhiteSpace(userData, result)) {
 			return result;
 		}
 
@@ -82,7 +82,7 @@ public class SignupValidator {
 	 * @param result
 	 * @return true if no errors found. false otherwise
 	 */
-	private static boolean checkForNullOrEmpty(Map<String, String> userDataEntries, ValidationResult result) {
+	private static boolean checkForNullEmptyOrWhiteSpace(Map<String, String> userDataEntries, ValidationResult result) {
 		final int numErrorsBefore = result.getErrors().size();
 
 		// Check for null or empty keys or values
