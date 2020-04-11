@@ -21,7 +21,7 @@ import com.reachout.models.User;
 public class TestHibernateUserDAOImpl {
 
 	static final Logger logger = LogManager.getLogger(TestHibernateUserDAOImpl.class);
-	User user = new User("TestUsername", "TestEmail@Email.com", "TestPassword");
+	User user = new User("TestUsername", "TestEmail@Email.com");
 
 	 @BeforeEach
 	 @AfterEach
@@ -38,11 +38,11 @@ public class TestHibernateUserDAOImpl {
 	@Test
 	public void testSave() throws Exception {
 		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
-			assertTrue(userDao.saveUser(user));
+			assertTrue(userDao.save(user));
 
 			// Try and put the same user in again. Should fail for a CVE
 			Assertions.assertThrows(PersistenceException.class, () -> {
-				assertTrue(userDao.saveUser(user));
+				userDao.save(user);
 			});
 		}
 	}
@@ -50,7 +50,7 @@ public class TestHibernateUserDAOImpl {
 	@Test
 	public void testUpdate() throws Exception {
 		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
-			assertTrue(userDao.saveUser(user));
+			assertTrue(userDao.save(user));
 			user.setEmail("notthesameemail@test.com");
 			assertTrue(userDao.updateUser(user));
 		}
@@ -59,7 +59,7 @@ public class TestHibernateUserDAOImpl {
 	@Test
 	public void testSelectExists() {
 		try(HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()){
-			assertTrue(userDao.saveUser(user));
+			assertTrue(userDao.save(user));
 			User userFound = userDao.selectUser(user.getUsername());
 			assertNotNull(userFound);
 			assertEquals(userFound.getEmail(), user.getEmail());

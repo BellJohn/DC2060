@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
+import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.gui.validators.SignupValidator;
 import com.reachout.gui.validators.ValidationResult;
+import com.reachout.models.Password;
 import com.reachout.models.User;
 
 @Controller
@@ -39,7 +41,7 @@ public class SignupController {
 		SystemUser sysUser = null;
 		if (auth instanceof UserDetails) {
 			sysUser = (SystemUser) auth;
-			//Should not be able to reach this page. Send them to home
+			// Should not be able to reach this page. Send them to home
 			ModelAndView mv = new ModelAndView("home");
 			mv.addObject("user", sysUser.getUsername());
 		}
@@ -63,8 +65,7 @@ public class SignupController {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String passwordConfirm = request.getParameter("password_confirm");
-		// TODO This is pretty rubbish was of collating the data, going to be a pain to
-		// expand later. Maybe build custom newUser data type?
+		
 		Map<String, String> userData = new HashMap<>();
 		userData.put("username", username);
 		userData.put("email", email);
@@ -78,12 +79,19 @@ public class SignupController {
 				logger.error(String.format("%s : %s", s, result.getErrors().get(s)));
 			}
 		} else {
+			//TODO Extract the user/password creation out into a support class as it doesn't belong here
 			// Otherwise, build a new User and populate the db
-			User newUser = new User(username, email, password);
-			
+			User newUser = new User(username, email);
 
-			try(HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-				saveUserSuccess = userDAO.saveUser(newUser);
+			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl(); HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
+				saveUserSuccess = userDAO.save(newUser);
+				if(saveUserSuccess) {
+					Password newPassword = new Password();
+					newPassword.setUserId(newUser.getId());
+					newPassword.setHashedPasswordString(password);
+					newPassword.setCreatedDate(System.currentTimeMillis());
+					passwordDAO.save(newPassword);
+				}
 				if (!saveUserSuccess) {
 					// Something went wrong building the user
 					logger.error("Unable to save the user");
@@ -97,9 +105,6 @@ public class SignupController {
 		}
 		// If we saved the new user, we should log them in
 		if (saveUserSuccess) {
-
-			// SystemUser sysUser = new SystemUser(username, passwordConfirm,
-			// passwordConfirm);
 			try {
 				request.login(username, password);
 			} catch (ServletException e) {

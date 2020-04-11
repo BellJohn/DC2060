@@ -13,6 +13,12 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import com.reachout.models.User;
 
+/**
+ * Database accesser for a User object. Stored in table USERS.
+ * 
+ * @author John
+ *
+ */
 public class HibernateUserDAOImpl extends HibernateDAO {
 
 	Logger logger = LogManager.getLogger(HibernateUserDAOImpl.class);
@@ -26,7 +32,7 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * @return true if successful, false otherwise
 	 */
 
-	public boolean saveUser(User user) {
+	public boolean save(User user) {
 		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
 			session.save(user);
@@ -39,13 +45,12 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	}
 
 	/**
-	 * Deletes a specified user from the database
-	 * </br>
-	 *  
+	 * Deletes a specified user from the database </br>
+	 * 
 	 * @param user being deleted
 	 * @return true if deletion succeeded. False otherwise
 	 */
-	public boolean deleteUser(User user) {
+	public boolean delete(User user) {
 		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
 			session.delete(user);
@@ -124,4 +129,17 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 		return null;
 	}
 
+	
+
+	public User selectByID(int userId) {
+		try (Session session = this.getSessionFactory().openSession()) {
+			session.beginTransaction();
+			Query query = session.createQuery("SELECT user FROM User user WHERE USERS_ID = :userId");
+			query.setParameter("userId", userId);
+			return (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug("Searched for user with userId [" + userId + "]. Found none");
+		}
+		return null;
+	}
 }

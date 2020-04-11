@@ -25,7 +25,7 @@ import com.reachout.models.User;
 
 class SignupControllerTest {
 
-	private static User user = new User("user", "email@fake.com", "password");
+	private static User user = new User("user", "email@fake.com");
 
 	@BeforeEach
 	@AfterEach
@@ -34,7 +34,7 @@ class SignupControllerTest {
 		try (HibernateUserDAOImpl dao = new HibernateUserDAOImpl()) {
 			User userFound = dao.selectUser(user.getUsername());
 			if (userFound != null) {
-				if (!dao.deleteUser(userFound)) {
+				if (!dao.delete(userFound)) {
 					fail("Unable to delete user. Cannot guarantee clean test bed for future tests");
 				}
 			}
@@ -62,9 +62,9 @@ class SignupControllerTest {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("email")).thenReturn(user.getEmail());
-		Mockito.when(mockedRequest.getParameter("password")).thenReturn(user.getPassword());
-		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn(user.getPassword());
-
+		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
+		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("password");
+		
 		SignupController sc = new SignupController();
 		ModelAndView result = sc.signup(mockedRequest);
 		assertNotNull(result);
@@ -86,14 +86,21 @@ class SignupControllerTest {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("email")).thenReturn(user.getEmail());
-		Mockito.when(mockedRequest.getParameter("password")).thenReturn(user.getPassword());
-		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn(user.getPassword());
-
+		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
+		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("password");
 		SignupController sc = new SignupController();
-		sc.signup(mockedRequest);
+		ModelAndView firstResult = sc.signup(mockedRequest);
+		Object firstResultObj = firstResult.getModel().get("validationErrors");
+		if (firstResultObj instanceof Map<?, ?>) {
+			Map<?, ?> errors = (Map<?, ?>) firstResultObj;
+			for (Object s : errors.keySet()) {
+				System.out.println("ERROR IN POSITIVE TEST CASE: " + errors.get(s));
+			}
+			assertTrue(errors.isEmpty());
+		}
 		// Call it again so the duplicate user generation is attempted
 		ModelAndView result = sc.signup(mockedRequest);
-		
+
 		assertNotNull(result);
 		assertEquals("signup", result.getViewName());
 		assertTrue((boolean) result.getModel().get("postSent"));
@@ -108,12 +115,12 @@ class SignupControllerTest {
 
 	@Test
 	void signUpInvalidUserTest() {
-		String badEmail ="NOT_A_GOOD_EMAIL.com";
-		
+		String badEmail = "NOT_A_GOOD_EMAIL.com";
+
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("email")).thenReturn(badEmail);
-		Mockito.when(mockedRequest.getParameter("password")).thenReturn(user.getPassword());
+		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
 		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("DIFFERENT_PASSWORD");
 
 		SignupController sc = new SignupController();
@@ -130,7 +137,7 @@ class SignupControllerTest {
 			Map<?, ?> errors = (Map<?, ?>) resultObj;
 			assertFalse(errors.isEmpty());
 			for (Object s : errors.keySet()) {
-				System.out.println("ERROR IN POSITIVE TEST CASE: " + s + ":" + errors.get(s) );
+				System.out.println("ERROR IN POSITIVE TEST CASE: " + s + ":" + errors.get(s));
 			}
 			assertEquals(badEmail, errors.get("Email is not of valid form"));
 			assertTrue(errors.keySet().contains("Passwords do not match"));

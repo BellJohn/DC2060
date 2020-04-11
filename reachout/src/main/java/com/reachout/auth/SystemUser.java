@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.reachout.models.Password;
 import com.reachout.models.User;
 
 public class SystemUser implements UserDetails {
@@ -24,8 +25,8 @@ public class SystemUser implements UserDetails {
 		roles.add(SGA);
 	}
 
-	public SystemUser(User foundUser) {
-		this(foundUser.getUsername(), foundUser.getPassword());
+	public SystemUser(User foundUser, Password password) {
+		this(foundUser.getUsername(), password.getPasswordString());
 	}
 
 	@Override
