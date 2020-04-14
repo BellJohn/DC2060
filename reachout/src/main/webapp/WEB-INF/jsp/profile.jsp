@@ -17,7 +17,7 @@
 						<div class="col-xs-12 col-sm-8">
 							<h2>First Last</h2>
 							<p>
-								<strong>About: </strong> Some details about the user
+								<strong>User Bio: </strong> Some details about the user
 							</p>
 						</div>
 						<div class="col-xs-12 col-sm-4 text-center">
