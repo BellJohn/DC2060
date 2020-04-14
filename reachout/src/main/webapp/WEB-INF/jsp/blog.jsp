@@ -3,6 +3,8 @@
 <head>
 <title>ReachOut Blog</title>
 <%@ include file="/components/stylesheets.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 </head>
 
 <body>
@@ -17,9 +19,14 @@
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
 
-				<h2>Blog Entry No.1 - 20th April 2020</h2>
-				<p>The team have been working hard...
-        </p>
+				<c:forEach items="${blogPosts}" var="post">
+					<tr>      
+						<td>${post.title}</td>
+						<td>${post.author}</td>
+						<td>${post.content}</td>
+					</tr>
+				</c:forEach>
+
 			</div>
 		</div>
 	</div>

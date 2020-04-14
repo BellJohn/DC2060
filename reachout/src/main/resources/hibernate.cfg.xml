@@ -30,6 +30,7 @@
 
 		<mapping resource="com/reachout/models/User.hbm.xml" />
 		<mapping resource="com/reachout/models/Password.hbm.xml" />
+		<mapping resource="com/reachout/models/Post.hbm.xml" />
 
 	</session-factory>
 
