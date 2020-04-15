@@ -1,8 +1,8 @@
-create database if not exists reach_out;
+CREATE database IF NOT EXISTS reach_out;
 
-CREATE USER 'reach'@'localhost' IDENTIFIED BY 'reach_pass';
+CREATE USER IF NOT EXISTS 'reach'@'localhost' IDENTIFIED BY 'reach_pass';
 
-GRANT ALL PRIVILEGES on reach_out.* TO 'reach'@'localhost';
+GRANT ALL PRIVILEGES ON reach_out.* TO 'reach'@'localhost';
 
 DROP TABLE IF EXISTS reach_out.USERS;
 DROP TABLE IF EXISTS reach_out.PASSWORDS;
