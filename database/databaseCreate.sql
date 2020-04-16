@@ -1,8 +1,8 @@
-create database if not exists reach_out;
+CREATE database IF NOT EXISTS reach_out;
 
-CREATE USER 'reach'@'localhost' IDENTIFIED BY 'reach_pass';
+CREATE USER IF NOT EXISTS 'reach'@'localhost' IDENTIFIED BY 'reach_pass';
 
-GRANT ALL PRIVILEGES on reach_out.* TO 'reach'@'localhost';
+GRANT ALL PRIVILEGES ON reach_out.* TO 'reach'@'localhost';
 
 DROP TABLE IF EXISTS reach_out.USERS;
 DROP TABLE IF EXISTS reach_out.PASSWORDS;
@@ -14,7 +14,7 @@ CREATE TABLE reach_out.USERS (
   `USERS_EMAIL` varchar(100) NOT NULL,
   `USERS_FIRSTNAME` varchar(100) NOT NULL,
   `USERS_LASTNAME` varchar(100) NOT NULL,
-  `USERS_DOB` date NOT NULL
+  `USERS_DOB` varchar(100) NOT NULL
   PRIMARY KEY (`USERS_ID`),
   UNIQUE KEY `USERS_USERNAME_UNIQUE` (`USERS_USERNAME`)
 );
@@ -25,6 +25,7 @@ PWD_USER_ID int(11) NOT NULL,
 PWD_CREATE_DATE BigInt(35) NOT NULL,
 PWD_PASSWORD varchar(128) NOT NULL,
 PRIMARY KEY(PWD_ID)
+
 );
 
 CREATE TABLE reach_out.USERPROFILE (
@@ -35,3 +36,6 @@ CREATE TABLE reach_out.USERPROFILE (
   PRIMARY KEY (`USER_ID`)
 );
  
+
+
+
