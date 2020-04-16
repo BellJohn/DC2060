@@ -20,16 +20,16 @@ public class BlogPageController {
     public final Logger logger = LogManager.getLogger(BlogPageController.class);
 
     private static final String VIEW_NAME = "blog";
+    private static final String FILE_PATH = "blogposts/";
 
-    
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 
 		logger.debug("Reached Blog Page Controller");
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
         mv.addObject("currentPage", VIEW_NAME);
-
-        PostReader pr = new PostReader();
+        
+        PostReader pr = new PostReader(FILE_PATH);
         ArrayList<Post> blogPosts = pr.readPosts();
         mv.addObject("blogPosts", blogPosts);
 
