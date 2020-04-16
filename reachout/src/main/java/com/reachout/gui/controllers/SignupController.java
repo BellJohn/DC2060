@@ -1,5 +1,11 @@
 package com.reachout.gui.controllers;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,25 +59,32 @@ public class SignupController {
 
 	/**
 	 * Register a new user. Required parameters are
-	 * username,email,password,password_confirm
+	 *  firstname, lastname, username, email, dob,password,password_confirm
 	 * 
 	 * @param request
 	 * @return
 	 */
 	@PostMapping
-	public ModelAndView signup(HttpServletRequest request) {
+	public ModelAndView signup(HttpServletRequest request){
 		boolean saveUserSuccess = false;
 		String username = request.getParameter("username");
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String dob = request.getParameter("dob");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String passwordConfirm = request.getParameter("password_confirm");
 		
+		
 		Map<String, String> userData = new HashMap<>();
+		userData.put("firstName", firstName);
+		userData.put("lastName", lastName);
 		userData.put("username", username);
+		userData.put("dob", dob);
 		userData.put("email", email);
 		userData.put("password", password);
 		userData.put("passwordConfirm", passwordConfirm);
-
+		
 		ValidationResult result = SignupValidator.validateSignupForm(userData);
 		// If we failed the validation, log some reasons why to the console for now
 		if (!result.getOutcome()) {
@@ -81,7 +94,7 @@ public class SignupController {
 		} else {
 			//TODO Extract the user/password creation out into a support class as it doesn't belong here
 			// Otherwise, build a new User and populate the db
-			User newUser = new User(username, email);
+			User newUser = new User(firstName, lastName, username, email, dob);
 
 			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl(); HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
 				saveUserSuccess = userDAO.save(newUser);
@@ -99,6 +112,9 @@ public class SignupController {
 				}
 			} catch (Exception e) {
 				result.addError("Duplicate Username", "This username is already taken");
+				if (saveUserSuccess) {
+					result.addError("woo success", "user is saved!!!");
+				}
 				result.setOutcome(false);
 				logger.error("Unable to save the user: This username is already taken");
 			}

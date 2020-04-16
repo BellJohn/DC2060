@@ -27,6 +27,10 @@
 							</figure>
 						</div>
 					</div>
+					<div class="btn-group dropup btn-block">
+								<a class="btn btn-primary btn-large" href="updateProfile">Update Profile</a>
+							</div>
+
 					<div class="col-xs-12 divider text-center">
 						<div class="col-xs-12 col-sm-4 emphasis">
 							<h2>

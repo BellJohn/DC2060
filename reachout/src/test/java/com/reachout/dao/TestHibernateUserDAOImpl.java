@@ -21,7 +21,7 @@ import com.reachout.models.User;
 public class TestHibernateUserDAOImpl {
 
 	static final Logger logger = LogManager.getLogger(TestHibernateUserDAOImpl.class);
-	User user = new User("TestUsername", "TestEmail@Email.com");
+	User user = new User("first", "last","testUser", "test@test.com", "2000/10/02");
 
 	 @BeforeEach
 	 @AfterEach

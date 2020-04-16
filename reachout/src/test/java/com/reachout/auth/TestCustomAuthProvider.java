@@ -25,9 +25,12 @@ import com.reachout.testUtils.TestUtils;
 
 public class TestCustomAuthProvider {
 
+	private static final String firstName = "first";
+	private static final String lastName = "last";
 	private static final String username = "testUser";
 	private static final String passwordString = "password";
 	private static final String email = "email@fake.com";
+	private static final String dob = "1987/07/20";
 
 	@BeforeAll
 	@AfterAll
@@ -43,7 +46,7 @@ public class TestCustomAuthProvider {
 	@Test
 	public void testAuthenticateExistingUser() throws GeneralSecurityException {
 		// Prep the test by building and storing a User and a Password
-		User user = new User(username, email);
+		User user = new User(firstName, lastName, username, email, dob);
 		user.setId(1);
 		Password password = new Password();
 		password.setHashedPasswordString(passwordString);

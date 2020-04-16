@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
+import java.text.ParseException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ import com.reachout.models.User;
 
 class SignupControllerTest {
 
-	private static User user = new User("user", "email@fake.com");
+	private static User user = new User("first", "last", "testUser", "test@test.com", "2000-10-02");
 
 	@BeforeEach
 	@AfterEach
@@ -42,7 +42,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void initPageTest() {
+	void initPageTest() throws ParseException{
 
 		Authentication auth = new UsernamePasswordAuthenticationToken("username", "passwod");
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
@@ -58,10 +58,13 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpValidUserTest() {
+	void signUpValidUserTest() throws ParseException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
+		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn("last");
 		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("email")).thenReturn(user.getEmail());
+		Mockito.when(mockedRequest.getParameter("dob")).thenReturn("20/09/1993");
 		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
 		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("password");
 		
@@ -82,10 +85,13 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpDuplicateUserTest() {
+	void signUpDuplicateUserTest() throws ParseException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
+		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn("last");
 		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("email")).thenReturn(user.getEmail());
+		Mockito.when(mockedRequest.getParameter("dob")).thenReturn("20/09/1993");
 		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
 		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("password");
 		SignupController sc = new SignupController();
@@ -114,12 +120,15 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpInvalidUserTest() {
+	void signUpInvalidUserTest() throws ParseException{
 		String badEmail = "NOT_A_GOOD_EMAIL.com";
 
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
+		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn("last");
 		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("email")).thenReturn(badEmail);
+		Mockito.when(mockedRequest.getParameter("dob")).thenReturn("20/09/1993");
 		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
 		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("DIFFERENT_PASSWORD");
 
@@ -143,5 +152,35 @@ class SignupControllerTest {
 			assertTrue(errors.keySet().contains("Passwords do not match"));
 		}
 	}
+	/*
+	//to be completed
+	@Test
+	void signUpUnderageUserTest() throws ParseException{
+		String dobString = ("1997-07-20");
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
+		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn("last");
+		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
+		Mockito.when(mockedRequest.getParameter("email")).thenReturn("test@test.com");
+		Mockito.when(mockedRequest.getParameter("dob")).thenReturn(dobString);
+		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
+		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("password");
 
+		SignupController sc = new SignupController();
+		ModelAndView result = sc.signup(mockedRequest);
+		
+		assertNotNull(result);
+		assertEquals("signup", result.getViewName());
+		assertTrue((boolean) result.getModel().get("postSent"));
+		Object resultObj = result.getModel().get("validationErrors");
+		if (resultObj instanceof Map<?, ?>) {
+			Map<?, ?> errors = (Map<?, ?>) resultObj;
+			assertFalse(errors.isEmpty());
+			for (Object s : errors.keySet()) {
+				System.out.println("ERROR IN POSITIVE TEST CASE: " + s + ":" + errors.get(s));
+			}
+			assertEquals(dobString, errors.get("You must be over 18 to sign up"));
+		}
+	}
+		*/
 }

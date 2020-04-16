@@ -42,7 +42,7 @@ class HibernatePasswordDAOImplTest {
 	@Test
 	public void saveTest() throws GeneralSecurityException {
 		// Setup with a test user to link to
-		User userForTest = new User("testUser", "test@test.com");
+		User userForTest = new User("first", "last","testUser", "test@test.com", "2000/10/02");
 		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
 			userDao.save(userForTest);
 		}
@@ -66,7 +66,6 @@ class HibernatePasswordDAOImplTest {
 	@Test
 	public void saveWithoutUserTest() throws GeneralSecurityException {
 		Password password = new Password();
-
 		password.setUserId(1);
 		password.setCreatedDate(System.currentTimeMillis());
 		password.setPasswordString("TESTPASSWORDSTRING");
@@ -84,7 +83,7 @@ class HibernatePasswordDAOImplTest {
 	@Test
 	public void deleteTest() throws GeneralSecurityException {
 		// Setup with a test user
-		User userForTest = new User("testUser", "test@test.com");
+		User userForTest = new User("first", "last","testUser", "test@test.com", "2000/10/02");
 		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
 			userDao.save(userForTest);
 		}

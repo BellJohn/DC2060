@@ -23,44 +23,38 @@
 								<fieldset>
 									<div id="legend">
 										<legend class="">
-											<h2>Sign Up</h2>
 										</legend>
 									</div>
 									<p>Update your profile information</p>
 									<hr>
+									<!-- Profile Picture -->
 									<div class="control-group">
-										<!-- Username -->
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-user"></i></span>
-											</div>
-											<input type="text" class="form-control" name="firstname" id="firstname"
-												placeholder="First Name" required="required">
-										</div>
-									</div>
-									<div class="control-group">
-										<!-- E-mail -->
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-paper-plane"></i></span>
-											</div>
-											<input type="text" class="form-control" name="surname" id="surname"
-												placeholder="Surname" required="required">
-										</div>
-									</div>
-									<div class="control-group">
-										<!-- Password-->
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1"><i
 														class="fa fa-lock"></i></span>
 											</div>
-											<input type="file" class="form-control" name="profilepic" id="profilepic"
+											<input type="file" class="form-control" name="profilepic" id="profilePic"
 												placeholder="Upload a profile picture" required="required">
 										</div>
 									</div>
+									<!-- Health status -->
+									<div class="control-group">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-user"></i></span>
+											</div>
+											<select id = "healthStatus" name="healthStatus" placeholder ="Health Status" required="required"
+											class="form-control">
+               								<option value = "1">Self-Isolating - due to suspected COVID-19</option>
+               								<option value = "2">Quarantine due to exposure</option>
+               								<option value = "3">Healthy</option>
+               								<option value = "4">Recovered from COVID-19</option>
+             								</select>
+										</div>
+									</div>		
+										<!-- User Biography -->					
 									<div class="control-group">
 										<div class="input-group">
 											<div class="input-group-prepend">
@@ -69,11 +63,11 @@
 												</span>
 											</div>
 											<input type="test" class="form-control" name="userbio"
-												id="userbio" placeholder="User Bio" required="required">
+												id="userBio" placeholder="User Bio" required="required">
 										</div>
 									</div>
 									<div class="control-group">
-										<!-- Button -->
+										<!--Update Button -->
 										<button class="btn btn-primary btn-lg">Update</button>
 									</div>
 								</fieldset>
@@ -82,7 +76,6 @@
 					</c:when>
 					<c:otherwise>
 						<c:choose>
-					
 							</c:otherwise>
 
 						</c:choose>

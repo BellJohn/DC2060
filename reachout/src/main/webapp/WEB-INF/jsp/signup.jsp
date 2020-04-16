@@ -29,6 +29,28 @@
 									<p>Please fill in this form to create an account!</p>
 									<hr>
 									<div class="control-group">
+										<!-- First name -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-user"></i></span>
+											</div>
+											<input type="text" class="form-control" name="firstName" id="firstName"
+												placeholder="First Name" required="required">
+										</div>
+									</div>
+									<div class="control-group">
+										<!-- Last Name -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-user"></i></span>
+											</div>
+											<input type="text" class="form-control" name="lastName" id="lastName"
+												placeholder="Last Name" required="required">
+										</div>
+									</div>
+									<div class="control-group">
 										<!-- Username -->
 										<div class="input-group">
 											<div class="input-group-prepend">
@@ -40,14 +62,25 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<!-- E-mail -->
+										<!-- Email Address -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-user"></i></span>
+											</div>
+											<input type="text" class="form-control" name="email" id="email"
+												placeholder="Email Address" required="required">
+										</div>
+									</div>
+									<div class="control-group">
+										<!-- Date of Birth-->
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1">
 													<i class="fa fa-paper-plane"></i></span>
 											</div>
-											<input type="email" class="form-control" name="email" id="email"
-												placeholder="Email Address" required="required">
+											<input type="text" class="form-control" name="dob" id="dob"
+												placeholder="Date of Birth" required="required">
 										</div>
 									</div>
 									<div class="control-group">
