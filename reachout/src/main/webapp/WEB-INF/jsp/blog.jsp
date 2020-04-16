@@ -11,25 +11,24 @@
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
+		
 		<div class="jumbotron">
 			<h2>ReachOut development blog</h2>
 			<p>See how our developers are getting on with the increasing pressures and demand for this type of application. We are motivated to get this app released to the public as soon as we can. </p>
-			
 		</div>
-		<div class="row">
-			<div class="col-md-6 col-md-offset-3">
 
-				<c:forEach items="${blogPosts}" var="post">
-					<tr>      
-						<td>${post.title}</td>
-						<td>${post.author}</td>
-						<td>${post.content}</td>
-					</tr>
-				</c:forEach>
+		<c:forEach items="${blogPosts}" var="post">
 
+			<div class="card mb-3 blogpost">
+				<div class="card-body">
+					<h5 class="card-title">${post.title}</h5>
+					<p class="card-text">${post.content}</p>
+					<p class="card-text"><small class="text-muted">${post.author}, ${post.date}</small></p>
+				  </div>
 			</div>
-		</div>
-	</div>
 
+		</c:forEach>
+
+	</div>
 </body>
 </html>

@@ -35,8 +35,9 @@ public class PostReader {
 
                 String title = br.readLine();
                 String author = br.readLine();
+                String date = br.readLine();
                 String content = br.readLine();
-                Post p = new Post(title, author, content);
+                Post p = new Post(title, author, date, content);
 
                 posts.add(p);
             }

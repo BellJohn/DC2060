@@ -19,10 +19,12 @@ public class PostReaderTest {
 
         assertEquals("Test Blog Post Title", posts.get(0).getTitle());
         assertEquals("Test Author", posts.get(0).getAuthor());
+        assertEquals("Test Date", posts.get(0).getDate());
         assertEquals("Test blog post content. This is just simple text at the moment.", posts.get(0).getContent());
 
         assertEquals("Test", posts.get(1).getTitle());
         assertEquals("Blog", posts.get(1).getAuthor());
+        assertEquals("Date", posts.get(1).getDate());
         assertEquals("Two", posts.get(1).getContent());
 
         assertEquals(2, posts.size());
