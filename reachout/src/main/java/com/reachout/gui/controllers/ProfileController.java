@@ -1,7 +1,5 @@
 package com.reachout.gui.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,10 +24,13 @@ import com.reachout.models.User;
 import com.reachout.models.UserProfile;
 
 @Controller
-@RequestMapping("/profile")
+@RequestMapping("/updateProfile")
 public class ProfileController {
+
 	public final Logger logger = LogManager.getLogger(ProfileController.class);
-	private static final String VIEW_NAME = "profile";
+
+	private static final String VIEW_NAME = "updateProfile";
+
 	private Authentication auth;
 
 	@GetMapping
@@ -47,7 +49,7 @@ public class ProfileController {
 		mv.addObject("user", username);
 		return mv;
 	}
-	
+
 	/**
 	 * Update user profile. Parameters are profilePic, bio, healthStatus
 	 *TO DO - might have to check that empty fields don't erase data in the db?
@@ -55,34 +57,36 @@ public class ProfileController {
 	 * @param request
 	 * @return
 	 */
-	//@PostMapping
+	@PostMapping
 	public ModelAndView update(HttpServletRequest request) {
 		boolean saveUserDetailsSuccess = false;
 		String profilePic = request.getParameter("profilePic");
 		String bio = request.getParameter("userBio");
 		String healthStatus = request.getParameter("healthStatus");
-		String username = ((SystemUser) auth.getPrincipal()).getUsername();
+		
+		String username = auth.getName();
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 		int userId = userDAO.getUserIdByUsername(username);
-		
+
 		// Populate the user profile db
-			UserProfile profile = new UserProfile(profilePic, bio, healthStatus, userId);
-			
-			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
-				saveUserDetailsSuccess = userProfileDAO.save(profile);
-				if (!saveUserDetailsSuccess) {
-					// Something went wrong updating the profile
-					logger.error("Unable to update profile at this time");
-				}
+		UserProfile profile = new UserProfile(profilePic, bio, healthStatus, userId);
+
+		try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
+			saveUserDetailsSuccess = userProfileDAO.save(profile);
+			if (!saveUserDetailsSuccess) {
+				// Something went wrong updating the profile
+				logger.error("Unable to update profile at this time");
+			}
+		}catch (Exception e) {
+			logger.error("Problem updating user profile");
 		}
-	
-		ModelAndView mv = new ModelAndView(VIEW_NAME);
-		mv.addObject("currentPage", VIEW_NAME);
+		ModelAndView mv = new ModelAndView("profile");
+		mv.addObject("redirect", "profile");
 		mv.addObject("postSent", true);
 		return mv;
 	}
 
 }
 
-	
+
 

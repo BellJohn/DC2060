@@ -10,15 +10,12 @@
 <hibernate-mapping
 	package="com.reachout.models">
 
-	<class name="User" table="USERS">
-		<id name="id" column="USERS_ID">
-			<generator class="increment" />
+	<class name="UserProfile" table="USERPROFILE">
+		<id name="userId" column="USERS_ID">
 		</id>
-		<property name="firstName" type="string" column="USERS_FIRSTNAME" />
-		<property name="lastName" type="string" column="USERS_LASTNAME" />
-		<property name="username" type="string" column="USERS_USERNAME" />
-		<property name="email" type="string" column="USERS_EMAIL" />
-		<property name="dob" type="string" column="USERS_DOB" />
+		<property name="bio" type="string" column="BIO" />
+		<property name="profilePic" type="string" column="PROFILE_PIC" />
+		<property name="healthStatus" type="string" column="HEALTH_STATUS" />
 	</class>
 
 </hibernate-mapping>

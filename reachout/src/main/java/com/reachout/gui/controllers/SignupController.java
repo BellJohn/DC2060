@@ -112,9 +112,6 @@ public class SignupController {
 				}
 			} catch (Exception e) {
 				result.addError("Duplicate Username", "This username is already taken");
-				if (saveUserSuccess) {
-					result.addError("woo success", "user is saved!!!");
-				}
 				result.setOutcome(false);
 				logger.error("Unable to save the user: This username is already taken");
 			}

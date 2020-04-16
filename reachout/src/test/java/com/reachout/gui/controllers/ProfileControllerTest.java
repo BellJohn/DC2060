@@ -29,5 +29,7 @@ class ProfileControllerTest {
 		assertEquals("username", result.getModel().get("user"));
 		assertEquals("profile", result.getModel().get("currentPage"));
 	}
+	
+	
 
 }

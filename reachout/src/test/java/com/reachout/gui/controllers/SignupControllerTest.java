@@ -25,7 +25,7 @@ import com.reachout.models.User;
 
 class SignupControllerTest {
 
-	private static User user = new User("first", "last", "testUser", "test@test.com", "2000-10-02");
+	private static User user = new User("first", "last", "testUser", "test@test.com", "2000/10/02");
 
 	@BeforeEach
 	@AfterEach
@@ -60,8 +60,8 @@ class SignupControllerTest {
 	@Test
 	void signUpValidUserTest() throws ParseException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
-		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
-		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn("last");
+		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn(user.getFirstName());
+		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn(user.getLastName());
 		Mockito.when(mockedRequest.getParameter("username")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("email")).thenReturn(user.getEmail());
 		Mockito.when(mockedRequest.getParameter("dob")).thenReturn("20/09/1993");
@@ -152,11 +152,10 @@ class SignupControllerTest {
 			assertTrue(errors.keySet().contains("Passwords do not match"));
 		}
 	}
-	/*
-	//to be completed
+
 	@Test
 	void signUpUnderageUserTest() throws ParseException{
-		String dobString = ("1997-07-20");
+		String dobString = ("20/09/2010");
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
 		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn("last");
@@ -182,5 +181,5 @@ class SignupControllerTest {
 			assertEquals(dobString, errors.get("You must be over 18 to sign up"));
 		}
 	}
-		*/
+		
 }
