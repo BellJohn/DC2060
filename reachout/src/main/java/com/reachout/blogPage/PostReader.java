@@ -73,9 +73,11 @@ public class PostReader {
         } catch (IOException e) {
             //This shouldn't ever be reached, but report errors and return the array
             e.printStackTrace();
+            br.close();
             return posts;
         }  
 
+        br.close();
         return posts;
     }
 

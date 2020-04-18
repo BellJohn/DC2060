@@ -27,7 +27,7 @@ public class BlogPageController {
     public final Logger logger = LogManager.getLogger(BlogPageController.class);
 
     private static final String VIEW_NAME = "blog";
-    private static final String BLOGS_FILE_PATH = "blogposts/"; //Relative from the resources folder
+    private static final String POSTS_FILE_PATH = "blogposts/"; //Relative from the resources folder
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -37,7 +37,7 @@ public class BlogPageController {
         mv.addObject("currentPage", VIEW_NAME);
         
         //Create a new instance of type PostReader, read the posts and then add them to the page
-        PostReader pr = new PostReader(BLOGS_FILE_PATH);
+        PostReader pr = new PostReader(POSTS_FILE_PATH);
         ArrayList<Post> blogPosts = pr.readPosts();
         mv.addObject("blogPosts", blogPosts);
 
