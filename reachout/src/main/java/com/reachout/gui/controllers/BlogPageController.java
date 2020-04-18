@@ -13,6 +13,13 @@ import java.util.ArrayList;
 import com.reachout.blog.PostReader;
 import com.reachout.models.Post;
 
+/**
+ * Controller for the blog page, responsible for creating and 
+ * calling the relevant classes to create the blog posts.
+ * 
+ * @author Jordan
+ * 
+ */
 @Controller
 @RequestMapping("/blog")
 public class BlogPageController {
@@ -20,7 +27,7 @@ public class BlogPageController {
     public final Logger logger = LogManager.getLogger(BlogPageController.class);
 
     private static final String VIEW_NAME = "blog";
-    private static final String FILE_PATH = "blogposts/";
+    private static final String BLOGS_FILE_PATH = "blogposts/"; //Relative from the resources folder
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -29,7 +36,8 @@ public class BlogPageController {
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
         mv.addObject("currentPage", VIEW_NAME);
         
-        PostReader pr = new PostReader(FILE_PATH);
+        //Create a new instance of type PostReader, read the posts and then add them to the page
+        PostReader pr = new PostReader(BLOGS_FILE_PATH);
         ArrayList<Post> blogPosts = pr.readPosts();
         mv.addObject("blogPosts", blogPosts);
 

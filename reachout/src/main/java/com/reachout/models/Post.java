@@ -1,6 +1,13 @@
 
 package com.reachout.models;
 
+/**
+ * Used to store all relevant post content so that it can
+ * be easily accessed for display on the relevant page.
+ * 
+ * @author Jordan
+ * 
+ */
 public class Post {
     private String title;
     private String author;
