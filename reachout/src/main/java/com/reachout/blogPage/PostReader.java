@@ -63,21 +63,22 @@ public class PostReader {
                     }
                 }
 
+                br.close();
+
                 //Ensure that all fields have appropriate values before adding to posts
                 if (checkFileContent(title, author, date, content)) {
                     Post p = new Post(title, author, date, content);
                     posts.add(p);
                 }
+
             }
 
         } catch (IOException e) {
             //This shouldn't ever be reached, but report errors and return the array
             e.printStackTrace();
-            br.close();
             return posts;
         }  
 
-        br.close();
         return posts;
     }
 
