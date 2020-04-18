@@ -34,6 +34,30 @@ public class PostReaderTest {
     }
 
     /**
+     * Test to ensure that blog posts with multiple paragraphs (more lines
+     * of content after the first four) have paragraph spacing added 
+     * appropriately
+     * 
+     */
+    @Test
+    public void testMultilineContent() {
+        PostReader pr = new PostReader("PostReaderTestFiles/MultilineContentTest/");
+        ArrayList<Post> posts = pr.readPosts();
+
+        assertEquals("Title", posts.get(0).getTitle());
+        assertEquals("Author", posts.get(0).getAuthor());
+        assertEquals("Date", posts.get(0).getDate());
+        assertEquals("Content<br/><br/>Content 2<br/><br/>Content 3<br/><br/>Content 4", posts.get(0).getContent());
+
+        assertEquals("title", posts.get(1).getTitle());
+        assertEquals("author", posts.get(1).getAuthor());
+        assertEquals("date", posts.get(1).getDate());
+        assertEquals("content<br/><br/>content 2<br/><br/>content 3<br/><br/>content 4", posts.get(1).getContent());
+
+        assertEquals(2, posts.size());
+    }
+
+    /**
      * Tests to see if the correct file objects are created when given
      * a valid directory containing multiple files.
      */
@@ -99,7 +123,7 @@ public class PostReaderTest {
     public void testIncorrectFileFormat() {
         PostReader pr = new PostReader("PostReaderTestFiles/IncorrectFileTest/");
         ArrayList<Post> posts = pr.readPosts();
-        
+
         assertEquals(0, posts.size());
     }
 

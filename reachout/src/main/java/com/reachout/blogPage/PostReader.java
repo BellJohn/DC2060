@@ -55,6 +55,14 @@ public class PostReader {
                 String date = br.readLine();
                 String content = br.readLine();
 
+                //After the first four lines, treat any subsequent lines as new paragraphs of content
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (!line.matches("\\s*")) {
+                        content += "<br/><br/>" + line;
+                    }
+                }
+
                 //Ensure that all fields have appropriate values before adding to posts
                 if (checkFileContent(title, author, date, content)) {
                     Post p = new Post(title, author, date, content);
