@@ -1,11 +1,8 @@
 package com.reachout.blog;
 
 import com.reachout.models.Post;
-import com.reachout.blog.PostReader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.AfterEach;
 import java.util.ArrayList;
 
 /**

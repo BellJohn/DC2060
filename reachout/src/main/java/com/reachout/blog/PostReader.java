@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException; 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Used for converting all files from a specified directory into instances of class Post.
@@ -18,6 +20,7 @@ import java.io.IOException;
 public class PostReader {
 
     private String directory;
+    private static final Logger logger = LogManager.getLogger(PostReader.class);
 
     /**
      * 
@@ -34,7 +37,7 @@ public class PostReader {
      */
     public ArrayList<Post> readPosts() {
 
-        ArrayList<Post> posts = new ArrayList();
+        ArrayList<Post> posts = new ArrayList<>();
 
         //Read each file into a file object, and return the empty array if none were found. 
         File[] files = getFilesFromDirectory();
@@ -45,9 +48,8 @@ public class PostReader {
         //Sort files lexicographically
         Arrays.sort(files);
 
-        try {  
-            for(File file : files) {
-                BufferedReader br = new BufferedReader(new FileReader(file)); 
+        for(File file : files) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) { 
 
                 //Read each of the relevant lines into the relevant variable, then create the object
                 String title = br.readLine();
@@ -63,21 +65,17 @@ public class PostReader {
                     }
                 }
 
-                br.close();
-
                 //Ensure that all fields have appropriate values before adding to posts
                 if (checkFileContent(title, author, date, content)) {
                     Post p = new Post(title, author, date, content);
                     posts.add(p);
                 }
-
+            } catch (IOException e) {
+                //This shouldn't ever be reached, but report errors and return the array
+                logger.error("POSTREADER ERROR when reading file '" + file.getName() + "' from directory '" + directory + "'.", e);
+                return posts;
             }
-
-        } catch (IOException e) {
-            //This shouldn't ever be reached, but report errors and return the array
-            e.printStackTrace();
-            return posts;
-        }  
+        }
 
         return posts;
     }
@@ -87,13 +85,13 @@ public class PostReader {
      * given directory.
      * 
      */
-    public File[] getFilesFromDirectory() {
+    private File[] getFilesFromDirectory() {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(directory);
 
         //Check to see if directory nonexistant or empty
         if (url == null) {
-            return null;
+            return new File[] {};
         }
 
         //Return array of all files found on path
@@ -106,7 +104,7 @@ public class PostReader {
      * content.
      * 
      */
-    public Boolean checkFileContent(String title, String author, String date, String content) {
+    private Boolean checkFileContent(String title, String author, String date, String content) {
 
         //Check if any fields are null. If they are, return false.
         if (title == null || author == null || date == null || content == null) {
