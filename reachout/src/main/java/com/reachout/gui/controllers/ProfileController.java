@@ -42,6 +42,8 @@ public class ProfileController {
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
+		
+		healthDAO = new HibernateHealthStatusDAOImpl();
 		// Test to see if the user is logged in
 		auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
@@ -54,8 +56,7 @@ public class ProfileController {
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("user", username);
-		List<HealthStatus> healthList = new ArrayList<HealthStatus>();
-		healthList = healthDAO.getAllHealthStatuses();
+		List<String> healthList = healthDAO.getAllHealthStatuses();
 		mv.addObject("healthList", healthList);
 		return mv;
 	}

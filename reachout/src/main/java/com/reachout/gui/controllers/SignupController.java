@@ -132,5 +132,4 @@ public class SignupController {
 		mv.addObject("validationErrors", result.getErrors());
 		return mv;
 	}
-
 }

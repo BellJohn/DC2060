@@ -14,7 +14,7 @@
     <id name="id" column="HEALTHSTATUS_ID">
 			<generator class="increment" />
 		</id>
-		<property name="Status" type="string" column="STATUS">
+		<property name="status" type="string" column="STATUS">
     </property>
 	</class>
 

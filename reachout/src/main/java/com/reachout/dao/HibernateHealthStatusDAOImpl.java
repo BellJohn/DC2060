@@ -41,11 +41,11 @@ public class HibernateHealthStatusDAOImpl extends HibernateDAO {
 	 * @return list of health status
 	 */
 		
-	public List<HealthStatus> getAllHealthStatuses() {
-		List<HealthStatus> statuses = null;
-		try (Session session = HibernateDAO.createSessionFactory().openSession())
+	public List<String> getAllHealthStatuses() {
+		List<String> statuses = null;
+		try (Session session = this.getSessionFactory().openSession())
 		{
-			Query q = session.createQuery("SELECT status FROM HealthStatus status", HealthStatus.class);
+			Query q = session.createQuery("SELECT status.status FROM HealthStatus status");
 			statuses = q.getResultList();
 		}
 		return statuses;

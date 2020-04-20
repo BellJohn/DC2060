@@ -1,6 +1,5 @@
 package com.reachout.gui.controllers;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +32,26 @@ public class ProfilePageController {
 
 	public final Logger logger = LogManager.getLogger(ProfilePageController.class);
 
-	private static final String VIEW_NAME = "updateProfile";
+	private static final String VIEW_NAME = "profile";
 	private HibernateHealthStatusDAOImpl healthDAO;
+	private HibernateUserDAOImpl userDAO;
+	private HibernateUserProfileDAOImpl userProfileDAO;
+	private String firstName;
+	private String lastName;
+	private String profilePic;
+	private String bio;
 
 	private Authentication auth;
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
+		healthDAO = new HibernateHealthStatusDAOImpl();
+		userDAO = new HibernateUserDAOImpl();
+		userProfileDAO = new HibernateUserProfileDAOImpl();
+		firstName = null;
+		lastName = null;
+		bio = null;
+		profilePic = null;
 		// Test to see if the user is logged in
 		auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
@@ -48,52 +60,20 @@ public class ProfilePageController {
 		} else {
 			username =  (String) auth.getPrincipal();
 		}
-		logger.debug("Reached profile Controller");
+		
+		logger.debug("Reached profilePage Controller");
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
-		mv.addObject("user", username);
-		List<HealthStatus> healthList = new ArrayList<HealthStatus>();
+		firstName ="Jess";
+		
+		mv.addObject("firstName", firstName);
+		mv.addObject("last", lastName);
+		mv.addObject("bio", bio);
+		List<String> healthList = new ArrayList<String>();
 		healthList = healthDAO.getAllHealthStatuses();
 		mv.addObject("healthList", healthList);
 		return mv;
 	}
-
-	/**
-	 * Update user profile. Parameters are profilePic, bio, healthStatus
-	 *TO DO - might have to check that empty fields don't erase data in the db?
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@PostMapping
-	public ModelAndView update(HttpServletRequest request) {
-		boolean saveUserDetailsSuccess = false;
-		String profilePic = request.getParameter("profilePic");
-		String bio = request.getParameter("userBio");
-		HealthStatus healthStatus =new HealthStatus(request.getParameter("healthStatus"));
-		
-		String username = auth.getName();
-		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-		int userId = userDAO.getUserIdByUsername(username);
-
-		// Populate the user profile db
-		UserProfile profile = new UserProfile(profilePic, bio, healthStatus, userId);
-
-		try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
-			saveUserDetailsSuccess = userProfileDAO.save(profile);
-			if (!saveUserDetailsSuccess) {
-				// Something went wrong updating the profile
-				logger.error("Unable to update profile at this time");
-			}
-		}catch (Exception e) {
-			logger.error("Problem updating user profile");
-		}
-		ModelAndView mv = new ModelAndView("profile");
-		mv.addObject("redirect", "profile");
-		mv.addObject("postSent", true);
-		return mv;
-	}
-
 }
 
 

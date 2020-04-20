@@ -7,6 +7,7 @@
 </head>
 
 <body>
+<%= session.getAttribute( "theName" ) %>
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
@@ -15,7 +16,8 @@
 				<div class="well profile">
 					<div class="col-sm-12">
 						<div class="col-xs-12 col-sm-8">
-							<h2>First Last</h2>
+						
+							<h2>${firstName} Last</h2>
 							<p>
 								<strong>User Bio: </strong> 
 							</p>

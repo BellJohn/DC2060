@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.reachout.dao.HibernateHealthStatusDAOImpl;
+import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.Password;
 import com.reachout.models.User;
 
 class SignupControllerTest {
@@ -44,7 +48,7 @@ class SignupControllerTest {
 	@Test
 	void initPageTest() throws ParseException{
 
-		Authentication auth = new UsernamePasswordAuthenticationToken("username", "passwod");
+		Authentication auth = new UsernamePasswordAuthenticationToken("username", "password");
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
 		SecurityContextHolder.setContext(securityContext);
@@ -82,6 +86,11 @@ class SignupControllerTest {
 			}
 			assertTrue(errors.isEmpty());
 		}
+		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
+			List<Password> list = dao.getAllPasswords();
+			assertEquals(1,list.get(0).getPwdId());
+		}
+		
 	}
 
 	@Test
@@ -120,7 +129,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpInvalidUserTest() throws ParseException{
+	void signUpInvalidEmailTest() throws ParseException{
 		String badEmail = "NOT_A_GOOD_EMAIL.com";
 
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
@@ -133,10 +142,7 @@ class SignupControllerTest {
 		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("DIFFERENT_PASSWORD");
 
 		SignupController sc = new SignupController();
-		sc.signup(mockedRequest);
-		// Call it again so the duplicate user generation is attempted
 		ModelAndView result = sc.signup(mockedRequest);
-
 		assertNotNull(result);
 		assertEquals("signup", result.getViewName());
 		assertTrue((boolean) result.getModel().get("postSent"));
@@ -151,6 +157,8 @@ class SignupControllerTest {
 			assertEquals(badEmail, errors.get("Email is not of valid form"));
 			assertTrue(errors.keySet().contains("Passwords do not match"));
 		}
+		
+		
 	}
 
 	@Test

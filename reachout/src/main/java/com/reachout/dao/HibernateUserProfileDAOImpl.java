@@ -44,6 +44,21 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 		}
 		return true;
 	}
+	
+	
+	/**
+	 * Fetches a profile from a user ID in the database
+	 * 
+	 * @return
+	 */
+	public String getProfileById(int userID) {
+		try (Session session = this.getSessionFactory().openSession()) {
+			Query query  = session.createQuery("SELECT profile FROM UserProfile profile where user_ID = :userID ");
+			query.setParameter("userId", userID);
+			return (String) query.getSingleResult();
+		}
+	}
+
 
 	/**
 	 * Deletes from the database where the user has a given ID
@@ -73,7 +88,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 */
 	public String getProfilePicById(int userID) {
 		try (Session session = this.getSessionFactory().openSession()) {
-			Query query  = session.createQuery("SELECT PROFILE_PIC FROM userprofile where user_ID = :userID ");
+			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where user_ID = :userID ");
 			query.setParameter("userId", userID);
 			return (String) query.getSingleResult();
 		}

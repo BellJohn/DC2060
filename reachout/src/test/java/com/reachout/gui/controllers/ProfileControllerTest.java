@@ -31,13 +31,13 @@ class ProfileControllerTest {
 	@AfterEach
 	public void setup() {
 		try (HibernateHealthStatusDAOImpl dao = new HibernateHealthStatusDAOImpl()) {
-			List<HealthStatus> list = dao.getAllHealthStatuses();
+			List<String> list = dao.getAllHealthStatuses();
+			System.out.println(list);
 			if (list == null) {
 					fail("Retrieve health statuses");
 				}
 			}
 		}
-	
 	
 	@Test
 	void initPageTest(){
