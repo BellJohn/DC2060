@@ -34,4 +34,14 @@ CREATE TABLE reach_out.USERPROFILE (
   `HEALTH_STATUS` varchar(100) NOT NULL,
   PRIMARY KEY (`USER_ID`)
 );
+
+CREATE TABLE reach_out.HEALTHSTATUS (
+  STATUS VARCHAR(100) NOT NULL
+  );
+  
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Self-Isolating - due to suspected COVID-19");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("In quarantine due to exposure to COVID-19");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES( "Self-Isolating - due to health issues");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Recovered from COVID-19");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Healthy");
  

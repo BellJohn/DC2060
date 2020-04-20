@@ -19,7 +19,7 @@ package com.reachout.models;
 		private int userId;
 		private String profilePic;
 		private String bio;
-		private String healthStatus;
+		private HealthStatus healthStatus;
 
 		/**
 		 * 
@@ -35,7 +35,7 @@ package com.reachout.models;
 		 * @param bio
 		 * @param healthStatus
 		 */
-		public UserProfile(String profilePic, String bio, String healthStatus, int userId) {
+		public UserProfile(String profilePic, String bio, HealthStatus healthStatus, int userId) {
 			this.profilePic = profilePic;
 			this.bio = bio;
 			this.healthStatus = healthStatus;
@@ -88,12 +88,20 @@ package com.reachout.models;
 			return userId;
 		}
 
+		
+		/**
+		 * Sets the userID
+		 * @param int
+		 */
+		public void setUserId(int userId) {
+			this.userId = userId;
+		}
 		/**
 		 * Gets the healthStatus as it exists in current memory
 		 * 
 		 * @return healthStatus
 		 */
-		public String getHealthStatus() {
+		public HealthStatus getHealthStatus() {
 			return healthStatus;
 		}
 
@@ -102,7 +110,7 @@ package com.reachout.models;
 		 * 
 		 * @param healthStatus
 		 */
-		public void setHealthStatus(String healthStatus) {
+		public void setHealthStatus(HealthStatus healthStatus) {
 			this.healthStatus = healthStatus;
 		}
 

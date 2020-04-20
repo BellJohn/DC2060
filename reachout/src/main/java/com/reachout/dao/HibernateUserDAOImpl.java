@@ -146,7 +146,7 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 			session.beginTransaction();
 			Query query = session.createQuery("SELECT username FROM User user WHERE USERS_USERNAME = :username");
 			query.setParameter("username", username);
-			return (int) query.getSingleResult();
+			return (Integer)(query.getSingleResult());
 		} catch (NoResultException e) {
 			logger.debug("User ID not found");
 		}

@@ -22,6 +22,14 @@
       you will be able to see requests local to you and start helping immediately. Please ensure that you
       follow social distancing measures to keep yourself and others safe. We offer many different ways to help
       so even if you are vulnerable you may still be able to get involved remotely. </p>
+      <div class="row"></div>
+      <div class="col-md-6 col-md-offset-3">
+      <video width="500" height="400" controls>
+ 	 <source src="images/reachoutpitch.mp4" type="video/mp4">
+		Your browser does not support the video tag.
+		</video>
+		</div>
+		</div>
 			<p>
 				<a class="btn btn-primary btn-large" href="about">Learn more</a>
 				<link type="text/css" rel="stylesheet" href="css/cc.css" />

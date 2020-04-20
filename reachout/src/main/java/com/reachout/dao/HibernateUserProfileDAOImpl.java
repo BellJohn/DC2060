@@ -26,7 +26,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 
 	/**
 	 * <p>
-	 * Attempts to persist a new user in the database.
+	 * Attempts to persist a new user profile in the database.
 	 * </p>
 	 * 
 	 * @param user
@@ -67,7 +67,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	}
 
 	/**
-	 * Fetches a list of all the user objects stored in the database
+	 * Fetches a profile picture from a user ID in the database
 	 * 
 	 * @return
 	 */
@@ -80,9 +80,9 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	}
 
 	/**
-	 * Attempts to update the user. Returns true if successful
+	 * Attempts to update the user profile. Returns true if successful
 	 * 
-	 * @param user
+	 * @param userProfile
 	 * @return
 	 */
 	public boolean updateUserProfile(UserProfile userProfile) {
@@ -97,16 +97,4 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 
 	}
 
-	
-	public User selectByID(int userId) {
-		try (Session session = this.getSessionFactory().openSession()) {
-			session.beginTransaction();
-			Query query = session.createQuery("SELECT user FROM User user WHERE USERS_ID = :userId");
-			
-			return (User) query.getSingleResult();
-		} catch (NoResultException e) {
-			logger.debug("Searched for user with userId [" + userId + "]. Found none");
-		}
-		return null;
-	}
 }

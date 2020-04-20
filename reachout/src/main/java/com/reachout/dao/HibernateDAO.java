@@ -4,10 +4,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 
 public abstract class HibernateDAO implements AutoCloseable {
 
-	private SessionFactory sessionFactory;
+	private static SessionFactory sessionFactory;
 
 	public HibernateDAO() {
 		// configures settings from hibernate.cfg.xml
@@ -23,6 +25,15 @@ public abstract class HibernateDAO implements AutoCloseable {
 	@Override
 	public void close() {
 		this.getSessionFactory().close();
+	}
+	
+	public static SessionFactory createSessionFactory() {
+
+	    Configuration configuration = new Configuration();
+	    configuration.configure("hibernate.cfg.xml");
+	    StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().configure().build();
+	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+	    return sessionFactory;
 	}
 
 }
