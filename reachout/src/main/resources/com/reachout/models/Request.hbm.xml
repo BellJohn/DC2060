@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<!-- ~ Hibernate, Relational Persistence for Idiomatic Java ~ ~ License: 
+	GNU Lesser General Public License (LGPL), version 2.1 or later. ~ See the 
+	lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>. -->
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.reachout.models">
+
+	<class name="Request" table="LISTINGS">
+		<id name="id" column="LST_ID">
+			<generator class="increment" />
+		</id>
+
+		<property name="title" type="string" column="LST_TITLE" />
+		<property name="description" type="string"
+			column="LST_DESCRIPTION" />
+		<property name="county" type="string" column="LST_COUNTY" />
+		<property name="city" type="string" column="LST_CITY" />
+		<property name="userId" type="int" column="LST_USER_ID" />
+		<property name="status" column="LST_STATUS">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.reachout.models.EntityStatus</param>
+			</type>
+		</property>
+		<property name="listingType" column="LST_TYPE">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.reachout.models.ListingType</param>
+			</type>
+		</property>
+		<property name="createdDate" type="long"
+			column="LST_CREATE_DATE" />
+
+	</class>
+
+</hibernate-mapping>

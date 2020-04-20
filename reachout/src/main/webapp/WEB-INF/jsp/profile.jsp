@@ -8,7 +8,6 @@
 
 <body>
 	<div class="container-fluid">
-		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="row">
 			<div class="col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
@@ -35,9 +34,12 @@
 							<p>
 								<small>Requests</small>
 							</p>
-							<button class="btn btn-success btn-block">
-								<span class="fa fa-plus-circle"></span> Create New Request
-							</button>
+							<form action="createRequest">
+								<button class="btn btn-success btn-block">
+									<span class="fa fa-plus-circle"></span> Create New Request
+								</button>
+							</form>
+
 						</div>
 						<div class="col-xs-12 col-sm-4 emphasis">
 							<h2>

@@ -3,6 +3,7 @@
  */
 package com.reachout.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -39,11 +40,39 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 		return password;
 	}
 
-	public Password selectByUserID(int userId) {
+	/**
+	 * Returns all passwords associated to this user
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public List<Password> selectAllByUserID(int userId) {
+		ArrayList<Password> results = new ArrayList<>();
 		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
-			Query query = session.createQuery("SELECT password FROM Password password WHERE PWD_USER_ID = :userId");
+			Query query = session.createQuery("SELECT password FROM Password password WHERE PWD_USER_ID = :userId",
+					Password.class);
 			query.setParameter("userId", userId);
+			List<?> output = query.getResultList();
+			for (Object obj : output) {
+				if (obj instanceof Password) {
+					results.add((Password) obj);
+				}
+			}
+		} catch (NoResultException e) {
+			logger.debug("Searched for password with pwd_USER_ID [" + userId + "]. Found none");
+		}
+		return results;
+	}
+
+	public Password selectInUseByUserId(int userId) {
+		try (Session session = this.getSessionFactory().openSession()) {
+			session.beginTransaction();
+			Query query = session.createQuery(
+					"SELECT password FROM Password password WHERE PWD_USER_ID = :userId order by PWD_CREATE_DATE DESC",
+					Password.class);
+			query.setParameter("userId", userId);
+			query.setMaxResults(1);
 			return (Password) query.getSingleResult();
 		} catch (NoResultException e) {
 			logger.debug("Searched for password with pwd_USER_ID [" + userId + "]. Found none");

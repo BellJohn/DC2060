@@ -115,7 +115,7 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * Search the database for a user with a given username
 	 * 
 	 * @param username
-	 * @return
+	 * @return the User found or null if nothing matches
 	 */
 	public User selectUser(String username) {
 		try (Session session = this.getSessionFactory().openSession()) {

@@ -76,7 +76,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 				HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
 			userFound = userDAO.selectUser(username);
 			if (userFound != null) {
-				passwordFound = passwordDAO.selectByUserID(userFound.getId());
+				passwordFound = passwordDAO.selectInUseByUserId(userFound.getId());
 			}
 		} catch (HibernateException e) {
 			logger.error("Unable to close the resource for HibernateUserDAOImpl or HibernatePasswordDAOImpl", e);
