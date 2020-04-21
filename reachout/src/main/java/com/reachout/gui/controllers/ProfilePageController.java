@@ -64,13 +64,19 @@ public class ProfilePageController {
 		logger.debug("Reached profilePage Controller");
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
-		firstName ="Jess";
-		
+		firstName = userDAO.selectUser(username).getFirstName();
+		lastName = userDAO.selectUser(username).getLastName();
+		int userId = userDAO.getUserIdByUsername(username);
+		UserProfile profile = userProfileDAO.getProfileById(userId);
+		bio = profile.getBio();
+		profilePic = profile.getProfilePic();
 		mv.addObject("firstName", firstName);
-		mv.addObject("last", lastName);
+		mv.addObject("lastName", lastName);
 		mv.addObject("bio", bio);
+		mv.addObject("profilePic", profilePic);
 		List<String> healthList = new ArrayList<String>();
 		healthList = healthDAO.getAllHealthStatuses();
+		System.out.println(healthList);
 		mv.addObject("healthList", healthList);
 		return mv;
 	}

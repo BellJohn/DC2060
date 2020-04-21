@@ -17,6 +17,8 @@
 			<div class="col-sm-4">
 						<div class="profile-form">
 							<form action="" method="POST" enctype="multipart/form-data">
+							<c:choose>
+								<c:when test="${empty postSent}">
 								<sec:csrfInput />
 								<fieldset>
 									<div id="legend">
@@ -32,7 +34,7 @@
 												<span class="input-group-text" id="basic-addon1"><i
 														class="fa fa-lock"></i></span>
 											</div>
-											<input type="file" class="form-control" name="profilepic" id="profilePic"
+											<input type="file" class="form-control" name="profilePic" id="profilePic"
 												placeholder="Upload a profile picture">
 										</div>
 									</div>
@@ -43,11 +45,11 @@
 												<span class="input-group-text" id="basic-addon1">
 													<i class="fa fa-user"></i></span>
 											</div>
-											<select id = "healthStatus" name="healthStatus" path="healthStatus" items="${healthList}" placeholder="Health Status"
-											class="form-control">
-             								</select>
-										</div>
+										<select id="healthStatus" name="healthList" class="form-control" 
+											items="${healthList}" placeholder= "Health Status">
+											</select>
 									</div>		
+									</div>
 										<!-- User Biography -->					
 									<div class="control-group">
 										<div class="input-group">
@@ -64,11 +66,20 @@
 										<!--Update Button -->
 										<button class="btn btn-primary btn-lg">Update</button>
 									</div>
-								</fieldset>
+									</fieldset>
+								</c:when>
+							</c:choose>
+								
 							</form>
+							
+							<c:otherwise>
+								<h3>Something was wrong with the data you provided!</h3>
+								<h3>Could not update profile</h3>
+							</c:otherwise>
+							
 						</div>
 			</div>
-			<div class="col-sm-4"></div>
+
 		</div>
 	</div>
 

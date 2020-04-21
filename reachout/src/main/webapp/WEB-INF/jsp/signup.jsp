@@ -35,6 +35,7 @@
 												<span class="input-group-text" id="basic-addon1">
 													<i class="fa fa-user"></i></span>
 											</div>
+											
 											<input type="text" class="form-control" name="firstName" id="firstName"
 												placeholder="First Name" required="required">
 										</div>
@@ -70,6 +71,8 @@
 											</div>
 											<input type="text" class="form-control" name="email" id="email"
 												placeholder="Email Address" required="required">
+												
+												<form:textarea path="address" rows="5" cols="30" />
 										</div>
 									</div>
 									<div class="control-group">

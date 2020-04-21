@@ -20,6 +20,10 @@
 	float:right;
 }
 
+.midpage {
+	margin: 7.5px 7.5px;
+}
+
 .homeimage {
 	height: 60%;
     width: 90%;

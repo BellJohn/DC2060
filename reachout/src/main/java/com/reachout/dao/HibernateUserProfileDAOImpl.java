@@ -1,5 +1,6 @@
 package com.reachout.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -51,11 +52,11 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 * 
 	 * @return
 	 */
-	public String getProfileById(int userID) {
+	public UserProfile getProfileById(int userID) {
 		try (Session session = this.getSessionFactory().openSession()) {
-			Query query  = session.createQuery("SELECT profile FROM UserProfile profile where user_ID = :userID ");
-			query.setParameter("userId", userID);
-			return (String) query.getSingleResult();
+			Query query  = session.createQuery("SELECT profile FROM UserProfile profile where USER_ID = :userID ");
+			query.setParameter("userID", userID);
+			return (UserProfile) query.getSingleResult();
 		}
 	}
 
@@ -78,7 +79,15 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 			session.getTransaction().rollback();
 			return false;
 		}
-
+	}
+	
+	public List<UserProfile> getAllProfiles(){
+		List<UserProfile> profiles = new ArrayList<UserProfile>();
+		try( Session session = this.getSessionFactory().openSession()){
+			Query query = session.createQuery("SELECT userprofile from UserProfile userprofile", UserProfile.class);
+			profiles = query.getResultList();
+			return profiles;
+		}
 	}
 
 	/**
@@ -88,7 +97,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 */
 	public String getProfilePicById(int userID) {
 		try (Session session = this.getSessionFactory().openSession()) {
-			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where user_ID = :userID ");
+			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userId", userID);
 			return (String) query.getSingleResult();
 		}
@@ -109,7 +118,6 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 			return false;
 		}
 		return true;
-
 	}
 
 }

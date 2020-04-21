@@ -11,7 +11,7 @@
 	package="com.reachout.models">
 
 	<class name="UserProfile" table="USERPROFILE">
-		<id name="userId" column="USERS_ID">
+		<id name="userId" column="USER_ID">
 		</id>
 		<property name="bio" type="string" column="BIO" />
 		<property name="profilePic" type="string" column="PROFILE_PIC" />

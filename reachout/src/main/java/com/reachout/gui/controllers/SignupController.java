@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -120,10 +121,12 @@ public class SignupController {
 		if (saveUserSuccess) {
 			try {
 				request.login(username, password);
+			    
 			} catch (ServletException e) {
 				logger.error(e.getStackTrace());
 			}
 		}
+		
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("postSent", true);
@@ -133,3 +136,7 @@ public class SignupController {
 		return mv;
 	}
 }
+
+
+
+

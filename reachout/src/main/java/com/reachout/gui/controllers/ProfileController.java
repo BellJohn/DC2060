@@ -73,31 +73,28 @@ public class ProfileController {
 		boolean saveUserDetailsSuccess = false;
 		String profilePic = request.getParameter("profilePic");
 		String bio = request.getParameter("userBio");
-		HealthStatus healthStatus =new HealthStatus(request.getParameter("healthStatus"));
-		
-		String username = auth.getName();
-		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-		int userId = userDAO.getUserIdByUsername(username);
+		String healthStatus = request.getParameter("healthStatus");
 
+		try(HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()){
+			int userId = userDAO.getUserIdByUsername("User2");
+			UserProfile profile = new UserProfile(profilePic, bio, healthStatus, userId);
 		// Populate the user profile db
-		UserProfile profile = new UserProfile(profilePic, bio, healthStatus, userId);
-
-		try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
-			saveUserDetailsSuccess = userProfileDAO.save(profile);
-			if (!saveUserDetailsSuccess) {
-				// Something went wrong updating the profile
-				logger.error("Unable to update profile at this time");
-			}
-		}catch (Exception e) {
-			logger.error("Problem updating user profile");
+			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
+				saveUserDetailsSuccess = userProfileDAO.save(profile);
+				if (!saveUserDetailsSuccess) {
+					// Something went wrong updating the profile
+					logger.error("Unable to update profile at this time");
+				}
+			}	
 		}
+			
+	
 		ModelAndView mv = new ModelAndView("profile");
 		mv.addObject("redirect", "profile");
-		mv.addObject("postSent", true);
+		mv.addObject("postSent", saveUserDetailsSuccess);
 		return mv;
-	}
-	
 
+	}
 }
 
 
