@@ -1,0 +1,8 @@
+Development Update #1
+ReachOut Team
+21st April 2020
+Welcome! We've just launched the proof of concept website where users can begin learning about the services that we plan to offer and get a deeper understanding of the things that we aim to provide. Since this is our first release, we've added a new homepage where you can watch a video explaining our plans, as well as a blog page which you are currently on. The blog page is where we plan on adding regular development updates as time goes on so that you know what's happening, as it's happening. We've also launched our basic sign-up and login features where you can begin building out your profile in preperation for the request feature, which is coming soon. 
+Coming Soon:
+The ability to create a new request
+The ability to accept a request, as well as mark it as complete
+Please bear in mind that we're still within the proof of concept and work in progress phase, and everything may not be working as expected at the current time. This will be developed incrementally within the coming months to the point where we should have a fully usable system, ready for you to use. 
