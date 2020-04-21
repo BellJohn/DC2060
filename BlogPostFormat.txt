@@ -1,0 +1,25 @@
+Blog post file placement:
+Currently, the file should be placed in reachout/src/main/resources/blogposts/
+
+
+Blog post file naming:
+The name of the file should simply be titled blog_#.txt where # is replaced with the next number in the sequence, which you can see by looking into the file path specified just above. They are named in this way so that the files are displayed newest first.
+
+
+Blog Post file contents:
+1. Line one of the file should be the title of the blog post
+2. Line two of the file should be the author of the blog post
+3. Line three of the file should be the date that the blog post was first published to the website. 
+4. Line four is the first paragraph of the blog post itself. 
+5. All subsequent lines after this will appear as further paragraphs for the same blog post. 
+
+The following is an example blog post file:
+Team Development Update
+Dev Team
+19th April 2020
+The team have been making good progress on development so far. This is paragraph one, and it is a very short paragraph.
+One example of recent developments is this blog post page. This is the second paragraph of the post, which will be displayed on a new line with paragraph spacing. 
+
+
+Caveats:
+There is currently no way to add anything like subtitles, images or any formatting other than the ability to denote a new paragraph via having each paragraph on a new line. This should be updated in the future. 
