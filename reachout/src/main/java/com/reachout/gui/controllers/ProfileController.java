@@ -30,7 +30,6 @@ import com.reachout.gui.validators.SignupValidator;
 import com.reachout.gui.validators.ValidationResult;
 import com.reachout.models.*;
 
-
 @Controller
 @RequestMapping("/updateProfile")
 public class ProfileController {
@@ -39,22 +38,20 @@ public class ProfileController {
 
 	private static final String VIEW_NAME = "updateProfile";
 	private HibernateHealthStatusDAOImpl healthDAO;
-	private Authentication auth;
-	
-	
+
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 		healthDAO = new HibernateHealthStatusDAOImpl();
 		// Test to see if the user is logged in
-		auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
-			username =  (String) auth.getPrincipal();
+			username = (String) auth.getPrincipal();
 		}
 		logger.debug("Reached profile Controller");
-		
+
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("user", username);
@@ -69,26 +66,34 @@ public class ProfileController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/updateProfile")
+	@PostMapping()
 	public ModelAndView update(HttpServletRequest request) {
+		logger.debug("Attempting profile update");
+
 		boolean saveUserDetailsSuccess = false;
-		String profilePic = request.getParameter("profilePic");
+//		String profilePic = request.getParameter("profilePic");
 		String bio = request.getParameter("userBio");
 		String healthStatus = request.getParameter("healthStatus");
-
-		try(HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()){
-			int userId = userDAO.getUserIdByUsername("User2");
-			UserProfile profile = new UserProfile(profilePic, bio, healthStatus, userId);
-		// Populate the user profile db
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username;
+		if (auth.getPrincipal() instanceof SystemUser) {
+			username = ((SystemUser) auth.getPrincipal()).getUsername();
+		} else {
+			username = (String) auth.getPrincipal();
+		}
+		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
+			int userId = userDAO.getUserIdByUsername(username);
+			UserProfile profile = new UserProfile("TESTIMAGE", bio, healthStatus, userId);
+			// Populate the user profile db
 			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
-				saveUserDetailsSuccess = userProfileDAO.save(profile);
+				saveUserDetailsSuccess = userProfileDAO.saveOrUpdate(profile);
 				if (!saveUserDetailsSuccess) {
 					// Something went wrong updating the profile
 					logger.error("Unable to update profile at this time");
 				}
-			}	
+			}
 		}
-	
+
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("postSent", saveUserDetailsSuccess);
@@ -96,6 +101,3 @@ public class ProfileController {
 
 	}
 }
-
-
-

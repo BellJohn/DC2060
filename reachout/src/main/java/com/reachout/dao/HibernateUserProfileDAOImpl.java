@@ -34,10 +34,10 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 * @return true if successful, false otherwise
 	 */
 
-	public boolean save(UserProfile userProfile) {
+	public boolean saveOrUpdate(UserProfile userProfile) {
 		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
-			session.save(userProfile);
+			session.saveOrUpdate(userProfile);
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException | ConstraintViolationException e) {

@@ -15,13 +15,14 @@
 		<div class="row">
 			<div class="col-sm-4">
 				<div class="profile-form" style="height: 424px;">
-					<form action="" method="POST" enctype="multipart/form-data"
-						style="height: 399px;">
+					<form action="" method="POST"style="height: 399px;">
+					<!--  enctype="multipart/form-data"	 -->
 						<sec:csrfInput />
 						<fieldset>
 						<p>Update your profile information</p>
 						<hr>
 						<!-- Profile Picture -->
+						<!-- 
 						<div class="control-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -31,7 +32,7 @@
 								<input type="file" class="form-control" name="profilePic"
 									id="profilePic" placeholder="Upload a profile picture">
 							</div>
-						</div>
+						</div>-->
 						<!-- Health status -->
 						<div class="control-group" style="height: 37px;">
 							<div class="input-group">
@@ -40,7 +41,7 @@
 										class="fa fa-user"></i></span>
 								</div>
 
-								<select id="healthStatus" name="healthList" class="form-control"
+								<select id="healthStatus" name="healthStatus" class="form-control"
 									placeholder="Health Status">
 									<c:forEach var="hs" items="${healthList}">
 										<option><c:set var="h" value="${hs}" />
@@ -61,7 +62,7 @@
 												class="fa fa-lock"></i>
 											</span>
 										</div>
-										<input type="textarea" class="form-control" name="userbio"
+										<input type="textarea" class="form-control" name="userBio"
 											path="bio" id="userBio" placeholder="User Bio"
 											maxLength="750" rows="4" cols="20"
 											style="width: 253px; height: 57px">
