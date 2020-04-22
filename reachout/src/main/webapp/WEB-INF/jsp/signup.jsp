@@ -141,7 +141,6 @@
 								<h3>Something was wrong with the data you provided!</h3>
 								<h3>${validationErrors}</h3>
 							</c:otherwise>
-
 						</c:choose>
 					</c:otherwise>
 				</c:choose>

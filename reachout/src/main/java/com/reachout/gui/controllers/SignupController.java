@@ -91,7 +91,8 @@ public class SignupController {
 			// Otherwise, build a new User and populate the db
 			User newUser = new User(firstName, lastName, username, email, dob);
 
-			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl(); HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
+			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl(); 
+					HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
 				saveUserSuccess = userDAO.save(newUser);
 				if(saveUserSuccess) {
 					Password newPassword = new Password();

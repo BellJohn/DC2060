@@ -1,8 +1,8 @@
 package com.reachout.gui.controllers;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,9 +12,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,9 +39,9 @@ public class ProfileController {
 
 	private static final String VIEW_NAME = "updateProfile";
 	private HibernateHealthStatusDAOImpl healthDAO;
-
 	private Authentication auth;
-
+	
+	
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 		healthDAO = new HibernateHealthStatusDAOImpl();
@@ -67,7 +69,7 @@ public class ProfileController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping
+	@PostMapping("/updateProfile")
 	public ModelAndView update(HttpServletRequest request) {
 		boolean saveUserDetailsSuccess = false;
 		String profilePic = request.getParameter("profilePic");
