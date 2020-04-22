@@ -37,6 +37,15 @@
 									class="img-circle img-responsive">
 							</figure>
 						</div>
+						<div class="col-xs-12 col-sm-6 text-center">
+						<c:choose>
+  									  <c:when test="${empty healthStatus}">
+        							Health Status : Unknown
+    								</c:when>
+   									 <c:otherwise>
+   									 Health Status :  ${healthStatus}
+    								</c:otherwise>
+								</c:choose>
 					</div>
 					<div class="col-xs-12 col-sm-6 emphasis">
 					<div class="btn-group dropup btn-block">

@@ -42,7 +42,6 @@ public class ProfileController {
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
-		
 		healthDAO = new HibernateHealthStatusDAOImpl();
 		// Test to see if the user is logged in
 		auth = SecurityContextHolder.getContext().getAuthentication();
@@ -53,6 +52,7 @@ public class ProfileController {
 			username =  (String) auth.getPrincipal();
 		}
 		logger.debug("Reached profile Controller");
+		
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("user", username);
@@ -63,7 +63,6 @@ public class ProfileController {
 
 	/**
 	 * Update user profile. Parameters are profilePic, bio, healthStatus
-	 *TO DO - might have to check that empty fields don't erase data in the db?
 	 * 
 	 * @param request
 	 * @return
@@ -87,10 +86,9 @@ public class ProfileController {
 				}
 			}	
 		}
-			
 	
-		ModelAndView mv = new ModelAndView("profile");
-		mv.addObject("redirect", "profile");
+		ModelAndView mv = new ModelAndView(VIEW_NAME);
+		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("postSent", saveUserDetailsSuccess);
 		return mv;
 
