@@ -29,6 +29,14 @@
 						<td>${request.getDescription()}</td>
 						<td>${request.getCounty()}</td>
 						<td>${request.getCity()}</td>
+						<td><form action="viewListing" method="POST">
+						<sec:csrfInput/>
+						<input type="hidden" id="listingType" name="listingType" value="${request.getListingType().getName()}"/>
+						<input type="hidden" id="listingID" name="listingID" value="${request.getId()}"/>
+								<button class="btn btn-success btn-block">
+									<span class="fa fa-info"></span> View Details
+								</button>
+							</form></td>
 					</tr>
 				</c:forEach>
 			</table>

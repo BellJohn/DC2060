@@ -48,9 +48,11 @@
 							<p>
 								<small>Services Offered</small>
 							</p>
-							<button class="btn btn-info btn-block">
-								<span class="fa fa-user"></span> Offer New Service
-							</button>
+							<form action="createService">
+								<button class="btn btn-info btn-block">
+									<span class="fa fa-user"></span> Offer New Service
+								</button>
+							</form>
 						</div>
 						<div class="col-xs-12 col-sm-4 emphasis">
 							<div class="btn-group dropup btn-block">

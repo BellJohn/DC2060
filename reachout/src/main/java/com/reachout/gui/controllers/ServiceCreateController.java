@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reachout.dao.HibernateRequestDAOImpl;
+import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.models.Request;
+import com.reachout.models.Service;
 import com.reachout.models.User;
 
 @Controller
-@RequestMapping("/createRequest")
-public class RequestCreateController {
+@RequestMapping("/createService")
+public class ServiceCreateController {
 
-	public final Logger logger = LogManager.getLogger(RequestCreateController.class);
+	public final Logger logger = LogManager.getLogger(ServiceCreateController.class);
 
-	private static final String VIEW_NAME = "createRequest";
+	private static final String VIEW_NAME = "createService";
 
 	/**
 	 * Arrival on page will trigger this
@@ -36,7 +36,7 @@ public class RequestCreateController {
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 
-		logger.debug("Reached Request Create Controller");
+		logger.debug("Reached ServiceCreate  Controller");
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		return mv;
@@ -53,10 +53,10 @@ public class RequestCreateController {
 	 * @return View representing success or failure
 	 */
 	@PostMapping
-	public ModelAndView submitForm(@RequestParam(name = "reqTitle") String title,
-			@RequestParam(name = "reqDesc", required = false) String description,
-			@RequestParam(name = "reqCounty") String county,
-			@RequestParam(name = "reqCity", required = false) String city, HttpServletRequest request) {
+	public ModelAndView submitForm(@RequestParam(name = "serTitle") String title,
+			@RequestParam(name = "serDesc", required = false) String description,
+			@RequestParam(name = "serCounty") String county,
+			@RequestParam(name = "serCity", required = false) String city, HttpServletRequest request) {
 
 		// TODO Check to see if the content is valid
 
@@ -72,15 +72,15 @@ public class RequestCreateController {
 			}
 		}
 		// Build a new request which will be given the status of "new"
-		Request newRequest = new Request(title, description, county, city, userId);
+		Service newService = new Service(title, description, county, city, userId);
 		boolean createSuccess = false;
-		try (HibernateRequestDAOImpl requestDAO = new HibernateRequestDAOImpl()) {
-			createSuccess = requestDAO.save(newRequest);
+		try (HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl()) {
+			createSuccess = serviceDAO.save(newService);
 
 		}
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		if (createSuccess) {
-			logger.debug(String.format("Built new request as %s", newRequest.toString()));
+			logger.debug(String.format("Built new service as %s", newService.toString()));
 		}
 		mv.addObject("postSent", true);
 		mv.addObject("createSuccess", createSuccess);
