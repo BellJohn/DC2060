@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
@@ -58,6 +59,7 @@ public class ProfileController {
 		List<String> healthList = healthDAO.getAllHealthStatuses();
 		mv.addObject("healthList", healthList);
 		return mv;
+		
 	}
 
 	/**
@@ -78,11 +80,13 @@ public class ProfileController {
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
+
 		} else {
 			username = (String) auth.getPrincipal();
 		}
 		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
 			int userId = userDAO.getUserIdByUsername(username);
+			
 			UserProfile profile = new UserProfile("TESTIMAGE", bio, healthStatus, userId);
 			// Populate the user profile db
 			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
@@ -93,11 +97,19 @@ public class ProfileController {
 				}
 			}
 		}
-
-		ModelAndView mv = new ModelAndView(VIEW_NAME);
-		mv.addObject("currentPage", VIEW_NAME);
+		
+		if(saveUserDetailsSuccess) {
+		ModelAndView mv = new ModelAndView("profile");
+		mv.addObject("currentPage", "profile");
 		mv.addObject("postSent", saveUserDetailsSuccess);
 		return mv;
-
+		}
+		else {
+			ModelAndView mv = new ModelAndView("updateProfile");
+			mv.addObject("currentPage", "updateProfile");
+			mv.addObject("postSent", saveUserDetailsSuccess);
+			mv.addObject("error", "Could not update profile, please try again");
+			return mv;
+		}
 	}
 }
