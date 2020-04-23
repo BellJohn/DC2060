@@ -33,6 +33,7 @@
     <mapping resource="com/reachout/models/UserProfile.hbm.xml" />
     <mapping resource="com/reachout/models/HealthStatus.hbm.xml" />
 
+
 	</session-factory>
 
 </hibernate-configuration>
