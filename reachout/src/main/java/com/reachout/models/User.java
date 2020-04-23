@@ -1,5 +1,7 @@
 package com.reachout.models;
 
+import java.time.LocalDate;
+
 /**
  * Represents a User object as stored in the database. </br>
  * The database table is USERS. </br>
@@ -17,8 +19,12 @@ package com.reachout.models;
 public class User {
 
 	private int id;
+	private String firstName;
+	private String lastName;
 	private String username;
 	private String email;
+	private String dob;
+
 
 	/**
 	 * 
@@ -32,10 +38,43 @@ public class User {
 	 * 
 	 * @param username
 	 * @param email
+	 * @param dob
+	 * @param firstName
+	 * @param lastName
 	 */
-	public User(String username, String email) {
+	public User(String firstName, String lastName, String username, String email, String dob) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.username = username;
 		this.email = email;
+		this.dob = dob;
+	}
+
+	/**
+	 * Gets the date of birth as it exists in current memory
+	 * 
+	 * @return dob
+	 */
+	public String getDob() {
+		return dob;
+	}
+
+	/**
+	 * Gets the firstName as it exists in current memory
+	 * 
+	 * @return firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * Gets the lastName as it exists in current memory
+	 * 
+	 * @return lastName
+	 */
+	public String getLastName() {
+		return lastName;
 	}
 
 	/**
@@ -93,6 +132,36 @@ public class User {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * Sets the record dob on this User object. Object must be saved in
+	 * order to store this in the database.
+	 * 
+	 * @param dob
+	 */
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	/**
+	 * Sets the record firstName on this User object. Object must be saved in
+	 * order to store this in the database.
+	 * 
+	 * @param firstName
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * Sets the record lastName on this User object. Object must be saved in
+	 * order to store this in the database.
+	 * 
+	 * @param lastName
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 }

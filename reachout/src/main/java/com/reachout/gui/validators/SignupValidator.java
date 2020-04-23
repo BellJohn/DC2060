@@ -3,6 +3,13 @@
  */
 package com.reachout.gui.validators;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -22,13 +29,15 @@ public class SignupValidator {
 	}
 
 	/**
-	 * Passed a data array containing username, email address, password and password
+	 * Passed a data array containing firstname, lastname, username, date of birth, email address, password and password
 	 * confirmation. 
 	 * </br>Returns a result with the outcome set to true/false (pass/fail) and reasons
 	 * for failure
 	 * 
 	 * @param userData
+	 * @return 
 	 * @return ValidationResult
+	 * @throws ParseException 
 	 */
 	public static ValidationResult validateSignupForm(Map<String, String> userData) {
 		ValidationResult result = new ValidationResult();
@@ -40,7 +49,7 @@ public class SignupValidator {
 		}
 		// Ensure there are as many entries as we expect
 		// TODO update to static field in User object
-		if (userData.size() != 4) {
+		if (userData.size() != 7) {
 			result.setOutcome(false);
 			result.addError("Wrong number of entries provided", userData.toString());
 			return result;
@@ -64,6 +73,19 @@ public class SignupValidator {
 				result.addError("Email is not of valid form", email);
 			}
 		}
+		
+		//Ensure user is over 18
+		if (userData.get("dob") != null) {
+			String dobString = userData.get("dob");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");	
+	        LocalDate dob = LocalDate.parse(dobString, formatter);
+			LocalDate currentDate = LocalDate.now();  
+		    int age = Period.between(dob, currentDate).getYears();
+		    if (age < 18 ) {
+		    	result.setOutcome(false);
+		    	result.addError("You must be over 18 to sign up", dobString);
+		    }		
+		}		
 
 		// Ensure passwords match
 		if (!userData.get("password").equals(userData.get("passwordConfirm"))) {

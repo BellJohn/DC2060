@@ -15,7 +15,6 @@ public class AccessDeniedController {
 	private static final String REDIRECT_VIEW_NAME = "home";
 	
 	@GetMapping
-	@PostMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView(REDIRECT_VIEW_NAME);
 		mv.addObject("currentPage", REDIRECT_VIEW_NAME);
@@ -23,4 +22,8 @@ public class AccessDeniedController {
 		return mv;
 	}
 	
+	@PostMapping
+	public ModelAndView postRedirectHandler(HttpServletRequest request) {
+		return initPage(request);
+	}
 }

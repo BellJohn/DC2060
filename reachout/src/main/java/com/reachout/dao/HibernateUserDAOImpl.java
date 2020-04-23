@@ -108,7 +108,6 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 			return false;
 		}
 		return true;
-
 	}
 
 	/**
@@ -128,9 +127,7 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 		}
 		return null;
 	}
-
 	
-
 	public User selectByID(int userId) {
 		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
@@ -142,4 +139,19 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 		}
 		return null;
 	}
+	
+	public int getUserIdByUsername(String username) {
+		
+		try (Session session = this.getSessionFactory().openSession()) {
+			session.beginTransaction();
+			Query query = session.createQuery("SELECT user.id FROM User user WHERE USERS_USERNAME = :username");
+			query.setParameter("username", username);
+			return (Integer)(query.getSingleResult());
+		}		
+		
+	}
+	
+	
+	
+	
 }

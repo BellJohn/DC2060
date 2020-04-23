@@ -104,4 +104,6 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 			return session.createQuery("SELECT password FROM Password password", Password.class).getResultList();
 		}
 	}
+	
+	
 }
