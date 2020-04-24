@@ -126,8 +126,7 @@ class ProfileControllerTest {
 		ModelAndView result = pc.update(mockedRequest);
 		assertNotNull(result);
 
-		assertEquals("profile", result.getViewName());
-		assertTrue((boolean) result.getModel().get("postSent"));
+		assertEquals("redirect:/profile", result.getViewName());
 		try(HibernateUserProfileDAOImpl dao = new HibernateUserProfileDAOImpl()){
 			assertEquals(1, dao.getAllProfiles().size());	
 		}
