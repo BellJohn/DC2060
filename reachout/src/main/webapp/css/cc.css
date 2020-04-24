@@ -126,3 +126,10 @@
 	font-size: 7px;
 	position: absolute;
 }
+
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
