@@ -2,10 +2,9 @@
 <html lang="en-GB">
 
 <head>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<title>Sign Up</title>
-<%@ include file="/components/stylesheets.jsp"%>
-
+	<title>ReachOut | Update Profile</title>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	<%@ include file="/components/stylesheets.jsp"%>
 </head>
 
 <body>
@@ -80,13 +79,13 @@
 
 		<c:choose>
 			<c:when test="${empty errors}">
+
 			</c:when>
 			<c:otherwise>
-   							 Errors :  ${errors}
-    						</c:otherwise>
+				Errors :  ${errors}
+			</c:otherwise>
 		</c:choose>
 	</div>
-
 </body>
 
 </html>

@@ -2,10 +2,9 @@
 <html lang="en-GB">
 
 <head>
+	<title>ReachOut | Login</title>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<title>Login</title>
 	<%@ include file="/components/stylesheets.jsp"%>
-
 </head>
 
 <body>
