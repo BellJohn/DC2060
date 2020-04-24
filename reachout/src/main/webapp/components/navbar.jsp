@@ -12,7 +12,7 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<a class="navbar-brand" href="/ReachOut/requests"><img alt="ReachOut Logo" class="brand-img" src="images/reachout-logo-black.png" /></a>
+				<a class="navbar-brand" href="/ReachOut/requests"><img alt="ReachOut Logo" class="brand-img" src="images/reachout-logo-dark.png" /></a>
 				
 				<sec:authentication var="princ" property="principal" />
 				<c:choose>
