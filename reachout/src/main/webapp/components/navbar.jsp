@@ -15,7 +15,7 @@
 			</button>
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
-				<a class="navbar-brand" href="#"><img class="brand-img"
+				<a class="navbar-brand" href="/ReachOut/home"><img class="brand-img"
 					src="images/clipart-home-heart-1.png" /></a>
 				<h2 class="brand-name">|ReachOut|</h2>
 				<ul class="navbar-nav">
