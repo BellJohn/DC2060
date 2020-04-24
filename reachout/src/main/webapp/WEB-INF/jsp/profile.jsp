@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<title>${user}'sProfile</title>
-<%@ include file="/components/stylesheets.jsp"%>
+	<title>ReachOut | Profile</title>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	<%@ include file="/components/stylesheets.jsp"%>
 </head>
 
 <body>
-<%= session.getAttribute( "theName" ) %>
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>

@@ -99,10 +99,7 @@ public class ProfileController {
 		}
 		
 		if(saveUserDetailsSuccess) {
-		ModelAndView mv = new ModelAndView("profile");
-		mv.addObject("currentPage", "profile");
-		mv.addObject("postSent", saveUserDetailsSuccess);
-		return mv;
+			return new ModelAndView("redirect:/profile");
 		}
 		else {
 			ModelAndView mv = new ModelAndView("updateProfile");
