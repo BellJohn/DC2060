@@ -32,8 +32,11 @@ class ValidationResultTest {
 	@Test
 	public void dataWithWhitespaceTest() {
 		Map<String, String> invalidData = new HashMap<>();
+		invalidData.put("firstName", "first");
+		invalidData.put("lastName", "last");
 		invalidData.put("user", null);
 		invalidData.put("email", "goodemail@test.com");
+		invalidData.put("dob", "20/09/1993");
 		invalidData.put("password", "bad password with spaces");
 		invalidData.put("passwordConfirm", "bad password with spaces");
 		
@@ -64,8 +67,11 @@ class ValidationResultTest {
 	@Test
 	public void EmailSyntaxTest() {
 		Map<String, String> invalidData = new HashMap<>();
+		invalidData.put("firstName", "first");
+		invalidData.put("lastName", "last");
 		invalidData.put("email", "notmatchingRegex.COM");
 		invalidData.put("user", "user");
+		invalidData.put("dob", "20/09/1993");
 		invalidData.put("password", "password");
 		invalidData.put("passwordConfirm", "password");
 
@@ -85,8 +91,11 @@ class ValidationResultTest {
 	@Test
 	public void nonMatchingPasswordsTest() {
 		Map<String, String> invalidData = new HashMap<>();
+		invalidData.put("firstName", "first");
+		invalidData.put("lastName", "last");
 		invalidData.put("email", "goodemail@test.com");
 		invalidData.put("user", "user");
+		invalidData.put("dob", "20/09/1993");
 		invalidData.put("password", "password");
 		invalidData.put("passwordConfirm", "passwordOTHER");
 

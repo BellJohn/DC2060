@@ -2,10 +2,9 @@
 <html lang="en-GB">
 
 <head>
+	<title>ReachOut | Update Profile</title>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<title>Sign Up</title>
 	<%@ include file="/components/stylesheets.jsp"%>
-
 </head>
 
 <body>
@@ -13,86 +12,80 @@
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="row">
-			<div class="col-sm-4"></div>
 			<div class="col-sm-4">
-				<c:choose>
-					<c:when test="${empty postSent}">
-						<div class="profile-form">
-							<form action="" method="POST">
-								<sec:csrfInput />
-								<fieldset>
-									<div id="legend">
-										<legend class="">
-											<h2>Sign Up</h2>
-										</legend>
+				<div class="profile-form" style="height: 424px;">
+					<form action="" method="POST" style="height: 399px;">
+						<!--  enctype="multipart/form-data"	 -->
+						<sec:csrfInput />
+						<fieldset>
+							<p>Update your profile information</p>
+							<hr>
+							<!-- Profile Picture -->
+							<!-- 
+						<div class="control-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1"><i
+										class="fa fa-lock"></i></span>
+								</div>
+								<input type="file" class="form-control" name="profilePic"
+									id="profilePic" placeholder="Upload a profile picture">
+							</div>
+						</div>-->
+							<!-- Health status -->
+							<div class="control-group" style="height: 37px;">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1"> <i
+											class="fa fa-user"></i></span>
 									</div>
-									<p>Update your profile information</p>
-									<hr>
-									<div class="control-group">
-										<!-- Username -->
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-user"></i></span>
-											</div>
-											<input type="text" class="form-control" name="firstname" id="firstname"
-												placeholder="First Name" required="required">
-										</div>
-									</div>
-									<div class="control-group">
-										<!-- E-mail -->
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-paper-plane"></i></span>
-											</div>
-											<input type="text" class="form-control" name="surname" id="surname"
-												placeholder="Surname" required="required">
-										</div>
-									</div>
-									<div class="control-group">
-										<!-- Password-->
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1"><i
-														class="fa fa-lock"></i></span>
-											</div>
-											<input type="file" class="form-control" name="profilepic" id="profilepic"
-												placeholder="Upload a profile picture" required="required">
-										</div>
-									</div>
+
+									<select id="healthStatus" name="healthStatus"
+										class="form-control" placeholder="Health Status">
+										<c:forEach var="hs" items="${healthList}">
+											<option><c:set var="h" value="${hs}" />
+												<c:out value="${h }" /></option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+							<!-- User Biography -->
+							<div class="row">
+								<div class="control-group">
+									<div class="col-sm-4"></div>
+									<!--Update Button -->
 									<div class="control-group">
 										<div class="input-group">
 											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-lock"></i>
+												<span class="input-group-text" id="basic-addon1"> <i
+													class="fa fa-lock"></i>
 												</span>
 											</div>
-											<input type="test" class="form-control" name="userbio"
-												id="userbio" placeholder="User Bio" required="required">
+											<input type="textarea" class="form-control" name="userBio"
+												path="bio" id="userBio" placeholder="User Bio"
+												maxLength="750" rows="4" cols="20"
+												style="width: 253px; height: 57px">
 										</div>
 									</div>
-									<div class="control-group">
-										<!-- Button -->
-										<button class="btn btn-primary btn-lg">Update</button>
-									</div>
-								</fieldset>
-							</form>
-						</div>
-					</c:when>
-					<c:otherwise>
-						<c:choose>
-					
-							</c:otherwise>
-
-						</c:choose>
-					</c:otherwise>
-				</c:choose>
+								</div>
+								<button class="btn btn-primary btn-lg">Update</button>
+							</div>
+						</fieldset>
+					</form>
+				</div>
 			</div>
-			<div class="col-sm-4"></div>
-		</div>
-	</div>
 
+		</div>
+
+		<c:choose>
+			<c:when test="${empty errors}">
+
+			</c:when>
+			<c:otherwise>
+				Errors :  ${errors}
+			</c:otherwise>
+		</c:choose>
+	</div>
 </body>
 
 </html>

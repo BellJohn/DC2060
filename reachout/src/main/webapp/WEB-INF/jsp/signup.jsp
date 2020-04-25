@@ -2,10 +2,9 @@
 <html lang="en-GB">
 
 <head>
+	<title>ReachOut | Sign Up</title>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<title>Sign Up</title>
 	<%@ include file="/components/stylesheets.jsp"%>
-
 </head>
 
 <body>
@@ -29,6 +28,29 @@
 									<p>Please fill in this form to create an account!</p>
 									<hr>
 									<div class="control-group">
+										<!-- First name -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-user"></i></span>
+											</div>
+											
+											<input type="text" class="form-control" name="firstName" id="firstName"
+												placeholder="First Name" required="required">
+										</div>
+									</div>
+									<div class="control-group">
+										<!-- Last Name -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-user"></i></span>
+											</div>
+											<input type="text" class="form-control" name="lastName" id="lastName"
+												placeholder="Last Name" required="required">
+										</div>
+									</div>
+									<div class="control-group">
 										<!-- Username -->
 										<div class="input-group">
 											<div class="input-group-prepend">
@@ -40,14 +62,29 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<!-- E-mail -->
+										<!-- Email Address -->
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">
+													<i class="fa fa-user"></i></span>
+											</div>
+											<input type="text" class="form-control" name="email" id="email"
+												placeholder="Email Address" required="required">
+												
+												<form:textarea path="address" rows="5" cols="30" />
+										</div>
+									</div>
+									<div class="control-group">
+										<!-- Date of Birth-->
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1">
 													<i class="fa fa-paper-plane"></i></span>
 											</div>
-											<input type="email" class="form-control" name="email" id="email"
-												placeholder="Email Address" required="required">
+											<!-- check date of birth is a suitable date including leap years -->
+											<input type="text" pattern="(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)" 
+											class="form-control" name="dob" id="dob" title="Please use format DD/MM/YYYY"
+												placeholder="Date of Birth" required="required" >
 										</div>
 									</div>
 									<div class="control-group">
@@ -57,7 +94,7 @@
 												<span class="input-group-text" id="basic-addon1"><i
 														class="fa fa-lock"></i></span>
 											</div>
-											<input type="password" class="form-control" name="password" id="password"
+											<input type="password" class="form-control" name="password" id="password" minLength="8"
 												placeholder="Password" required="required">
 										</div>
 									</div>
@@ -70,7 +107,7 @@
 													<i class="fa fa-check"></i>
 												</span>
 											</div>
-											<input type="password" class="form-control" name="password_confirm"
+											<input type="password" class="form-control" name="password_confirm" minLength="8"
 												id="password_confirm" placeholder="Confirm Password"
 												required="required">
 										</div>
@@ -92,18 +129,23 @@
 					<c:otherwise>
 						<c:choose>
 							<c:when test="${postResult}">
-								<h3>A confirmation email has been sent to the address
-									provided: ${emailAddress}</h3>
-								</br>
+								<br>
+								<div class="alert alert-success" role="alert">
+									<h3>A confirmation email has been sent to the address
+										provided: ${emailAddress}</h3>
+								</div>
 								</br>
 								<h4>In the meantime, why not check out your new <a href="profile">profile!</a></h4>
 								<p>It could probably do with some details about you.</p>
 							</c:when>
 							<c:otherwise>
-								<h3>Something was wrong with the data you provided!</h3>
-								<h3>${validationErrors}</h3>
+								<br>
+								<div class="alert alert-danger" role="alert">
+									<p>Something was wrong with the data you provided!</p>
+									<br>
+									<p>${validationErrors}</p>
+								</div>
 							</c:otherwise>
-
 						</c:choose>
 					</c:otherwise>
 				</c:choose>

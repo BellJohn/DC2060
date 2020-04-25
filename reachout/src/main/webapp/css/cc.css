@@ -1,6 +1,5 @@
 <meta charset="UTF-8">
 
-
 #topheader .navbar-nav li>a {
 	text-transform: capitalize;
 	color: #333;
@@ -18,6 +17,10 @@
 }
 .brand-name {
 	float:right;
+}
+
+.midpage {
+	margin: 7.5px 7.5px;
 }
 
 .homeimage {

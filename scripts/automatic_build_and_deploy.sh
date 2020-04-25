@@ -6,10 +6,10 @@ LOG=${DIR}/buildLog.log
 cd $DIR
 mkdir -p $DIR/download 
 date > ${LOG}
-#find $DIR/download/ -delete
+find $DIR/download/ -delete
 mkdir -p $DIR/download
 
-#git clone https://github.com/BellJohn/DC2060.git $DIR/download >> ${LOG} 2>&1
+git clone https://github.com/BellJohn/DC2060.git $DIR/download >> ${LOG} 2>&1
 
 # Have we managed the download?
 if [[ -e ${DIR}/download/reachout ]]; then

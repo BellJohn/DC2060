@@ -1,0 +1,4 @@
+Test Title
+Test Author
+Test Date
+Test blog post content. This is just simple text at the moment.

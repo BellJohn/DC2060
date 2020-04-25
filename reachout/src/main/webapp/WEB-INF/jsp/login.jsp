@@ -2,10 +2,9 @@
 <html lang="en-GB">
 
 <head>
+	<title>ReachOut | Login</title>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<title>Login</title>
 	<%@ include file="/components/stylesheets.jsp"%>
-
 </head>
 
 <body>
@@ -17,10 +16,10 @@
 			<div class="col-sm-4">
 
 				<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
-					<font color="red"> Your login attempt was not successful due
-						to <br /> <br />
+					<br>
+					<div class="alert alert-danger" role="alert">
 						<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
-					</font>
+					</div>
 				</c:if>
 				<div class="signup-form">
 					<form action="<c:url value='j_spring_security_check'/>" method="POST">
