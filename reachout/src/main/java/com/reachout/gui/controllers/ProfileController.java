@@ -1,34 +1,23 @@
 package com.reachout.gui.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateHealthStatusDAOImpl;
-import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
-import com.reachout.gui.validators.SignupValidator;
-import com.reachout.gui.validators.ValidationResult;
 import com.reachout.models.*;
 
 @Controller
@@ -102,8 +91,8 @@ public class ProfileController {
 			return new ModelAndView("redirect:/profile");
 		}
 		else {
-			ModelAndView mv = new ModelAndView("updateProfile");
-			mv.addObject("currentPage", "updateProfile");
+			ModelAndView mv = new ModelAndView(VIEW_NAME);
+			mv.addObject("currentPage", VIEW_NAME);
 			mv.addObject("postSent", saveUserDetailsSuccess);
 			mv.addObject("error", "Could not update profile, please try again");
 			return mv;

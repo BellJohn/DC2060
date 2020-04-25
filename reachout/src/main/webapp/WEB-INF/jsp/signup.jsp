@@ -129,16 +129,22 @@
 					<c:otherwise>
 						<c:choose>
 							<c:when test="${postResult}">
-								<h3>A confirmation email has been sent to the address
-									provided: ${emailAddress}</h3>
-								</br>
+								<br>
+								<div class="alert alert-success" role="alert">
+									<h3>A confirmation email has been sent to the address
+										provided: ${emailAddress}</h3>
+								</div>
 								</br>
 								<h4>In the meantime, why not check out your new <a href="profile">profile!</a></h4>
 								<p>It could probably do with some details about you.</p>
 							</c:when>
 							<c:otherwise>
-								<h3>Something was wrong with the data you provided!</h3>
-								<h3>${validationErrors}</h3>
+								<br>
+								<div class="alert alert-danger" role="alert">
+									<p>Something was wrong with the data you provided!</p>
+									<br>
+									<p>${validationErrors}</p>
+								</div>
 							</c:otherwise>
 						</c:choose>
 					</c:otherwise>

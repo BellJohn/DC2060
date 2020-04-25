@@ -1,28 +1,19 @@
 package com.reachout.gui.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
-import com.reachout.dao.HibernateHealthStatusDAOImpl;
-import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
-import com.reachout.gui.validators.SignupValidator;
-import com.reachout.gui.validators.ValidationResult;
 import com.reachout.models.*;
 
 
