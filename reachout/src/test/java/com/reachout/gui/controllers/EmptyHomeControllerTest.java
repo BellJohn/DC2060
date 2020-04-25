@@ -11,7 +11,7 @@ class EmptyHomeControllerTest {
 	void test() {
 		EmptyHomeController ehc = new EmptyHomeController();
 		ModelAndView result = ehc.initPageRedirect(null);
-		assertEquals("home", result.getViewName());
+		assertEquals("redirect:/profile", result.getViewName());
 	}
 
 }

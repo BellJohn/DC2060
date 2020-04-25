@@ -11,7 +11,7 @@ class HomeControllerTest {
 	void test() {
 		HomeController hc = new HomeController();
 		ModelAndView result = hc.initPage(null);
-		assertEquals("home", result.getViewName());
+		assertEquals("redirect:/profile", result.getViewName());
 	}
 
 }
