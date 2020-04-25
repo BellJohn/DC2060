@@ -31,7 +31,7 @@ import com.reachout.models.User;
  */
 class RequestCreateControllerTest {
 
-	private static User user = new User("user", "email@fake.com");
+	private User user = new User("firstname", "lastname", "username", "fake@email.com", "01/01/2000");
 	Password password = new Password();
 
 	@BeforeEach
