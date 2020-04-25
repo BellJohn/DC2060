@@ -18,8 +18,6 @@ public class HomeController {
 	public ModelAndView initPage(HttpServletRequest request) {
 		
 		logger.debug("Reached Home Controller");
-		ModelAndView mv = new ModelAndView("home");
-		mv.addObject("currentPage", "home");
-		return mv;
+		return new ModelAndView("redirect:/profile");
 	}
 }

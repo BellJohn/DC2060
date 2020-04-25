@@ -13,6 +13,6 @@ public class EmptyHomeController {
 
 	@GetMapping
 	public ModelAndView initPageRedirect(HttpServletRequest request) {
-		return new ModelAndView("home");
+		return new ModelAndView("redirect:/profile");
 	}
 }
