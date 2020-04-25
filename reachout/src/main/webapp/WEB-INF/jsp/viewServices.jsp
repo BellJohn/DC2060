@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<title>ReachOut - Services</title>
+<title>ReachOut | Services</title>
 <%@ include file="/components/stylesheets.jsp"%>
 <meta charset="UTF-8">
 </head>
@@ -21,6 +21,7 @@
 						<th scope="col">Description</th>
 						<th scope="col">County</th>
 						<th scope="col">City</th>
+						<th scope="col">View</th>
 					</tr>
 				</thead>
 				<c:forEach items="${liveServices}" var="service">
@@ -29,6 +30,16 @@
 						<td>${service.getDescription()}</td>
 						<td>${service.getCounty()}</td>
 						<td>${service.getCity()}</td>
+						<td><form action="viewListing" method="POST">
+								<sec:csrfInput />
+								<input type="hidden" id="listingType" name="listingType"
+									value="${service.getListingType().getName()}" /> <input
+									type="hidden" id="listingID" name="listingID"
+									value="${service.getId()}" />
+								<button class="btn btn-success btn-block">
+									<span class="fa fa-info"></span> View Details
+								</button>
+							</form></td>
 					</tr>
 				</c:forEach>
 			</table>

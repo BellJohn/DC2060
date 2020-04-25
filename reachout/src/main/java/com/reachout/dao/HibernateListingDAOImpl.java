@@ -3,22 +3,33 @@
  */
 package com.reachout.dao;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.reachout.models.Listing;
+import com.reachout.models.Request;
+import com.reachout.models.Service;
+import com.reachout.models.User;
 
 /**
  * @author John
  *
  */
 public abstract class HibernateListingDAOImpl extends HibernateDAO {
+	private Logger logger = LogManager.getLogger(HibernateListingDAOImpl.class);
 
 	/**
 	 * Returns all the possible listings in the system
+	 * 
 	 * @return
 	 */
 	public abstract List<Listing> getAllListings();
@@ -40,5 +51,45 @@ public abstract class HibernateListingDAOImpl extends HibernateDAO {
 		}
 		return true;
 	}
-	 
+
+	/**
+	 * Attempts to update the ASSIGNED_LISTINGS table with a new entry and update
+	 * the relevant listing status simultaneously. </br>
+	 * Errors in this result in rollback </br>
+	 * Returns true/false success indicator
+	 * 
+	 * @param dao
+	 * 
+	 * @param listing
+	 * @param user
+	 * @return
+	 */
+	public synchronized boolean assignListingToUser(Listing listing, User user) {
+		try (Session session = this.getSessionFactory().openSession()) {
+			session.beginTransaction();
+			Query query = session.createSQLQuery(
+					"INSERT INTO ASSIGNED_LISTINGS (AS_LISTING_ID, AS_USER_ID) VALUES (:listingID, :userID)");
+			query.setParameter("listingID", listing.getId());
+			query.setParameter("userID", user.getId());
+			// Ensure both the insert happens and the update happens
+			if (query.executeUpdate() != 1) {
+				session.getTransaction().rollback();
+				throw new PersistenceException(
+						"Unable to save assignedListing mapping, preventing Listing object updating in database");
+			}
+			if (listing instanceof Request) {
+				session.saveOrUpdate((Request) listing);
+			}
+			if (listing instanceof Service) {
+				session.saveOrUpdate((Service) listing);
+			}
+			session.flush();
+			session.getTransaction().commit();
+		} catch (PersistenceException e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+		return true;
+	}
+
 }

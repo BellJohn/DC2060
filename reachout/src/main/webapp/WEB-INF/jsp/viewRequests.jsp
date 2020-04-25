@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<title>ReachOut - Requests</title>
+<title>ReachOut | Requests</title>
 <%@ include file="/components/stylesheets.jsp"%>
 <meta charset="UTF-8">
 </head>
@@ -21,6 +21,7 @@
 						<th scope="col">Description</th>
 						<th scope="col">County</th>
 						<th scope="col">City</th>
+						<th scope="col">View</th>
 					</tr>
 				</thead>
 				<c:forEach items="${liveRequests}" var="request">
@@ -30,9 +31,11 @@
 						<td>${request.getCounty()}</td>
 						<td>${request.getCity()}</td>
 						<td><form action="viewListing" method="POST">
-						<sec:csrfInput/>
-						<input type="hidden" id="listingType" name="listingType" value="${request.getListingType().getName()}"/>
-						<input type="hidden" id="listingID" name="listingID" value="${request.getId()}"/>
+								<sec:csrfInput />
+								<input type="hidden" id="listingType" name="listingType"
+									value="${request.getListingType().getName()}" /> <input
+									type="hidden" id="listingID" name="listingID"
+									value="${request.getId()}" />
 								<button class="btn btn-success btn-block">
 									<span class="fa fa-info"></span> View Details
 								</button>

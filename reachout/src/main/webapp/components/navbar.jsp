@@ -25,6 +25,9 @@
 						<c:when test="${princ !='anonymousUser'}">
 							<!--  Only show the requests & services links to users who are logged in -->
 							<li class="nav-item"><a class="nav-link" href="viewRequests">Requests</a></li>
+							<!-- Disabled while it is yet not possible to create a service -->
+						<!-- 	<li class="nav-item"><a class="nav-link" href="viewServices">Services</a></li>-->
+
 						</c:when>
 					</c:choose>
 

@@ -40,6 +40,10 @@ public class Request extends Listing {
 		this.listingType = ListingType.REQUEST;
 	}
 	
+	/**
+	 * Empty constructor for Hibernate. 
+	 * Do not use
+	 */
 	public Request() {
 		super();
 	}
