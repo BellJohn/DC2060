@@ -8,7 +8,6 @@
 
 <body>
 	<div class="container-fluid">
-		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="row">
 			<div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-6">
@@ -59,9 +58,12 @@
 							<p>
 								<small>Requests</small>
 							</p>
-							<button class="btn btn-success btn-block">
-								<span class="fa fa-plus-circle"></span> Create New Request
-							</button>
+							<form action="createRequest">
+								<button class="btn btn-success btn-block">
+									<span class="fa fa-plus-circle"></span> Create New Request
+								</button>
+							</form>
+
 						</div>
 						<div class="col-xs-12 col-sm-6 emphasis">
 							<h2>
@@ -70,9 +72,11 @@
 							<p>
 								<small>Services Offered</small>
 							</p>
-							<button class="btn btn-info btn-block">
-								<span class="fa fa-user"></span> Offer New Service
-							</button>
+							<form action="createService">
+								<button class="btn btn-info btn-block">
+									<span class="fa fa-user"></span> Offer New Service
+								</button>
+							</form>
 						</div>
 						<div class="col-xs-12 col-sm-6 emphasis">
 							<div class="btn-group dropup btn-block">

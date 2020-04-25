@@ -114,7 +114,7 @@ public class Password {
 	}
 
 	/**
-	 * Sets the current password string in memory after hashing with a generated
+	 * Sets a plaintext password string in memory after hashing with a generated
 	 * salt
 	 * 
 	 * @param passwordString

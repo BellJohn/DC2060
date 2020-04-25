@@ -25,7 +25,7 @@ import com.reachout.testUtils.TestUtils;
  * @author John
  *
  */
-class HibernatePasswordDAOImplTest {
+class TestHibernatePasswordDAOImpl {
 	Logger logger = LogManager.getLogger(HibernatePasswordDAOImpl.class);
 
 	@BeforeEach
@@ -110,7 +110,7 @@ class HibernatePasswordDAOImplTest {
 	@Test
 	public void testSelectByUserIDNoUser() {
 		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
-			Password passFound = dao.selectByUserID(1);
+			Password passFound = dao.selectInUseByUserId(1);
 			assertNull(passFound);
 		}
 	}

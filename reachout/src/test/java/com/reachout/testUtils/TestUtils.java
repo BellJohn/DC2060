@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.reachout.dao.HibernateListingDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
+import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.Listing;
 import com.reachout.models.Password;
 import com.reachout.models.User;
 
@@ -49,5 +52,16 @@ public class TestUtils {
 				assertTrue(passwordDao.deletePasswordById(password.getPwdId()));
 			}
 		}
+	}
+
+	public static void clearAllListings() {
+		// Remove all listings
+		try (HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl()) {
+			ArrayList<Listing> currentStoredListings = (ArrayList<Listing>) listingDAO.getAllListings();
+			for (Listing listing : currentStoredListings) {
+				logger.info("Deleting request with ID: " + listing.getId());
+				assertTrue(listingDAO.delete(listing));
+			}
+		}		
 	}
 }
