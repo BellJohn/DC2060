@@ -45,11 +45,13 @@ public class ViewMyMessagesController {
 			username = (String) auth.getPrincipal();
 		}
 		logger.debug("Reached viewMyMessages Controller");
-
+		String previousUserSelected = request.getParameter("targetID");
+		System.out.println("previous user was: " + previousUserSelected);
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("user", username);
 		mv.addObject("conversations", getAllMyConversations(username));
+		mv.addObject("previousUser", previousUserSelected);
 		return mv;
 	}
 
