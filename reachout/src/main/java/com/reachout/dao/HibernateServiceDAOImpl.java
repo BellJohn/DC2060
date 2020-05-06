@@ -139,4 +139,8 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		}
 		return returnList;
 	}
+
+	public int getNumServicesForUser(int userId) {
+		return getAllServicesForUser(userId).size();
+	}
 }
