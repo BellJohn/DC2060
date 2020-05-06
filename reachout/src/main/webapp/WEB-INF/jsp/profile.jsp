@@ -10,6 +10,8 @@
 	<div class="container-fluid">
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="row">
+
+			<!-- PROFILE INFO (ETC) -->
 			<div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-6">
 				<div class="well profile">
 					<div class="col-sm-12">
@@ -86,6 +88,78 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- REQUESTED SERVICES -->
+			<div class="col-lg-offset-9">
+				<h1>Requests Made</h1>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">Request</th>
+							<th scope="col">Description</th>
+							<th scope="col">County</th>
+							<th scope="col">City</th>
+							<th scope="col">View</th>
+						</tr>
+					</thead>
+					<c:forEach items="${liveRequests}" var="request">
+						<tr>
+							<th scope="row">${request.getTitle()}</th>
+							<td>${request.getDescription()}</td>
+							<td>${request.getCounty()}</td>
+							<td>${request.getCity()}</td>
+							<td><form action="viewListing" method="POST">
+									<sec:csrfInput />
+									<input type="hidden" id="listingType" name="listingType"
+										value="${request.getListingType().getName()}" /> <input
+										type="hidden" id="listingID" name="listingID"
+										value="${request.getId()}" />
+									<button class="btn btn-success btn-block">
+										<span class="fa fa-info"></span> View Details
+									</button>
+								</form></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+
+
+			<!-- OFFERED SERVICES -->
+			<div class="col-lg-offset-9">
+				<h1>Services Offered</h1>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">Service</th>
+							<th scope="col">Description</th>
+							<th scope="col">County</th>
+							<th scope="col">City</th>
+							<th scope="col">View</th>
+						</tr>
+					</thead>
+					<c:forEach items="${liveServices}" var="service">
+						<tr>
+							<th scope="row">${service.getTitle()}</th>
+							<td>${service.getDescription()}</td>
+							<td>${service.getCounty()}</td>
+							<td>${service.getCity()}</td>
+							<td><form action="viewListing" method="POST">
+									<sec:csrfInput />
+									<input type="hidden" id="listingType" name="listingType"
+										value="${service.getListingType().getName()}" /> <input
+										type="hidden" id="listingID" name="listingID"
+										value="${service.getId()}" />
+									<button class="btn btn-success btn-block">
+										<span class="fa fa-info"></span> View Details
+									</button>
+								</form></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+
+
+
 		</div>
 	</div>
 

@@ -116,4 +116,27 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		}
 		return allResults;
 	}
+
+	/**
+	 * Returns all requests made by a specific user based on their ID
+	 * 
+	 * @param userId The users ID
+	 * @return List of requests made by a specific user
+	 */
+	public List<Request> getAllRequestsForUser(int userId) {
+		ArrayList<Request> returnList = new ArrayList<>();
+		try (Session session = this.getSessionFactory().openSession()) {
+			Query query = session.createQuery("SELECT request FROM Request request where LST_TYPE = :lstType AND LST_USER_ID = :userId",
+					Request.class);
+			query.setParameter("lstType", ListingType.REQUEST.getOrdindal());
+			query.setParameter("userId", userId);
+			List<?> results = query.getResultList();
+			for (Object obj : results) {
+				if (obj instanceof Request) {
+					returnList.add((Request) obj);
+				}
+			}
+		}
+		return returnList;
+	}
 }

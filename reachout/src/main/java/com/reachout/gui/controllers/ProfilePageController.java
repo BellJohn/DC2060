@@ -16,11 +16,12 @@ import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
 import com.reachout.models.*;
 
+import com.reachout.dao.HibernateRequestDAOImpl;
+import com.reachout.dao.HibernateServiceDAOImpl;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfilePageController {
-
 	public final Logger logger = LogManager.getLogger(ProfilePageController.class);
 
 	private static final String VIEW_NAME = "profile";
@@ -71,12 +72,21 @@ public class ProfilePageController {
 		}
 		
 		
-			mv.addObject("firstName", firstName);
-			mv.addObject("lastName", lastName);
-			mv.addObject("bio", bio);
-			mv.addObject("profilePic", profilePic);
-			mv.addObject("healthStatus", healthStatus);
-			return mv;
+		mv.addObject("firstName", firstName);
+		mv.addObject("lastName", lastName);
+		mv.addObject("bio", bio);
+		mv.addObject("profilePic", profilePic);
+		mv.addObject("healthStatus", healthStatus);
+
+		try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
+			mv.addObject("liveRequests", reqDAO.getAllRequestsForUser(userId));
+		}
+
+		try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
+			mv.addObject("liveServices", serDAO.getAllServicesForUser(userId));
+		}
+
+		return mv;
 		}
 	}
 
