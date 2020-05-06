@@ -2,7 +2,19 @@ package com.reachout.gui.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +44,9 @@ public class SignupController {
 	public final Logger logger = LogManager.getLogger(SignupController.class);
 
 	private static final String VIEW_NAME = "signup";
+	private static Properties mailServerProperties;
+	private static Session getMailSession;
+	private static MimeMessage generateMailMessage;
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -57,9 +72,10 @@ public class SignupController {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws MessagingException 
 	 */
 	@PostMapping
-	public ModelAndView signup(HttpServletRequest request){
+	public ModelAndView signup(HttpServletRequest request) throws MessagingException{
 		boolean saveUserSuccess = false;
 		String username = request.getParameter("username");
 		String firstName = request.getParameter("firstName");
@@ -68,8 +84,8 @@ public class SignupController {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String passwordConfirm = request.getParameter("password_confirm");
-		
-		
+
+
 		Map<String, String> userData = new HashMap<>();
 		userData.put("firstName", firstName);
 		userData.put("lastName", lastName);
@@ -78,7 +94,7 @@ public class SignupController {
 		userData.put("email", email);
 		userData.put("password", password);
 		userData.put("passwordConfirm", passwordConfirm);
-		
+
 		ValidationResult result = SignupValidator.validateSignupForm(userData);
 		// If we failed the validation, log some reasons why to the console for now
 		if (!result.getOutcome()) {
@@ -115,11 +131,17 @@ public class SignupController {
 		if (saveUserSuccess) {
 			try {
 				request.login(username, password);
-			    
+
 			} catch (ServletException e) {
 				logger.error(e.getStackTrace());
 			}
 		}
+		
+		
+		//Commenting out for testing purposes - otherwise will be spammed with many emails
+		// ec = new EmailController();
+		EmailController.generateAndSendEmail(email);
+		
 		
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
@@ -128,9 +150,11 @@ public class SignupController {
 		mv.addObject("emailAddress", request.getParameter("email"));
 		mv.addObject("validationErrors", result.getErrors());
 		return mv;
+
+
+		
 	}
 }
-
 
 
 

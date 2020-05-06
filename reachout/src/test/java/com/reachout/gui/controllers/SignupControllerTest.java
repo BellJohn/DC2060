@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +30,7 @@ import com.reachout.models.User;
 
 class SignupControllerTest {
 
-	private static User user = new User("first", "last", "testUser", "test@test.com", "2000/10/02");
+	private static User user = new User("first", "last", "testUser", "jesswales1993@yahoo.co.uk", "2000/10/02");
 
 	@BeforeEach
 	@AfterEach
@@ -62,7 +63,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpValidUserTest() throws ParseException {
+	void signUpValidUserTest() throws ParseException, MessagingException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn(user.getFirstName());
 		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn(user.getLastName());
@@ -94,7 +95,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpDuplicateUserTest() throws ParseException {
+	void signUpDuplicateUserTest() throws ParseException, MessagingException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
 		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn("last");
@@ -129,7 +130,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpInvalidEmailTest() throws ParseException{
+	void signUpInvalidEmailTest() throws ParseException, MessagingException{
 		String badEmail = "NOT_A_GOOD_EMAIL.com";
 
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
@@ -162,7 +163,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpUnderageUserTest() throws ParseException{
+	void signUpUnderageUserTest() throws ParseException, MessagingException{
 		String dobString = ("20/09/2010");
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
