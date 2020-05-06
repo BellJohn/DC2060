@@ -16,7 +16,7 @@
 			</button>
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
-				<a class="navbar-brand" href="/ReachOut/profile"><img
+				<a class="navbar-brand" href="/profile"><img
 					alt="ReachOut Logo" class="brand-img"
 					src="images/reachout-logo-dark.png" /></a>
 
