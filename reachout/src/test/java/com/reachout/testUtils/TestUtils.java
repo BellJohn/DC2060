@@ -7,13 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
+import javax.persistence.Query;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
 
+import com.reachout.dao.HibernateInternalMessageDAOImpl;
 import com.reachout.dao.HibernateListingDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateRequestDAOImpl;
+import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.InternalMessage;
 import com.reachout.models.Listing;
 import com.reachout.models.Password;
 import com.reachout.models.User;
@@ -62,6 +68,45 @@ public class TestUtils {
 				logger.info("Deleting request with ID: " + listing.getId());
 				assertTrue(listingDAO.delete(listing));
 			}
-		}		
+		}
+	}
+
+	public static void clearAllInternalMessages() {
+		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
+			ArrayList<InternalMessage> storedIMs = (ArrayList<InternalMessage>) imDAO.getAllMessages();
+			for (InternalMessage im : storedIMs) {
+				logger.info("Deleting InternalMessage with ID: " + im.getId());
+				assertTrue(imDAO.delete(im));
+			}
+		}
+	}
+
+	/**
+	 * Makes a test user in memory with default data of:
+	 * <ul>
+	 * <li>First Name: firstName</li>
+	 * <li>Last Name: lastName</li>
+	 * <li>Username: username</li>
+	 * <li>Email: email@email.com</li>
+	 * <li>DOB: 01/01/1970</li>
+	 * </ul>
+	 * 
+	 * @return test User
+	 */
+	public static User makeTestUser() {
+		return new User("firstName", "lastName", "username", "email@email.com", "01/01/1970");
+	}
+
+	/**
+	 * Blanket deletes every assigned listing in the database
+	 */
+	public static void clearAllAssignedListings() {
+		try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl(); Session session = serDAO.getSessionFactory().openSession()) {
+			session.beginTransaction();
+			Query delQuery = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_ID like '%'");
+			delQuery.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+		}
 	}
 }
