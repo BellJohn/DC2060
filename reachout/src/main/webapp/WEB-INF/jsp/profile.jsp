@@ -9,89 +9,88 @@
 <body>
 	<div class="container-fluid">
 		<%@ include file="/components/navbar.jsp"%>
-		<div class="row">
+
+		<div class="row profile-row">
 
 			<!-- PROFILE INFO (ETC) -->
-			<div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-6">
-				<div class="well profile">
-					<div class="col-sm-12">
-						<div class="col-xs-12 col-sm-8" style="width: 981px; ">
-						
-							<h2>${firstName} ${lastName}</h2>
-							<p>
-								<strong>User Bio:
-								 </strong> 
-								 <c:choose>
-  									  <c:when test="${empty bio}">
-        							Tell us more about yourself
-    								</c:when>
-   									 <c:otherwise>
-        							${bio}
-    								</c:otherwise>
-								</c:choose>
-							</p>
-						</div>
-						<div class="col-xs-12 col-sm-6 text-center">
-							<figure>
-								<img src="images/no-profile-pic.png" alt=""
-									class="img-circle img-responsive">
-							</figure>
-						</div>
-						<div class="col-xs-12 col-sm-6 text-center">
+			<div class="col-md-3">
+				<div class="card">
+					<div class="well profile">
+
+					<!-- USERS NAME -->
+					<h2><strong>${firstName} ${lastName}</strong></h2>
+
+					<!-- USERS IMAGE-->
+					<figure>
+						<img src="images/no-profile-pic.png" alt="" class="rounded-circle">
+					</figure>
+
+					<!-- USERS BIO -->
+					<p>
+					<c:choose>
+								<c:when test="${empty bio}">
+								Update your profile below to add a bio
+							</c:when>
+								<c:otherwise>
+								${bio}
+							</c:otherwise>
+						</c:choose>
+						<br>-<br>
 						<c:choose>
-  									  <c:when test="${empty healthStatus}">
-        							Health Status : Unknown
-    								</c:when>
-   									 <c:otherwise>
-   									 Health Status :  ${healthStatus}
-    								</c:otherwise>
-								</c:choose>
-					</div>
-					<div class="col-xs-12 col-sm-6 emphasis">
-					<div class="btn-group dropup btn-block">
-								<a class="btn btn-primary btn-large" href="updateProfile">Update Profile</a>
-							</div>
-					</div>
-					<div class="col-xs-12 divider text-center">
-						<div class="col-xs-12 col-sm-6 emphasis">
+							<c:when test="${empty healthStatus}">
+								Please Update Profile (below)
+							</c:when>
+							<c:otherwise>
+								${healthStatus}
+							</c:otherwise>
+						</c:choose>
+					</p>
+
+					<hr/>
+
+					<!-- USER REQUESTS/SERVICES INFO -->
+					<div class="row">
+						<div class="col-md-6">
 							<h2>
-								<strong>1</strong>
+								<strong>${numRequests}</strong>
 							</h2>
 							<p>
-								<small>Requests</small>
+								<small>Request(s) Made</small>
 							</p>
+
 							<form action="createRequest">
-								<button class="btn btn-success btn-block">
+								<button class="btn btn-success">
 									<span class="fa fa-plus-circle"></span> Create New Request
 								</button>
 							</form>
-
 						</div>
-						<div class="col-xs-12 col-sm-6 emphasis">
+
+						<div class="col-md-6">
 							<h2>
-								<strong>2</strong>
+								<strong>${numServices}</strong>
 							</h2>
 							<p>
-								<small>Services Offered</small>
+								<small>Service(s) Offered</small>
 							</p>
+
 							<form action="createService">
-								<button class="btn btn-info btn-block">
+								<button class="btn btn-info">
 									<span class="fa fa-user"></span> Offer New Service
 								</button>
 							</form>
 						</div>
-						<div class="col-xs-12 col-sm-6 emphasis">
-							<div class="btn-group dropup btn-block">
-								<button type="button" class="btn btn-primary">Options</button>
-							</div>
-						</div>
+					</div>
+
+					<!-- UPDATE PROFILE -->
+					<a class="btn btn-primary btn-large btn-block update-profile-btn" href="updateProfile">Update Profile</a>
+
 					</div>
 				</div>
 			</div>
 
 			<!-- REQUESTED SERVICES -->
-			<div class="col-lg-offset-9">
-				<h1>Requests Made</h1>
+			<div class="col-md-9">
+				<h3>Requests Made</h3>
 				<table class="table">
 					<thead>
 						<tr>
@@ -121,12 +120,10 @@
 						</tr>
 					</c:forEach>
 				</table>
-			</div>
 
 
 			<!-- OFFERED SERVICES -->
-			<div class="col-lg-offset-9">
-				<h1>Services Offered</h1>
+				<h3>Services Offered</h3>
 				<table class="table">
 					<thead>
 						<tr>

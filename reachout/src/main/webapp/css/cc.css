@@ -6,6 +6,7 @@
 	transition: background-color .2s, color .2s;
 	color: #fff;
 }
+
 #topheader .navbar-nav li.active>a {
 	background-color: #333;
 	color: #fff;
@@ -15,6 +16,7 @@
 	height: 2em;
 	float:left;
 }
+
 .brand-name {
 	float:right;
 }
@@ -124,4 +126,22 @@
 	top: 18px;
 	font-size: 7px;
 	position: absolute;
+}
+
+/* CSS for Profile page */
+
+.card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	max-width: 100%;
+	margin: auto;
+	text-align: center;
+	padding: 10px;
+}
+
+.profile-row {
+	padding-top: 30px;
+}
+
+.update-profile-btn {
+	margin-top: 30px;
 }
