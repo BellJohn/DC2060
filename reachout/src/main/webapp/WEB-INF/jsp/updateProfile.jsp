@@ -11,81 +11,93 @@
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
-		<div class="row">
-			<div class="col-sm-4">
-				<div class="profile-form" style="height: 424px;">
-					<form action="" method="POST" style="height: 399px;">
-						<!--  enctype="multipart/form-data"	 -->
-						<sec:csrfInput />
-						<fieldset>
-							<p>Update your profile information</p>
-							<hr>
-							<!-- Profile Picture -->
-							<!-- 
-						<div class="control-group">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" id="basic-addon1"><i
-										class="fa fa-lock"></i></span>
-								</div>
-								<input type="file" class="form-control" name="profilePic"
-									id="profilePic" placeholder="Upload a profile picture">
-							</div>
-						</div>-->
-							<!-- Health status -->
-							<div class="control-group" style="height: 37px;">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<span class="input-group-text" id="basic-addon1"> <i
-											class="fa fa-user"></i></span>
-									</div>
+		
+		<div class="row profile-row">
+			<div class="col-sm-4"></div>
+			<div class="col-md-4">
+				<div class="card card-bkg">
 
-									<select id="healthStatus" name="healthStatus"
-										class="form-control" placeholder="Health Status">
+					<!-- Display Users Name -->
+					<h2><strong>${firstName} ${lastName}</strong></h2>
+
+					<!-- Edit Profile Form -->
+					<div class="profile-form">
+						<form action="" method="POST">
+							<sec:csrfInput />
+							<fieldset>
+
+								<!-- Profile Picture -->
+								<figure>
+									<img src="images/no-profile-pic.png" alt="" class="rounded-circle">
+								</figure>
+
+								<!-- Edit Bio -->
+								<div class="form-group">
+									<label for="userBio">Bio</label>
+									<textarea class="form-control" name="userBio" path="bio" id="userBio" 
+										placeholder="Please enter a short sentence or two about yourself."
+										maxLength="160" rows="4" cols="40">${bio}</textarea>
+								</div>
+
+								<!-- Remaining Characters -->
+								<div class="row">
+									<div class="col-sm-3"></div>
+									<div class="col-sm-6"><br></div>
+									<div class="col-sm-3">
+										<span id='remainingC'></span>
+									</div>
+								</div>
+								
+								<!-- Edit Health Status -->
+								<div class="form-group">
+									<label for="healthStatus">Status</label>
+									<select id="healthStatus" name="healthStatus" class="form-control">
 										<c:forEach var="hs" items="${healthList}">
-											<option><c:set var="h" value="${hs}" />
-												<c:out value="${h }" /></option>
+											<option ${hs == healthStatus ? 'selected' : ''}><c:set var="h" value="${hs}" />
+												<c:out value="${h}" /></option>
 										</c:forEach>
 									</select>
 								</div>
-							</div>
-							<!-- User Biography -->
-							<div class="row">
-								<div class="control-group">
-									<div class="col-sm-4"></div>
-									<!--Update Button -->
-									<div class="control-group">
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1"> <i
-													class="fa fa-lock"></i>
-												</span>
-											</div>
-											<input type="textarea" class="form-control" name="userBio"
-												path="bio" id="userBio" placeholder="User Bio"
-												maxLength="750" rows="4" cols="20"
-												style="width: 253px; height: 57px">
-										</div>
-									</div>
-								</div>
-								<button class="btn btn-primary btn-lg">Update</button>
-							</div>
-						</fieldset>
-					</form>
+
+								<!-- Save Button -->
+								<button class="btn btn-primary btn-large btn-block save-profile-btn" href="updateProfile">Save</button>
+							</fieldset>
+						</form>
+					</div>
 				</div>
+
+
+				<c:choose>
+					<c:when test="${empty errors}">
+					</c:when>
+					<c:otherwise>
+						Errors :  ${errors}
+					</c:otherwise>
+				</c:choose>
+
 			</div>
-
 		</div>
-
-		<c:choose>
-			<c:when test="${empty errors}">
-
-			</c:when>
-			<c:otherwise>
-				Errors :  ${errors}
-			</c:otherwise>
-		</c:choose>
 	</div>
 </body>
+
+<script>
+	$(document).ready(function() {
+	var len = 0;
+	var maxchar = 160;
+
+	$( '#userBio' ).keyup(function(){
+		len = this.value.length
+		if(len > maxchar){
+			return false;
+		}
+		else if (len > 0) {
+			$( "#remainingC" ).html(maxchar - len);
+		}
+		else {
+			$( "#remainingC" ).html(maxchar);
+		}
+	})
+	});
+</script>
 
 </html>
