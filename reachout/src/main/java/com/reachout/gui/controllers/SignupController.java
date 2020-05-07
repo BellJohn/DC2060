@@ -140,7 +140,7 @@ public class SignupController {
 		
 		//Commenting out for testing purposes - otherwise will be spammed with many emails
 		// ec = new EmailController();
-		EmailController.generateAndSendEmail(email);
+		EmailController.generateAndSendEmail(email, username);
 		
 		
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
