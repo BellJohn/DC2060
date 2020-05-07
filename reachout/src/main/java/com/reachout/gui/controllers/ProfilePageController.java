@@ -44,6 +44,7 @@ public class ProfilePageController {
 		bio = null;
 		profilePic = null;
 		healthStatus = null;
+		
 		// Test to see if the user is logged in
 		auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
@@ -70,7 +71,6 @@ public class ProfilePageController {
 		catch (Exception e) {
 			System.out.println("No result found");
 		}
-		
 		
 		mv.addObject("firstName", firstName);
 		mv.addObject("lastName", lastName);

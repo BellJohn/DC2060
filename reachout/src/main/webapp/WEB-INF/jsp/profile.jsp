@@ -12,83 +12,80 @@
 
 		<div class="row profile-row">
 
-			<!-- PROFILE INFO (ETC) -->
+			<!-- User Profile Card -->
 			<div class="col-md-3">
-				<div class="card">
-					<div class="well profile">
+				<div class="card card-bkg">
 
-					<!-- USERS NAME -->
-					<h2><strong>${firstName} ${lastName}</strong></h2>
+				<!-- Display Users Name -->
+				<h2><strong>${firstName} ${lastName}</strong></h2>
 
-					<!-- USERS IMAGE-->
-					<figure>
-						<img src="images/no-profile-pic.png" alt="" class="rounded-circle">
-					</figure>
+				<!-- Display Users Image -->
+				<figure>
+					<img src="images/no-profile-pic.png" alt="" class="rounded-circle">
+				</figure>
 
-					<!-- USERS BIO -->
-					<p>
-					<c:choose>
-								<c:when test="${empty bio}">
-								Update your profile below to add a bio
-							</c:when>
-								<c:otherwise>
-								${bio}
-							</c:otherwise>
-						</c:choose>
-						<br>-<br>
-						<c:choose>
-							<c:when test="${empty healthStatus}">
-								Please Update Profile (below)
-							</c:when>
+				<!-- Users Bio and health status (or default values) -->
+				<p>
+				<c:choose>
+							<c:when test="${empty bio}">
+							Update your profile below to add a bio.
+						</c:when>
 							<c:otherwise>
-								${healthStatus}
-							</c:otherwise>
-						</c:choose>
-					</p>
+							${bio}
+						</c:otherwise>
+					</c:choose>
+					<br>-<br>
+					<c:choose>
+						<c:when test="${empty healthStatus}">
+							Please Update Profile (below)
+						</c:when>
+						<c:otherwise>
+							${healthStatus}
+						</c:otherwise>
+					</c:choose>
+				</p>
 
-					<hr/>
+				<hr/>
 
-					<!-- USER REQUESTS/SERVICES INFO -->
-					<div class="row">
-						<div class="col-md-6">
-							<h2>
-								<strong>${numRequests}</strong>
-							</h2>
-							<p>
-								<small>Request(s) Made</small>
-							</p>
+				<!-- Service/Request Info and Create Buttons -->
+				<div class="row">
+					<div class="col-md-6">
+						<h2>
+							<strong>${numRequests}</strong>
+						</h2>
+						<p>
+							<small>Request(s) Made</small>
+						</p>
 
-							<form action="createRequest">
-								<button class="btn btn-success">
-									<span class="fa fa-plus-circle"></span> Create New Request
-								</button>
-							</form>
-						</div>
-
-						<div class="col-md-6">
-							<h2>
-								<strong>${numServices}</strong>
-							</h2>
-							<p>
-								<small>Service(s) Offered</small>
-							</p>
-
-							<form action="createService">
-								<button class="btn btn-info">
-									<span class="fa fa-user"></span> Offer New Service
-								</button>
-							</form>
-						</div>
+						<form action="createRequest">
+							<button class="btn btn-success">
+								<span class="fa fa-plus-circle"></span> Create New Request
+							</button>
+						</form>
 					</div>
 
-					<!-- UPDATE PROFILE -->
-					<a class="btn btn-primary btn-large btn-block update-profile-btn" href="updateProfile">Update Profile</a>
+					<div class="col-md-6">
+						<h2>
+							<strong>${numServices}</strong>
+						</h2>
+						<p>
+							<small>Service(s) Offered</small>
+						</p>
 
+						<form action="createService">
+							<button class="btn btn-info">
+								<span class="fa fa-user"></span> Offer New Service
+							</button>
+						</form>
 					</div>
+				</div>
+
+				<!-- Update Profile Button -->
+				<a class="btn btn-primary btn-large btn-block update-profile-btn" href="updateProfile">Update Profile</a>
 				</div>
 			</div>
 
-			<!-- REQUESTED SERVICES -->
+			<!-- Users Help Requests -->
 			<div class="col-md-9">
 				<h3>Requests Made</h3>
 				<table class="table">
@@ -121,8 +118,7 @@
 					</c:forEach>
 				</table>
 
-
-			<!-- OFFERED SERVICES -->
+			<!-- Users Offered Services -->
 				<h3>Services Offered</h3>
 				<table class="table">
 					<thead>
@@ -154,11 +150,8 @@
 					</c:forEach>
 				</table>
 			</div>
-
-
-
 		</div>
 	</div>
-
 </body>
+
 </html>
