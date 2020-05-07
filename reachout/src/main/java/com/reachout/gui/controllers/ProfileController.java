@@ -29,9 +29,19 @@ public class ProfileController {
 	private static final String VIEW_NAME = "updateProfile";
 	private HibernateHealthStatusDAOImpl healthDAO;
 
+	private HibernateUserDAOImpl userDAO;
+	private HibernateUserProfileDAOImpl userProfileDAO;
+	private String firstName;
+	private String lastName;
+	private String profilePic;
+	private String bio;
+	private String healthStatus;
+
+
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 		healthDAO = new HibernateHealthStatusDAOImpl();
+		
 		// Test to see if the user is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
@@ -45,10 +55,42 @@ public class ProfileController {
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("user", username);
+
+		// Get all possible health status' to the dropdown list
 		List<String> healthList = healthDAO.getAllHealthStatuses();
 		mv.addObject("healthList", healthList);
-		return mv;
+
+		// Get all relevant information to display on the page for the user to edit
+		userDAO = new HibernateUserDAOImpl();
+		userProfileDAO = new HibernateUserProfileDAOImpl();
+		firstName = null;
+		lastName = null;
+		bio = null;
+		profilePic = null;
+		healthStatus = null;
+
+		firstName = userDAO.selectUser(username).getFirstName();
+		lastName = userDAO.selectUser(username).getLastName();
+		int userId = userDAO.getUserIdByUsername(username);
+
+		UserProfile profile = new UserProfile();
+		try {
+			profile = userProfileDAO.getProfileById(userId);
+			bio = profile.getBio();
+			profilePic = profile.getProfilePic();
+			healthStatus = profile.getHealthStatus();
+		}
+		catch (Exception e) {
+			System.out.println("No result found");
+		}
 		
+		mv.addObject("firstName", firstName);
+		mv.addObject("lastName", lastName);
+		mv.addObject("bio", bio);
+		mv.addObject("profilePic", profilePic);
+		mv.addObject("healthStatus", healthStatus);
+
+		return mv;
 	}
 
 	/**

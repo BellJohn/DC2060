@@ -56,7 +56,7 @@ UNIQUE KEY AS_UNIQ_COMBO (AS_LISTING_ID, AS_USER_ID)
 CREATE TABLE reach_out.USERPROFILE (
   `USER_ID` int(11) NOT NULL AUTO_INCREMENT,
   `PROFILE_PIC` varchar(300) NOT NULL,
-  `BIO` varchar(1000) NOT NULL,
+  `BIO` varchar(160) NOT NULL,
   `HEALTH_STATUS` varchar(100) NOT NULL,
   PRIMARY KEY (`USER_ID`)
 );
@@ -67,8 +67,7 @@ CREATE TABLE reach_out.HEALTHSTATUS (
     PRIMARY KEY (`HEALTHSTATUS_ID`)
   );
 
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Self-Isolating - due to suspected COVID-19");
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("In quarantine due to exposure to COVID-19");
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES( "Self-Isolating - due to health issues");
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Recovered from COVID-19");
 INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Healthy");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Healthy, but mobility restricted");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Self-Isolating, potential COVID-19");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Self-Isolating, due to COVID-19");
