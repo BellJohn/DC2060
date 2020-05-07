@@ -66,14 +66,7 @@
 					</div>
 				</div>
 
-
-				<c:choose>
-					<c:when test="${empty errors}">
-					</c:when>
-					<c:otherwise>
-						Errors :  ${errors}
-					</c:otherwise>
-				</c:choose>
+				<c:when test="${not empty errors}"> Errors : ${errors} </c:when>
 
 			</div>
 		</div>
