@@ -67,8 +67,7 @@ CREATE TABLE reach_out.HEALTHSTATUS (
     PRIMARY KEY (`HEALTHSTATUS_ID`)
   );
 
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Self-Isolating - due to suspected COVID-19");
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("In quarantine due to exposure to COVID-19");
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES( "Self-Isolating - due to health issues");
-INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Recovered from COVID-19");
 INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Healthy");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Healthy, but mobility restricted");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Self-Isolating, potential COVID-19");
+INSERT INTO reach_out.HEALTHSTATUS (`status`) VALUES ("Self-Isolating, due to COVID-19");
