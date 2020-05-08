@@ -65,11 +65,15 @@
 				<c:otherwise>
 					<c:choose>
 						<c:when test="${createSuccess}">
-						<div class="col-sm-4">Hooray! Your post is now live</div>
+							<!-- Display success message -->
+							<div class="alert alert-success col-sm-4 alert-spacing" role="alert">
+								<p>Success! Your service offer is now live. Please visit your <a href="/profile">Profile</a> to see your open requests.</p>
+							</div>
 						</c:when>
 					</c:choose>
 				</c:otherwise>
-				</c:choose>
+			</c:choose>
+			<div class="col-sm-4"></div>
 		</div>
 	</div>
 </body>
