@@ -15,6 +15,16 @@
 		<div class="row profile-row">
 			<div class="col-sm-4"></div>
 			<div class="col-md-4">
+
+				<!-- Display an error if any occurred -->
+				<c:if test="${not empty errors}">
+					<br>
+					<div class="alert alert-danger" role="alert">
+						<c:out value="Error updating profile: ${errors}" />.
+						<p>Please try again shortly.</p>
+					</div>
+				</c:if>
+
 				<div class="card card-bkg">
 
 					<!-- Display Users Name -->
@@ -65,11 +75,6 @@
 						</form>
 					</div>
 				</div>
-
-				<c:choose>
-					<c:when test="${not empty errors}"> Errors : ${errors} </c:when>
-				</c:choose>
-
 			</div>
 		</div>
 	</div>
