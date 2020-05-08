@@ -1,5 +1,3 @@
-<meta charset="UTF-8">
-
 #topheader .navbar-nav li>a {
 	text-transform: capitalize;
 	color: #333;
@@ -158,4 +156,21 @@
 
 .alert-spacing {
 	margin-top: 20px;
+}
+
+/* Request/Service page CSS */
+
+.card-request {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: left !important;
+}
+
+.listing-page {
+	padding-top: 30px;
+	padding-bottom: 10px;
+}
+
+.request-row {
+	padding-bottom: 20px;
 }

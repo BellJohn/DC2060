@@ -26,8 +26,6 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/accessDenied"
 			access="permitAll" />
-		<security:intercept-url pattern="/blog"
-			access="permitAll" />
 		<security:intercept-url pattern="/*"
 			access="isAuthenticated()" />
 
