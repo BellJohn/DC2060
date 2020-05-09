@@ -8,6 +8,9 @@ import java.util.List;
 import com.reachout.models.InternalMessage;
 
 /**
+ * Conversation object wraps all InternalMessages between the user browsing and another user.
+ * <br>
+ * Messages stored in allIMs are in chronological order - Oldest to Newest - 0 to N
  * @author John
  *
  */

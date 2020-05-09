@@ -144,7 +144,14 @@ public class InternalMessageHandler {
 		int origin;
 		int target;
 		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			origin = userDAO.getUserIdByUsername(userBrowsing);
+			// We need user IDs for the subsequent call to createAndStoreMessage
+			// If we have numeric IDs then we can make use of that straight away
+			// If we fail the parseInt, it must be alphanumeric so search for matching usernames
+			try {
+				origin = Integer.parseInt(userBrowsing);
+			} catch (NumberFormatException e) {
+				origin = userDAO.getUserIdByUsername(userBrowsing);
+			}
 			try {
 				target = Integer.parseInt(userOther);
 			} catch (NumberFormatException e) {

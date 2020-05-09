@@ -43,13 +43,17 @@
 				<h6>Pick a user to see your conversation history</h6>
 			</div>
 		</c:if>
+		
+		<!--  population of rest of data items -->
 		<c:forEach items="${conversations}" var="convo">
 			<c:choose>
 				<c:when test="${previousUser==convo.getUserOther()}">
+				<!--  open tab content div for active user (if the user sent a message we will end up here) -->
 					<div id="${convo.getUserOther()}" class="tabcontent active"
 						style="overflow-y: scroll; display: block;">
 				</c:when>
 				<c:otherwise>
+				<!--  open other tab content div -->
 					<div id="${convo.getUserOther()}" class="tabcontent"
 						style="overflow-y: scroll; display: none;">
 				</c:otherwise>
@@ -61,7 +65,8 @@
 					<p>${message.getMessage()}</p>
 				</div>
 			</c:forEach>
-	</div>
+			<!--  close tab content div -->
+		</div>
 	</c:forEach>
 	<div id="sendMSGBox" class="input-group mb-3"
 		style="visibility: hidden">
@@ -73,6 +78,7 @@
 				id="button-sendMSG" onclick="sendMessage()" disabled="disabled">Send</button>
 		</div>
 	</div>
+	<!-- close container div -->
 	</div>
 
 	<script>
