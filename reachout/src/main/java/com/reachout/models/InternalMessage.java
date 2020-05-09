@@ -133,8 +133,7 @@ public final class InternalMessage {
 	 * </br>
 	 * InternalMessage from: [%s] to: [%s] at: [%d]. Viewed: [%s]. Message:[%s]
 	 */
-	@Override
-	public String toString() {
+	public String toPrettyString() {
 		return String.format("InternalMessage from: [%s] to: [%s] at: [%d]. Viewed: [%s]. Message:[%s]", origin, target, createdDate, viewed, message );
 	}
 }

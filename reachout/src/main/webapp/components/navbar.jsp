@@ -45,7 +45,7 @@
 									class="nav-link" href="profile">Profile${pagina.endsWith('/profile') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
 								<li
 									class="nav-item ${pagina.endsWith('/viewMyMessages') ? 'active' : ''}"><a
-									class="nav-link" href="viewMyMessages">viewMyMessages${pagina.endsWith('/viewMyMessages') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
+									class="nav-link" href="viewMyMessages">My Messages${pagina.endsWith('/viewMyMessages') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
 								<li
 									class="nav-item ${pagina.endsWith('/viewRequests') ? 'active' : ''}"><a
 									class="nav-link" href="viewRequests">Requests${pagina.endsWith('/viewRequests') ? '<span class="sr-only">(current)</span>' : ''}</a></li>

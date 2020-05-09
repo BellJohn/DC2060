@@ -188,4 +188,20 @@
 	margin-top: 30px;
 }
 
-.save-profile
+.save-profile-btn {
+	margin-top: 40px;
+}
+
+.card-bkg {
+	background: #F7FDFF;
+	margin-bottom: 20px;
+}
+
+
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}

@@ -40,8 +40,7 @@
 								<sec:csrfInput />
 								<input type="hidden" id="action" name="action" value="accept" />
 								<input type="hidden" id="listingType" name="listingType"
-									value="${ListingObj.getListingType().getName()}" /> 
-									<input
+									value="${ListingObj.getListingType().getName()}" /> <input
 									type="hidden" id="listingID" name="listingID"
 									value="${ListingObj.getId()}" />
 								<button class="btn btn-success btn-block">
@@ -49,12 +48,14 @@
 								</button>
 							</form>
 						</div>
+
+						<!-- Button to trigger modal -->
+						<button class="btn btn-success btn-lg" data-toggle="modal"
+							data-target="#modalForm">Open Contact Form</button>
 					</c:when>
 				</c:choose>
 			</div>
-			<!-- Button to trigger modal -->
-			<button class="btn btn-success btn-lg" data-toggle="modal"
-				data-target="#modalForm">Open Contact Form</button>
+
 
 			<!-- Modal -->
 			<div class="modal fade" id="modalForm" role="dialog">
@@ -113,7 +114,8 @@
 					.ajax({
 						type : 'POST',
 						url : 'SendUserMessage',
-						data : 'contactFrmSubmit=1&message=' + message +'&targetID=' + targetID,
+						data : 'contactFrmSubmit=1&message=' + message
+								+ '&targetID=' + targetID,
 						beforeSend : function(xhr) {
 							$('.submitBtn').attr("disabled", "disabled");
 							$('.modal-body').css('opacity', '.5');

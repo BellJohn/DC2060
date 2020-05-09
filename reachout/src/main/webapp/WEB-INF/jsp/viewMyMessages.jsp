@@ -18,77 +18,155 @@
 	<div class="container-fluid">
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="jumbotron">
-			<div class="row">My Messages</div>
-		</div>
-		<div class="tab" style="overflow-y: scroll;">
-			<c:forEach items="${conversations}" var="convo">
-				<c:choose>
-					<c:when test="${previousUser==convo.getUserOther()}">
-						<button class="tablinks active"
-							onclick="openConvo(event, '${convo.getUserOther()}')">${convo.getOtherUserName()}</button>
-					</c:when>
-					<c:otherwise>
-						<button class="tablinks"
-							onclick="openConvo(event, '${convo.getUserOther()}')">${convo.getOtherUserName()}</button>
-					</c:otherwise>
-				</c:choose>
-
-			</c:forEach>
-		</div>
-
-		<!--  If we have received no previous user then just populate with default open tab -->
-		<c:if test="${empty previousUser}">
-			<div id="defaultTabContent" class="tabcontent active"
-				style="display: block">
-				<h6>Pick a user to see your conversation history</h6>
+			<div class="col-lg-9">
+				<h1>My Messages</h1>
 			</div>
-		</c:if>
-		
-		<!--  population of rest of data items -->
-		<c:forEach items="${conversations}" var="convo">
-			<c:choose>
-				<c:when test="${previousUser==convo.getUserOther()}">
-				<!--  open tab content div for active user (if the user sent a message we will end up here) -->
-					<div id="${convo.getUserOther()}" class="tabcontent active"
-						style="overflow-y: scroll; display: block;">
-				</c:when>
-				<c:otherwise>
-				<!--  open other tab content div -->
-					<div id="${convo.getUserOther()}" class="tabcontent"
-						style="overflow-y: scroll; display: none;">
-				</c:otherwise>
-			</c:choose>
-
-			<c:forEach items="${convo.getAllIMsAsList()}" var="message">
-				<div>
-					<h6>${message.getPrettyPrintDate()}</h6>
-					<p>${message.getMessage()}</p>
+		</div>
+		<div id="messageDisplay" onload="getFreshData()"></div>
+		<c:choose>
+			<c:when test="${conversations.size()== 0}">
+				<div class="card"
+					style="display: inline-flex; float: inline-end; margin-right: 10%; min-width: 65%; visibility: hidden;">
+					<div id="sendMSGBox" class="input-group mb-3"
+						style="visibility: hidden">
+						<input type="text" class="form-control" placeholder="Send Message"
+							aria-label="Send Message" aria-describedby="button-sendMSG"
+							id="inputMessage" />
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button"
+								id="button-sendMSG" onclick="sendMessage()">Send</button>
+						</div>
+					</div>
 				</div>
-			</c:forEach>
-			<!--  close tab content div -->
-		</div>
-	</c:forEach>
-	<div id="sendMSGBox" class="input-group mb-3"
-		style="visibility: hidden">
-		<input type="text" class="form-control" placeholder="Send Message"
-			aria-label="Send Message" aria-describedby="button-sendMSG"
-			id="inputMessage">
-		<div class="input-group-append">
-			<button class="btn btn-outline-secondary" type="button"
-				id="button-sendMSG" onclick="sendMessage()" disabled="disabled">Send</button>
-		</div>
-	</div>
-	<!-- close container div -->
-	</div>
+			</c:when>
+		</c:choose>
 
+	</div>
 	<script>
 		var activeUID;
+		getFreshData(); // This will run on page load
+		setInterval(function() {
+			getFreshData() // this will run after every 5 seconds
+		}, 5000);
+
+		function getFreshData() {
+			$
+					.ajax({
+						type : 'GET',
+						url : 'viewMyMessages?targetID=' + activeUID,
+						complete : function(resp) {
+							var obj = jQuery.parseJSON(resp
+									.getResponseHeader('conversationstring'));
+
+							// Test to see how many conversations we have to build.
+							// If there are none, display a relevant message instead.
+							if (obj.length == 0) {
+
+								content = "<div class=\"alert alert-primary\" role=\"alert\" style=\"text-align: center;\">";
+								content += "<p>Page looking a bit empty? Try striking up a conversation with another user first!</p>";
+								content += "<p>Why not start by seeing if there is a Request out there which you can help with?</p>";
+								content += "</div>";
+								// Populate with the new data
+								var displayDiv = document
+										.getElementById("messageDisplay");
+								displayDiv.innerHTML = content;
+								return;
+							}
+
+							// get last selected user and do the magic
+							// For each Conversation
+							var tabStyle = "style=\"overflow-y: scroll; max-width: 30%; border-radius: 10%; float: left; min-height: 500px; margin-left: 2.5%;\"";
+							var content = "<div class=\"tab\" " + tabStyle + ">";
+							for (var i = 0; i < obj.length; i++) {
+
+								if (activeUID == obj[i].userOther) {
+									content += "<button class=\"tablinks active\"  onclick=\"openConvo(event, "
+											+ obj[i].userOther
+											+ ")\">"
+											+ obj[i].otherUserName
+											+ "</button>";
+								} else {
+									// Add the User tab button
+									content += "<button class=\"tablinks\"  onclick=\"openConvo(event, "
+											+ obj[i].userOther
+											+ ")\">"
+											+ obj[i].otherUserName
+											+ "</button>";
+								}
+							}
+							content += "</div>";
+
+							var tabContentStyleVisible = "style=\"display: flex; flex-direction: column; block; max-width: 70%; min-height: 500px; max-height: 500px;\"";
+
+							var tabContentStyleHidden = "style=\"; flex-direction: column; display: none; max-width: 70%; min-height: 500px; max-height: 500px;\"";
+							var activeElement = "";
+							// iterate again for each of the tab contents
+							for (var i = 0; i < obj.length; i++) {
+								// For each message in that conversation
+								if (activeUID == obj[i].userOther) {
+									content += "<div id=\"" + obj[i].userOther + "\" class=\"tabcontent active\" " + tabContentStyleVisible +">";
+									activeElement = obj[i].userOther;
+								} else {
+									content += "<div id=\"" + obj[i].userOther + "\" class=\"tabcontent\" " + tabContentStyleHidden +">";
+								}
+
+								content += "<div id=\"scrollBarConvo"+obj[i].userOther+"\" style=\"overflow-y: scroll;\">";
+								for (var j = 0; j < obj[i].allIMsAsList.length; j++) {
+									// Add the messages to the tab window
+									content += "<div class=\"card\">";
+									content += "<div class=\"card-header\">";
+									content += "<img src=\"images/no-profile-pic.png\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
+									content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
+											+ obj[i].allIMsAsList[j].prettyPrintDate
+											+ "</p>";
+
+									//close card header
+									content += "</div>";
+									//open card body
+									content += "<div class=\"card-body\">";
+									content += "<p style=\"margin-bottom: 0px;\">"
+											+ obj[i].allIMsAsList[j].message
+											+ "</p>";
+									//close card body
+									content += "</div>";
+									//close card
+									content += "</div>";
+								}
+
+								// close the overflow y div
+								content += "</div>";
+
+								// Add the message box & content
+
+								content += "</div>";
+							}
+
+							// Populate with the new data
+							var displayDiv = document
+									.getElementById("messageDisplay");
+							displayDiv.innerHTML = content;
+
+							// Set the scroll bar to the bottom
+							dropScrollBarToBottom(activeElement);
+						}
+					});
+		}
+
+		function dropScrollBarToBottom(uid) {
+			// Set the scroll bar to the bottom
+			var scrollBox = "scrollBarConvo" + uid;
+			var element = document.getElementById(scrollBox);
+			element.scrollTop = element.scrollHeight;
+		}
 
 		function openConvo(evt, uid) {
+
 			activeUID = uid;
 			// Enable the messaging button and make the div visible
-			document.getElementById("button-sendMSG").disabled = false;
-			document.getElementById("sendMSGBox").style.visibility = 'visible'
+			var buttonID = "button-sendMSG";
+			var sendMsgBox = "sendMSGBox";
+			document.getElementById(buttonID).disabled = false;
+			document.getElementById(sendMsgBox).style.visibility = 'visible';
 
 			// Declare all variables
 			var i, tabcontent, tablinks;
@@ -107,10 +185,14 @@
 			}
 
 			// Show the current tab, and add an "active" class to the link that opened the tab
-			document.getElementById(uid).style.display = "block";
+			document.getElementById(uid).style.display = "flex";
 			evt.currentTarget.className += " active";
+
+			dropScrollBarToBottom(uid);
 		}
 
+		// Attempts to send the message to the InternalMessageHandler
+		// On success, the IM data is refreshed to include the new message
 		function sendMessage() {
 			var message = $('#inputMessage').val();
 			var token = $("meta[name='_csrf']").attr("content");
@@ -120,8 +202,6 @@
 				$('#inputMessage').focus();
 				return false;
 			} else {
-				console.log("sending message id: " + activeUID + " message: "
-						+ message);
 				$.ajax({
 					type : 'POST',
 					url : 'SendUserMessage',
@@ -133,15 +213,11 @@
 					success : function(msg) {
 						if (msg == 'SUCCESS') {
 							$('#inputMessage').val('');
-
-							$('.submitBtn').removeAttr("disabled");
-							// TODO Replace this whole section with a jQuery call on page load to populate the page with 
-							// data rather than returning it in the primary GET request and populating through the jsp
-							// Consider https://stackoverflow.com/questions/25446628/ajax-jquery-refresh-div-every-5-seconds
-							// Trigger reload of page with the current user active
-							window.location.href = 'viewMyMessages'
-									+ '?targetID=' + activeUID;
 						}
+					},
+					complete : function(resp) {
+						activeUID = resp.getResponseHeader('targetID');
+						getFreshData();
 					}
 				});
 			}

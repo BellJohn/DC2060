@@ -55,4 +55,11 @@ public final class Conversation {
 	public String getOtherUserName() {
 		return otherUserName;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Conversation [userBrowsing=%s, userOther=%s, allIMs=%s, otherUserName=%s]", userBrowsing, userOther, allIMs, otherUserName);
+	}
+	
+	
 }

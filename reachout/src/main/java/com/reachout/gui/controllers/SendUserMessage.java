@@ -75,6 +75,7 @@ public class SendUserMessage {
 			}
 		}
 		// On success, write SENT to response for AJAX to process
+		response.setHeader("targetID", userTarget);
 		response.setContentType("text/plain");
 		response.getWriter().write(outcome);
 	}

@@ -3,11 +3,13 @@
  */
 package com.reachout.gui.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.im.Conversation;
@@ -36,7 +39,7 @@ public class ViewMyMessagesController {
 	private static final String VIEW_NAME = "viewMyMessages";
 
 	@GetMapping
-	public ModelAndView initPage(HttpServletRequest request) {
+	public ModelAndView initPage(HttpServletRequest request, HttpServletResponse response) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
@@ -46,12 +49,23 @@ public class ViewMyMessagesController {
 		}
 		logger.debug("Reached viewMyMessages Controller");
 		String previousUserSelected = request.getParameter("targetID");
-		System.out.println("previous user was: " + previousUserSelected);
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("user", username);
-		mv.addObject("conversations", getAllMyConversations(username));
+		List<Conversation> convos = getAllMyConversations(username);
+		mv.addObject("conversations", convos);
 		mv.addObject("previousUser", previousUserSelected);
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		String jsonStr = "";
+        try { 
+        	// Convert conversations to JSON for the AJAX script
+            jsonStr = mapper.writeValueAsString(convos); 
+        } 
+        catch (IOException e) { 
+            logger.error("An error occured generating the JSON of the user's conversations",e); 
+        } 
+		response.setHeader("conversationString", jsonStr);
 		return mv;
 	}
 
