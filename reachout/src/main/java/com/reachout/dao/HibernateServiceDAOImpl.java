@@ -116,4 +116,31 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		}
 		return allResults;
 	}
+
+	/**
+	 * Returns all services made by a specific user based on their ID
+	 * 
+	 * @param userId The users ID
+	 * @return List of services made by a specific user
+	 */
+	public List<Service> getAllServicesForUser(int userId) {
+		ArrayList<Service> returnList = new ArrayList<>();
+		try (Session session = this.getSessionFactory().openSession()) {
+			Query query = session.createQuery("SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID = :userId",
+					Service.class);
+			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
+			query.setParameter("userId", userId);
+			List<?> results = query.getResultList();
+			for (Object obj : results) {
+				if (obj instanceof Service) {
+					returnList.add((Service) obj);
+				}
+			}
+		}
+		return returnList;
+	}
+
+	public int getNumServicesForUser(int userId) {
+		return getAllServicesForUser(userId).size();
+	}
 }
