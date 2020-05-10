@@ -36,7 +36,7 @@ import com.reachout.gui.validators.SignupValidator;
 import com.reachout.gui.validators.ValidationResult;
 import com.reachout.models.Password;
 import com.reachout.models.User;
-
+import com.reachout.processors.EmailHandler;
 @Controller
 @RequestMapping("/signup")
 public class SignupController {
@@ -140,7 +140,7 @@ public class SignupController {
 		
 		//Commenting out for testing purposes - otherwise will be spammed with many emails
 		// ec = new EmailController();
-		EmailController.generateAndSendEmail(email, username);
+		EmailHandler.generateAndSendEmail(email, username);
 		
 		
 		ModelAndView mv = new ModelAndView(VIEW_NAME);

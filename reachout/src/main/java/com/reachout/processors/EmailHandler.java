@@ -1,4 +1,4 @@
-package com.reachout.gui.controllers;
+package com.reachout.processors;
 
 import java.util.Properties;
 
@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMultipart;
  * @author Jessica Morgan
  */
 
-public class EmailController {
+public class EmailHandler {
 
 	static Properties mailServerProperties;
 	static Session getMailSession;
