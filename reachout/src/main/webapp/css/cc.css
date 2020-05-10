@@ -40,21 +40,19 @@
 	background-color: #008080!important;
 }
 
-
-/* Sign Up Form CSS */
+/* Sign Up / Log In Form CSS */
 .form-control, .form-control:focus, .input-group-addon {
 	border-color: #e1e1e1;
 }
 .form-control, .btn {        
 	border-radius: 3px;
 }
-.signup-form {
-	width: 390px;
+.signup-login-form {
+	width: 490px;
 	margin: 0 auto;
 	padding: 30px 0;
-	margin-top: 100px;
 }
-.signup-form form {
+.signup-login-form form {
 	color: #999;
 	border-radius: 3px;
 	margin-bottom: 15px;
@@ -62,69 +60,77 @@
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 	padding: 30px;
 }
-.signup-form h2 {
+.signup-login-form h2 {
 	color: #333;
 	font-weight: bold;
 	margin-top: 0;
 }
-.signup-form hr {
+.signup-login-form hr {
 	margin: 0 -30px 20px;
 }
-.signup-form .control-group {
+.signup-login-form .control-group {
 	margin-bottom: 20px;
 }
-.signup-form label {
+.signup-login-form label {
 	font-weight: normal;
 	font-size: 13px;
 }
-.signup-form .form-control {
+.signup-login-form .form-control {
 	min-height: 38px;
 	box-shadow: none !important;
 }	
-.signup-form .input-group-addon {
+.signup-login-form .input-group-addon {
 	max-width: 42px;
 	text-align: center;
 }
-.signup-form input[type="checkbox"] {
+.signup-login-form input[type="checkbox"] {
 	margin-top: 2px;
 }   
-.signup-form .btn{        
+.signup-login-form .btn{        
 	font-size: 16px;
 	font-weight: bold;
 	background: #19aa8d;
 	border: none;
 	min-width: 140px;
 }
-.signup-form .btn:hover, .signup-form .btn:focus {
+.signup-login-form .btn:hover, .signup-login-form .btn:focus {
 	background: #179b81;
 	outline: none;
 }
-.signup-form a {
+.signup-login-form a {
 	color: #2E88FF;	
 	text-decoration: underline;
 }
-.signup-form a:hover {
+.signup-login-form a:hover {
 	text-decoration: none;
 }
-.signup-form form a {
+.signup-login-form form a {
 	color: #19aa8d;
 	text-decoration: none;
 }	
-.signup-form form a:hover {
+.signup-login-form form a:hover {
 	text-decoration: underline;
 }
-.signup-form .fa {
+.signup-login-form .fa {
 	font-size: 21px;
 }
-.signup-form .fa-paper-plane {
+.signup-login-form .fa-paper-plane {
 	font-size: 18px;
 }
-.signup-form .fa-check {
+.signup-login-form .fa-check {
 	color: #fff;
 	left: 17px;
 	top: 18px;
 	font-size: 7px;
 	position: absolute;
+}
+
+.login-form {
+	margin-top: 30px;
+}
+
+.alert-success {
+	word-wrap: break-word;
 }
 
 /* CSS for Profile page */

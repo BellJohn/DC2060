@@ -20,7 +20,7 @@
 					</div>
 					<div class="col-lg-3">
 						<form action="createRequest">
-							<button class="btn btn-success text-right ">
+							<button class="btn btn-success text-right">
 								<span class="fa fa-plus-circle"></span> Create New Request
 							</button>
 						</form>

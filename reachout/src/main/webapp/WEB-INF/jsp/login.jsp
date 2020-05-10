@@ -12,8 +12,8 @@
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="row">
-			<div class="col-sm-4"></div>
-			<div class="col-sm-4">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
 
 				<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
 					<br>
@@ -21,7 +21,7 @@
 						<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
 					</div>
 				</c:if>
-				<div class="signup-form">
+				<div class="signup-login-form login-form">
 					<form action="<c:url value='j_spring_security_check'/>" method="POST">
 						<sec:csrfInput />
 						<fieldset>
@@ -64,7 +64,7 @@
 				</div>
 
 			</div>
-			<div class="col-sm-4"></div>
+			<div class="col-sm-3"></div>
 		</div>
 	</div>
 
