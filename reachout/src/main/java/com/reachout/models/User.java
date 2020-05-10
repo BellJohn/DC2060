@@ -1,7 +1,5 @@
 package com.reachout.models;
 
-import java.time.LocalDate;
-
 /**
  * Represents a User object as stored in the database. </br>
  * The database table is USERS. </br>

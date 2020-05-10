@@ -16,7 +16,7 @@
 			</button>
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
-				<a class="navbar-brand" href="/ReachOut/profile"><img
+				<a class="navbar-brand" href="/profile"><img
 					alt="ReachOut Logo" class="brand-img"
 					src="images/reachout-logo-dark.png" /></a>
 
@@ -43,6 +43,9 @@
 								<li
 									class="nav-item ${pagina.endsWith('/profile') ? 'active' : ''}"><a
 									class="nav-link" href="profile">Profile${pagina.endsWith('/profile') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
+								<li
+									class="nav-item ${pagina.endsWith('/viewMyMessages') ? 'active' : ''}"><a
+									class="nav-link" href="viewMyMessages">My Messages${pagina.endsWith('/viewMyMessages') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
 								<li
 									class="nav-item ${pagina.endsWith('/viewRequests') ? 'active' : ''}"><a
 									class="nav-link" href="viewRequests">Requests${pagina.endsWith('/viewRequests') ? '<span class="sr-only">(current)</span>' : ''}</a></li>

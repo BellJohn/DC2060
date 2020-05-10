@@ -26,9 +26,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	Logger logger = LogManager.getLogger(HibernateUserProfileDAOImpl.class);
 
 	/**
-	 * <p>
 	 * Attempts to persist a new user profile in the database.
-	 * </p>
 	 * 
 	 * @param user
 	 * @return true if successful, false otherwise
@@ -54,7 +52,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 */
 	public UserProfile getProfileById(int userID) {
 		try (Session session = this.getSessionFactory().openSession()) {
-			Query query  = session.createQuery("SELECT profile FROM UserProfile profile where USER_ID = :userID ");
+			Query query = session.createQuery("SELECT profile FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userID", userID);
 			return (UserProfile) query.getSingleResult();
 		}

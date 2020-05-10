@@ -156,6 +156,7 @@
         	<scope>runtime</scope>
     	</dependency>
 		<!-- Misc Start -->
+
 		<!-- Apache Commons Codec for Base64 functionality -->
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -163,6 +164,15 @@
 			<version>1.14</version>
 		</dependency>
 
+		<!-- JSON Library -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+
+		<!-- Misc End -->
 	</dependencies>
 	<build>
 		<finalName>ReachOut</finalName>
