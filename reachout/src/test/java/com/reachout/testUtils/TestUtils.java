@@ -7,15 +7,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
+import javax.persistence.Query;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
 
+import com.reachout.dao.HibernateInternalMessageDAOImpl;
 import com.reachout.dao.HibernateListingDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateRequestDAOImpl;
+import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.InternalMessage;
 import com.reachout.models.Listing;
 import com.reachout.models.Password;
+import com.reachout.models.Request;
+import com.reachout.models.Service;
 import com.reachout.models.User;
 
 /**
@@ -27,11 +35,15 @@ public class TestUtils {
 	private static final Logger logger = LogManager.getLogger(TestUtils.class);
 
 	/**
-	 * 
+	 * private as all methods are static, don't need an actual instance of this
+	 * class
 	 */
 	private TestUtils() {
 	}
 
+	/**
+	 * Deletes all users from the database
+	 */
 	public static void clearAllUsers() {
 		// Remove all users
 		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
@@ -43,6 +55,9 @@ public class TestUtils {
 		}
 	}
 
+	/**
+	 * Deletes all passwords from the database
+	 */
 	public static void clearAllPasswords() {
 		// Remove all passwords
 		try (HibernatePasswordDAOImpl passwordDao = new HibernatePasswordDAOImpl()) {
@@ -54,6 +69,9 @@ public class TestUtils {
 		}
 	}
 
+	/**
+	 * Deletes all Listings in the database
+	 */
 	public static void clearAllListings() {
 		// Remove all listings
 		try (HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl()) {
@@ -62,6 +80,76 @@ public class TestUtils {
 				logger.info("Deleting request with ID: " + listing.getId());
 				assertTrue(listingDAO.delete(listing));
 			}
-		}		
+		}
+	}
+
+	/**
+	 * Deletes all InternalMessages from the database
+	 */
+	public static void clearAllInternalMessages() {
+		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
+			ArrayList<InternalMessage> storedIMs = (ArrayList<InternalMessage>) imDAO.getAllMessages();
+			for (InternalMessage im : storedIMs) {
+				logger.info("Deleting InternalMessage with ID: " + im.getId());
+				assertTrue(imDAO.delete(im));
+			}
+		}
+	}
+
+	/**
+	 * Makes a test user in memory with default data of:
+	 * <ul>
+	 * <li>First Name: firstName</li>
+	 * <li>Last Name: lastName</li>
+	 * <li>Username: username</li>
+	 * <li>Email: email@email.com</li>
+	 * <li>DOB: 01/01/1970</li>
+	 * </ul>
+	 * 
+	 * @return test User
+	 */
+	public static User makeTestUser() {
+		return new User("firstName", "lastName", "username", "email@email.com", "01/01/1970");
+	}
+
+	/**
+	 * Blanket deletes every assigned listing in the database
+	 */
+	public static void clearAllAssignedListings() {
+		try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+				Session session = serDAO.getSessionFactory().openSession()) {
+			session.beginTransaction();
+			Query delQuery = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_ID like '%'");
+			delQuery.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+		}
+	}
+
+	/**
+	 * Returns a populated Request for a given user. <br>
+	 * User must be persisted in the database already as this relies on the user
+	 * having an assigned ID already
+	 * 
+	 * @param user
+	 * @return populated Request
+	 */
+	public static Request makeTestRequestForUser(User user) {
+		return new Request(String.format("testRequestFor%s", user.getUsername()), "Test Request", "count", "city",
+				user.getId());
+	}
+
+	/**
+	 * Returns a populated service for a given user. <br>
+	 * User must be persisted in the database already as this relies on the user
+	 * having an assigned ID already
+	 * 
+	 * @param user
+	 * @return populated Service
+	 */
+	public static Service makeTestServiceForUser(User user) {
+		return new Service(String.format("testServiceFor%s", user.getUsername()), "Test Request", "count", "city",
+				user.getId());
+
 	}
 }

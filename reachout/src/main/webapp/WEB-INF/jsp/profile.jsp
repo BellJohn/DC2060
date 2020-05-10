@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-	<title>ReachOut | Profile</title>
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<%@ include file="/components/stylesheets.jsp"%>
+<title>ReachOut | Profile</title>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/components/stylesheets.jsp"%>
 </head>
 
 <body>

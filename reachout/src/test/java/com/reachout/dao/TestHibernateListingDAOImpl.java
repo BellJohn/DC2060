@@ -5,19 +5,26 @@ package com.reachout.dao;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.reachout.models.Request;
 import com.reachout.models.User;
+import com.reachout.testUtils.TestUtils;
 
 /**
  * @author John
  *
  */
-class HibernateListingDAOImplTest {
+class TestHibernateListingDAOImpl {
 
+	@BeforeEach
+	@AfterEach
+	public void tearDown() {
+		TestUtils.clearAllAssignedListings();
+	}
 	/**
 	 * Test method for
 	 * {@link com.reachout.dao.HibernateListingDAOImpl#getAllListings()}.

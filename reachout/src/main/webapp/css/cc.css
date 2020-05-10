@@ -44,7 +44,7 @@
 .form-control, .form-control:focus, .input-group-addon {
 	border-color: #e1e1e1;
 }
-.form-control, .btn {        
+.form-control, .btn {
 	border-radius: 3px;
 }
 .signup-login-form {
@@ -85,7 +85,7 @@
 }
 .signup-login-form input[type="checkbox"] {
 	margin-top: 2px;
-}   
+}
 .signup-login-form .btn{        
 	font-size: 16px;
 	font-weight: bold;
@@ -134,7 +134,6 @@
 }
 
 /* CSS for Profile page */
-
 .card {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	max-width: 100%;
@@ -179,4 +178,52 @@
 
 .request-row {
 	padding-bottom: 20px;
+}
+
+/* Style the tab */
+.tab {
+	float: left;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	width: 20%;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+	display: block;
+	background-color: inherit;
+	color: black;
+	padding: 22px 16px;
+	width: 100%;
+	border: none;
+	outline: none;
+	text-align: left;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+	background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+	background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+	float: left;
+	padding: 0px 12px;
+	border: 1px solid #ccc;
+	width: 80%;
+	border-left: none;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
