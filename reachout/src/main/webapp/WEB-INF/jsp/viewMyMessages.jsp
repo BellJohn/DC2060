@@ -24,7 +24,7 @@
 		</div>
 		<div id="messageDisplay" onload="getFreshData()"></div>
 		<c:choose>
-			<c:when test="${conversations.size()== 0}">
+			<c:when test="${conversations.size() > 0}">
 				<div class="card"
 					style="display: inline-flex; float: inline-end; margin-right: 10%; min-width: 65%; visibility: hidden;">
 					<div id="sendMSGBox" class="input-group mb-3"
@@ -112,25 +112,52 @@
 
 								content += "<div id=\"scrollBarConvo"+obj[i].userOther+"\" style=\"overflow-y: scroll;\">";
 								for (var j = 0; j < obj[i].allIMsAsList.length; j++) {
-									// Add the messages to the tab window
-									content += "<div class=\"card\">";
-									content += "<div class=\"card-header\">";
-									content += "<img src=\"images/no-profile-pic.png\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
-									content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
-											+ obj[i].allIMsAsList[j].prettyPrintDate
-											+ "</p>";
-
-									//close card header
-									content += "</div>";
-									//open card body
-									content += "<div class=\"card-body\">";
-									content += "<p style=\"margin-bottom: 0px;\">"
-											+ obj[i].allIMsAsList[j].message
-											+ "</p>";
-									//close card body
-									content += "</div>";
-									//close card
-									content += "</div>";
+								
+									if(obj[i].userBrowsing == obj[i].allIMsAsList[j].origin){
+										// Create a message element sent by the user browsing
+										// Add the messages to the tab window
+										content += "<div class=\"card\">";
+										content += "<div class=\"card-header\" style=\"background-color: #AAFFDF;\">";
+										content += "<img src=\"images/no-profile-pic.png\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
+										content += "<h5>" + obj[i].browsingUserName +"</h5>";
+										content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
+												+ obj[i].allIMsAsList[j].prettyPrintDate
+												+ "</p>";
+										//close card header
+										content += "</div>";
+										//open card body
+										content += "<div class=\"card-body\" style=\"background-color: #AAFFDF;\">";
+										content += "<p style=\"margin-bottom: 0px;\">"
+												+ obj[i].allIMsAsList[j].message
+												+ "</p>";
+										//close card body
+										content += "</div>";
+										//close card
+										content += "</div>";
+									}
+									else{
+									// Create a message element sent by the other party in the conversation
+										// Add the messages to the tab window
+										content += "<div class=\"card\">";
+										content += "<div class=\"card-header\" style=\"background-color: #c3edea;\">";
+										content += "<img src=\"images/no-profile-pic.png\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
+										content += "<h5>" + obj[i].otherUserName +"</h5>";
+										content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
+												+ obj[i].allIMsAsList[j].prettyPrintDate
+												+ "</p>";
+										//close card header
+										content += "</div>";
+										//open card body
+										content += "<div class=\"card-body\" style=\"background-color: #c3edea;\">";
+										content += "<p style=\"margin-bottom: 0px;\">"
+												+ obj[i].allIMsAsList[j].message
+												+ "</p>";
+										//close card body
+										content += "</div>";
+										//close card
+										content += "</div>";
+									}
+									
 								}
 
 								// close the overflow y div

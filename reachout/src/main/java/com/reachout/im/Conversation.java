@@ -20,12 +20,14 @@ public final class Conversation {
 	private final int userOther;
 	private final List<InternalMessage> allIMs;
 	private final String otherUserName;
+	private final String browsingUserName;
 
-	public Conversation(int userBrowsing, int userOther, List<InternalMessage> allIMs, String otherUserName) {
+	public Conversation(int userBrowsing, int userOther, List<InternalMessage> allIMs, String otherUserName, String browsingUserName) {
 		this.userBrowsing = userBrowsing;
 		this.userOther = userOther;
 		this.allIMs = allIMs;
 		this.otherUserName = otherUserName;
+		this.browsingUserName = browsingUserName;
 	}
 
 	/**
@@ -56,6 +58,13 @@ public final class Conversation {
 		return otherUserName;
 	}
 	
+	/**
+	 * @return the browsingUserName
+	 */
+	public String getBrowsingUserName() {
+		return browsingUserName;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Conversation [userBrowsing=%s, userOther=%s, allIMs=%s, otherUserName=%s]", userBrowsing, userOther, allIMs, otherUserName);

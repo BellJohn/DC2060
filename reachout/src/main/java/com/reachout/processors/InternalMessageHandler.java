@@ -106,11 +106,13 @@ public class InternalMessageHandler {
 			return null;
 		}
 		String otherUserName;
+		String browsingUserName;
 		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
 			otherUserName = userDAO.selectByID(userOther).getUsername();
+			browsingUserName = userDAO.selectByID(userBrowsing).getUsername();
 		}
 		// If we are here, we have messages to put together into a conversation
-		Conversation conversation = new Conversation(userBrowsing, userOther, allIMs, otherUserName);
+		Conversation conversation = new Conversation(userBrowsing, userOther, allIMs, otherUserName, browsingUserName);
 		logger.debug(String.format("Created conversation between users {%s} : {%s}", userBrowsing, userOther));
 		return conversation;
 	}

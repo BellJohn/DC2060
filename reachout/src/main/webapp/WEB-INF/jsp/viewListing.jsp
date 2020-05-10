@@ -51,7 +51,7 @@
 
 						<!-- Button to trigger modal -->
 						<button class="btn btn-success btn-lg" data-toggle="modal"
-							data-target="#modalForm">Open Contact Form</button>
+							data-target="#modalForm" style="margin-top: 10px;">Open Contact Form</button>
 					</c:when>
 				</c:choose>
 			</div>
