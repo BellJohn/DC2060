@@ -8,8 +8,6 @@
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}" />
 <meta name="_csrf_header" content="${_csrf.headerName}" />
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script
@@ -22,38 +20,46 @@
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
-		<div class="card">
-			<div class="card-body card-header"
-				style="width: 40%; margin: 0 auto;">
-				<h4 class="card-title">${ListingObj.getTitle()}</h4>
-				<p class="card-text">Description: ${ListingObj.getDescription()}</p>
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item">County: ${ListingObj.getCounty()}</li>
-					<li class="list-group-item">City: ${ListingObj.getCity()}</li>
-					<li class="list-group-item">Status: ${ListingObj.getStatus()}</li>
-				</ul>
+		<div class="row profile-row">
+			<div class="col-sm-3"></div>
+			<div class="col-md-6">
+				<div class="card">
+					<h2><strong>${ListingObj.getTitle()}</strong></h2>
+					<p class="card-text">${ListingObj.getDescription()}</p>
+					<hr>
+					<p class="card-text">${ListingObj.getCity()}, ${ListingObj.getCounty()}</p>
+					<hr>
+					<p class="card-text">Status: ${ListingObj.getStatus()}</p>
 
-				<c:choose>
-					<c:when test="${enableButton}">
-						<div>
-							<form action="" method="POST">
-								<sec:csrfInput />
-								<input type="hidden" id="action" name="action" value="accept" />
-								<input type="hidden" id="listingType" name="listingType"
-									value="${ListingObj.getListingType().getName()}" /> <input
-									type="hidden" id="listingID" name="listingID"
-									value="${ListingObj.getId()}" />
-								<button class="btn btn-success btn-block">
-									<span class="fa fa-info"></span> Offer to Help!
-								</button>
-							</form>
-						</div>
+					<c:choose>
+						<c:when test="${enableButton}">
+							<div class="row">
 
-						<!-- Button to trigger modal -->
-						<button class="btn btn-success btn-lg" data-toggle="modal"
-							data-target="#modalForm" style="margin-top: 10px;">Open Contact Form</button>
-					</c:when>
-				</c:choose>
+								<div class="col-lg-6">
+									<!-- Button to trigger modal -->
+									<button class="btn btn-info btn-block" data-toggle="modal" data-target="#modalForm">
+										<span class="fa fa-comments-o"></span> Message User</button>
+								</div>
+
+								<div class="col-lg-6">
+									<form action="" method="POST">
+										<sec:csrfInput />
+										<input type="hidden" id="action" name="action" value="accept" />
+										<input type="hidden" id="listingType" name="listingType"
+											value="${ListingObj.getListingType().getName()}" /> <input
+											type="hidden" id="listingID" name="listingID"
+											value="${ListingObj.getId()}" />
+										<button class="btn btn-success btn-block">
+											<span class="fa fa-handshake-o"></span> Offer Your Help
+										</button>
+									</form>
+								</div>
+								
+							</div>
+						</c:when>
+					</c:choose>
+				</div>
+				<div class="col-sm-3"></div>
 			</div>
 
 
