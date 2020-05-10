@@ -3,7 +3,6 @@
  */
 package com.reachout.dao;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -13,7 +12,6 @@ import javax.persistence.RollbackException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.exception.ConstraintViolationException;
 
 import com.reachout.models.Listing;
 import com.reachout.models.Request;

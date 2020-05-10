@@ -147,7 +147,9 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 			Query query = session.createQuery("SELECT user.id FROM User user WHERE USERS_USERNAME = :username");
 			query.setParameter("username", username);
 			return (Integer)(query.getSingleResult());
-		}		
+		} catch (NoResultException e) {
+			return -1;
+		}
 		
 	}
 	
