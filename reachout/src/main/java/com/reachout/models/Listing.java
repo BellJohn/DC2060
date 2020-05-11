@@ -79,6 +79,21 @@ public abstract class Listing implements Serializable {
 	}
 
 	/**
+	 * @return the description ready to be dislpayed on a page
+	 */
+	public String getFormattedDescription() {
+		int strLen = description.length();
+		int cutoff = 300;
+		if (strLen > cutoff) {
+			String formattedDescription = description.substring(0, cutoff);
+			formattedDescription += "... (View Details to read more)";
+			return formattedDescription;
+		} else {
+			return description;
+		}
+	}
+
+	/**
 	 * @return the county
 	 */
 	public String getCounty() {
