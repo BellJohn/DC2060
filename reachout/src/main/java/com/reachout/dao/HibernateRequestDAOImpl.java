@@ -76,6 +76,8 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
 			session.delete(request);
+			Query query = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
+			query.setParameter("lst_id", request.getId());
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
