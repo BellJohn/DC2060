@@ -69,7 +69,7 @@
 
 								<!-- Display success message -->
 								<div class="alert alert-success alert-spacing" role="alert">
-									<p>Success! Your request is now live. Please visit your <a href="/profile">Profile</a> to see your open requests.</p>
+									<p>Success! Your request is now live. Please visit your <a href="profile">Profile</a> to see your open requests.</p>
 								</div>
 
 							</c:when>

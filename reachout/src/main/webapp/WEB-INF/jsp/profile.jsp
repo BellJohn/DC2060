@@ -105,9 +105,9 @@
 							<p class="card-text">${request.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-6"></div>
+								<div class="col-lg-8"></div>
 
-								<div class="col-lg-3">
+								<div class="col-lg-2">
 									<form action="viewListing" method="POST">
 										<sec:csrfInput />
 										<input type="hidden" id="listingType" name="listingType"
@@ -119,7 +119,7 @@
 										</button>
 									</form>
 								</div>
-								<div class="col-lg-3">
+								<div class="col-lg-2">
 									<!-- Edit Details Button -->
 									<form action="editListing" method="GET">
 										<input
@@ -156,9 +156,9 @@
 							<p class="card-text">${service.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-6"></div>
+								<div class="col-lg-8"></div>
 
-								<div class="col-lg-3">
+								<div class="col-lg-2">
 									<form action="viewListing" method="POST">
 										<sec:csrfInput />
 										<input type="hidden" id="listingType" name="listingType"
@@ -170,7 +170,7 @@
 										</button>
 									</form>
 								</div>
-								<div class="col-lg-3">
+								<div class="col-lg-2">
 									<!--  Edit Service Button -->
 									<form action="editListing" method="GET">
 										<input

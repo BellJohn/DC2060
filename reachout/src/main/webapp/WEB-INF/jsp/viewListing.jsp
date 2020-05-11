@@ -41,7 +41,7 @@
 										<span class="fa fa-comments-o"></span> Message User</button>
 								</div>
 
-								<div class="col-lg-3">
+								<div class="col-lg-6">
 									<form action="" method="POST">
 										<sec:csrfInput />
 										<input type="hidden" id="action" name="action" value="accept" />
@@ -61,15 +61,18 @@
 
 					<c:choose>
 						<c:when test="${isOwner == true}">
-							<div class="col-lg-3">
-								<form action="editListing" method="GET">
-									<input type="hidden" id="action" name="action" value="accept" />
-									<input type="hidden" id="listingID" name="listingID"
-										value="${ListingObj.getId()}" />
-									<button class="btn btn-success btn-block">
-										<span class="fa fa-info"></span> Edit Listing
-									</button>
-								</form>
+							<div class="row">
+								<div class="col-lg-4"></div>
+								<div class="col-lg-4">
+									<form action="editListing" method="GET">
+										<input type="hidden" id="action" name="action" value="accept" />
+										<input type="hidden" id="listingID" name="listingID"
+											value="${ListingObj.getId()}" />
+										<button class="btn btn-success btn-block">
+											<span class="fa fa-info"></span> Edit Listing
+										</button>
+									</form>
+								</div>
 							</div>
 						</c:when>
 					</c:choose>
