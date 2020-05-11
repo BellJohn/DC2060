@@ -143,4 +143,28 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	public int getNumServicesForUser(int userId) {
 		return getAllServicesForUser(userId).size();
 	}
+
+	/** 
+	 * Returns all open services made by anyone other than the current user
+	 * 
+	 * @param userId the users ID
+	 * @return List of services made by all other users
+	 */
+	public List<Service> getAllServicesForDisplay(int userId) {
+		ArrayList<Service> returnList = new ArrayList<>();
+		try (Session session = this.getSessionFactory().openSession()) {
+			Query query = session.createQuery("SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status",
+					Service.class);
+			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
+			query.setParameter("userId", userId);
+			query.setParameter("status", 0);
+			List<?> results = query.getResultList();
+			for (Object obj : results) {
+				if (obj instanceof Service) {
+					returnList.add((Service) obj);
+				}
+			}
+		}
+		return returnList;
+	}
 }

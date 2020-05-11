@@ -128,7 +128,7 @@ class ProfileControllerTest {
 
 		assertEquals("redirect:/profile", result.getViewName());
 		try(HibernateUserProfileDAOImpl dao = new HibernateUserProfileDAOImpl()){
-			assertEquals(1, dao.getAllProfiles().size());	
+			assertEquals(1, dao.getAllProfiles().size());
 		}
 
 	}
