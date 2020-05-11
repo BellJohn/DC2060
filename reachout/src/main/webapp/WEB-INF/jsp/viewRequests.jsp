@@ -31,7 +31,7 @@
 					<div class="card card-request">
 						<h4 class="card-title">${request.getTitle()}</h4>
 						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()}, ${request.getCounty()}</h6>
-						<p class="card-text">${request.getDescription()}</p>
+						<p class="card-text">${request.getFormattedDescription()}</p>
 						
 						<hr>
 

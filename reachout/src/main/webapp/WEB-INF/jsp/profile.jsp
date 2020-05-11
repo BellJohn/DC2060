@@ -102,7 +102,7 @@
 						<div class="card card-request">
 							<h4 class="card-title">${request.getTitle()}</h4>
 							<h6 class="card-subtitle mb-2 text-muted">${request.getCity()}, ${request.getCounty()}</h6>
-							<p class="card-text">${request.getDescription()}</p>
+							<p class="card-text">${request.getFormattedDescription()}</p>
 							
 							<div class="row">
 								<div class="col-lg-9"></div>
@@ -142,7 +142,7 @@
 						<div class="card card-request">
 							<h4 class="card-title">${service.getTitle()}</h4>
 							<h6 class="card-subtitle mb-2 text-muted">${service.getCity()}, ${service.getCounty()}</h6>
-							<p class="card-text">${service.getDescription()}</p>
+							<p class="card-text">${service.getFormattedDescription()}</p>
 							
 							<div class="row">
 								<div class="col-lg-9"></div>
