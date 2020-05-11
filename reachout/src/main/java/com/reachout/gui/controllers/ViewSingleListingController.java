@@ -15,7 +15,7 @@ import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.models.EntityStatus;
+import com.reachout.models.ListingStatus;
 import com.reachout.models.Listing;
 import com.reachout.models.ListingType;
 import com.reachout.models.User;
@@ -68,10 +68,11 @@ public class ViewSingleListingController {
 
 		// If this user is the user who owns the listing, we should disable the "Offer
 		// to help" button
+		boolean isOwner = userBrowsingOwnsPost(result.getUserId());
 		boolean enableOfferButton = true;
 		// If it is not currently open or the user browsing owns this post, hide the
 		// button
-		if (result.getListingType().equals(ListingType.SERVICE) || result.getStatus() != EntityStatus.OPEN || userBrowsingOwnsPost(result.getUserId())) {
+		if (result.getListingType().equals(ListingType.SERVICE) || result.getStatus() != ListingStatus.OPEN || isOwner) {
 			enableOfferButton = false;
 		}
 
@@ -80,6 +81,7 @@ public class ViewSingleListingController {
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("ListingObj", result);
 		mv.addObject("enableButton", enableOfferButton);
+		mv.addObject("isOwner", isOwner);
 
 		return mv;
 	}

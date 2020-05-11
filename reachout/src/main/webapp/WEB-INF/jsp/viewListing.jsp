@@ -51,7 +51,23 @@
 
 						<!-- Button to trigger modal -->
 						<button class="btn btn-success btn-lg" data-toggle="modal"
-							data-target="#modalForm" style="margin-top: 10px;">Open Contact Form</button>
+							data-target="#modalForm" style="margin-top: 10px;"> Open
+							Contact Form</button>
+					</c:when>
+				</c:choose>
+
+				<c:choose>
+					<c:when test="${isOwner == true}">
+						<div>
+							<form action="editListing" method="GET">
+								<input type="hidden" id="action" name="action" value="accept" />
+								<input type="hidden" id="listingID" name="listingID"
+									value="${ListingObj.getId()}" />
+								<button class="btn btn-success btn-block">
+									<span class="fa fa-info"></span> Edit Listing
+								</button>
+							</form>
+						</div>
 					</c:when>
 				</c:choose>
 			</div>

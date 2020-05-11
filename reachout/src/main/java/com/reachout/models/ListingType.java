@@ -26,13 +26,13 @@ public enum ListingType {
 	}
 	
 	/**
-	 * Returns the corresponding EntityStatus by ordindal
+	 * Returns the corresponding ListingStatus by ordindal
 	 * 
 	 * @param statusValue
 	 * @return
 	 */
-	public static EntityStatus getByOrdinal(int listingValue) {
-		return EntityStatus.values()[listingValue];
+	public static ListingStatus getByOrdinal(int listingValue) {
+		return ListingStatus.values()[listingValue];
 	}
 
 	@Override

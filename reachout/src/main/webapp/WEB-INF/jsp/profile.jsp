@@ -96,6 +96,7 @@
 							<th scope="col">County</th>
 							<th scope="col">City</th>
 							<th scope="col">View</th>
+							<th scope="col">Edit</th>
 						</tr>
 					</thead>
 					<c:forEach items="${liveRequests}" var="request">
@@ -104,7 +105,9 @@
 							<td>${request.getDescription()}</td>
 							<td>${request.getCounty()}</td>
 							<td>${request.getCity()}</td>
-							<td><form action="viewListing" method="POST">
+							<td>
+							<!-- View Request Button -->
+								<form action="viewListing" method="POST">
 									<sec:csrfInput />
 									<input type="hidden" id="listingType" name="listingType"
 										value="${request.getListingType().getName()}" /> <input
@@ -112,6 +115,17 @@
 										value="${request.getId()}" />
 									<button class="btn btn-success btn-block">
 										<span class="fa fa-info"></span> View Details
+									</button>
+								</form>
+								</td>
+								<td>
+								<!-- Edit Details Button -->
+								<form action="editListing" method="GET">
+									<input
+										type="hidden" id="listingID" name="listingID"
+										value="${request.getId()}" />
+									<button class="btn btn-success btn-block">
+										<span class="fa fa-info"></span> Edit Details
 									</button>
 								</form></td>
 						</tr>
@@ -128,6 +142,7 @@
 							<th scope="col">County</th>
 							<th scope="col">City</th>
 							<th scope="col">View</th>
+							<th scope="col">Edit</th>
 						</tr>
 					</thead>
 					<c:forEach items="${liveServices}" var="service">
@@ -136,6 +151,7 @@
 							<td>${service.getDescription()}</td>
 							<td>${service.getCounty()}</td>
 							<td>${service.getCity()}</td>
+							<!-- View Service button -->
 							<td><form action="viewListing" method="POST">
 									<sec:csrfInput />
 									<input type="hidden" id="listingType" name="listingType"
@@ -144,6 +160,17 @@
 										value="${service.getId()}" />
 									<button class="btn btn-success btn-block">
 										<span class="fa fa-info"></span> View Details
+									</button>
+								</form>
+								</td>
+								<td>
+								<!--  Edit Service Button -->
+								<form action="editListing" method="GET">
+									<input
+										type="hidden" id="listingID" name="listingID"
+										value="${service.getId()}" />
+									<button class="btn btn-success btn-block">
+										<span class="fa fa-info"></span> Edit Details
 									</button>
 								</form></td>
 						</tr>

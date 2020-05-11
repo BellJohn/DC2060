@@ -69,7 +69,7 @@ public class ProfilePageController {
 			healthStatus = profile.getHealthStatus();
 		}
 		catch (Exception e) {
-			System.out.println("No result found");
+			logger.error("No result found");
 		}
 		
 		mv.addObject("firstName", firstName);

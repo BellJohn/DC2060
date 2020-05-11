@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.reachout.dao.HibernateListingDAOImpl;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
-import com.reachout.models.EntityStatus;
+import com.reachout.models.ListingStatus;
 import com.reachout.models.Listing;
 import com.reachout.models.ListingType;
 import com.reachout.models.User;
@@ -73,7 +73,7 @@ public class ListingHandler {
 		// If we reached here, this user is valid to accept this request and we are
 		// confident we have appropriate objects for both
 		boolean success = false;
-		listingFound.setStatus(EntityStatus.ACCEPTED);
+		listingFound.setStatus(ListingStatus.PENDING);
 		try (HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl()) {
 			success = listingDAO.assignListingToUser(listingFound, userBrowsing);
 		}
