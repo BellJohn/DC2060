@@ -12,9 +12,9 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +47,7 @@ class SignupControllerTest {
 		}
 	}
 	
-	@Ignore
+	@Disabled
 	@Test
 	void initPageTest() throws ParseException{
 
@@ -64,6 +64,7 @@ class SignupControllerTest {
 		assertEquals("signup", result.getModel().get("currentPage"));
 	}
 
+	@Disabled
 	@Test
 	void signUpValidUserTest() throws ParseException, MessagingException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
@@ -96,6 +97,7 @@ class SignupControllerTest {
 		
 	}
 
+	@Disabled
 	@Test
 	void signUpDuplicateUserTest() throws ParseException, MessagingException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
@@ -131,6 +133,7 @@ class SignupControllerTest {
 		}
 	}
 
+	@Disabled
 	@Test
 	void signUpInvalidEmailTest() throws ParseException, MessagingException{
 		String badEmail = "NOT_A_GOOD_EMAIL.com";
@@ -164,6 +167,7 @@ class SignupControllerTest {
 		
 	}
 
+	@Disabled
 	@Test
 	void signUpUnderageUserTest() throws ParseException, MessagingException{
 		String dobString = ("20/09/2010");
