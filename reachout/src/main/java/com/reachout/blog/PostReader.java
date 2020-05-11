@@ -85,11 +85,11 @@ public class PostReader {
      * given directory.
      * 
      */
-    private File[] getFilesFromDirectory() {
+    public File[] getFilesFromDirectory() {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(directory);
 
-        //Check to see if directory nonexistant or empty
+        //Check to see if file nonexistant or empty
         if (url == null) {
             return new File[] {};
         }
@@ -99,6 +99,29 @@ public class PostReader {
         return new File(path).listFiles();
     }
 
+    /**
+     * Get a specific file from a given directory
+     * 
+     * 
+     */
+    public static String getFilePath(String fileName) {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        URL url = loader.getResource(fileName);
+        System.out.println( url);
+
+        //Check to see if file exists
+        if (url == null) {
+            System.out.println("File can't be found");
+        }
+
+        //Return array of all files found on path
+        return url.getPath();
+        
+     
+    }
+    
+    
+    
     /**
      * Returns whether or not all blog post fields contain valid
      * content.

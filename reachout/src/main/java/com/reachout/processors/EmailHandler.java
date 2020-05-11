@@ -22,6 +22,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.reachout.blog.PostReader;
+
 /**
  * @author Jessica Morgan
  */
@@ -34,20 +36,23 @@ public class EmailHandler {
 
 
 	public static void main(String args[]) throws AddressException, MessagingException, IOException {
-
-		generateAndSendEmail("jesswales1993@yahoo.co.uk", "testuser", "./src/main/resources/signupEmail.html", "Welcome to ReachOut...");
+							
+		//set up for testing purposes		
+		generateAndSendEmail("test@test.co.uk", "testuser", "./src/main/resources/signupEmail.html", "Welcome to ReachOut...");
 		System.out.println("\n\n ===> Your Java Program has just sent an Email successfully. Check your email..");
 	}
 
 
 	public static void generateAndSendEmail(String email, String username, String filename, String emailSubject) throws AddressException, MessagingException{
 
+		//get actual path of file
+		String emailFile = PostReader.getFilePath(filename);
 		StringBuilder sb = new StringBuilder();
 		
 		BufferedReader rd = null;
 		try {
 			// Open the file for reading.
-			rd = new BufferedReader(new FileReader(new File(filename)));
+			rd = new BufferedReader(new FileReader(new File(emailFile)));
 
 			// Read all contents of the file.
 			String inputLine = null;
