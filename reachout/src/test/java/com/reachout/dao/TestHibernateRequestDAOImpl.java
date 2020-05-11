@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.reachout.models.EntityStatus;
+import com.reachout.models.ListingStatus;
 import com.reachout.models.Request;
 import com.reachout.testUtils.TestUtils;
 
@@ -81,7 +81,7 @@ class TestHibernateRequestDAOImpl {
 			request = (Request) reqDAO.selectById(reqId);
 
 			request.setCity(newCityData);
-			request.setStatus(EntityStatus.ACCEPTED);
+			request.setStatus(ListingStatus.PENDING);
 			// TEST the method returns what we expect
 			assertTrue(reqDAO.update(request));
 
@@ -93,7 +93,7 @@ class TestHibernateRequestDAOImpl {
 
 			// TEST that the returned entity actually has the updated fields
 			assertEquals(newCityData, request.getCity());
-			assertEquals(EntityStatus.ACCEPTED, request.getStatus());
+			assertEquals(ListingStatus.PENDING, request.getStatus());
 
 		}
 	}

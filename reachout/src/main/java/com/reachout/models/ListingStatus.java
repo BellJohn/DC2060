@@ -10,9 +10,9 @@ package com.reachout.models;
  * @author John
  *
  */
-public enum EntityStatus {
+public enum ListingStatus {
 
-	OPEN(0, "OPEN"), ACCEPTED(1, "ACCEPTED"), COMPLETE(2, "COMPLETE");
+	OPEN(0, "OPEN"), PENDING(1, "PENDING"), CLOSED(2, "CLOSED");
 
 	private final int ordinal;
 	private final String name;
@@ -22,13 +22,13 @@ public enum EntityStatus {
 	 * 
 	 * @param ordinal
 	 */
-	EntityStatus(int ordinal, String name) {
+	ListingStatus(int ordinal, String name) {
 		this.ordinal = ordinal;
 		this.name = name;
 	}
 
 	/**
-	 * Returns the ordinal of the EntityStatus
+	 * Returns the ordinal of the ListingStatus
 	 * 
 	 * @return
 	 */
@@ -41,13 +41,13 @@ public enum EntityStatus {
 	}
 	
 	/**
-	 * Returns the corresponding EntityStatus by ordindal
+	 * Returns the corresponding ListingStatus by ordindal
 	 * 
 	 * @param statusValue
 	 * @return
 	 */
-	public static EntityStatus getByOrdinal(int statusValue) {
-		return EntityStatus.values()[statusValue];
+	public static ListingStatus getByOrdinal(int statusValue) {
+		return ListingStatus.values()[statusValue];
 	}
 
 	@Override

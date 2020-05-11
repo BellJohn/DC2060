@@ -58,6 +58,24 @@
 							</div>
 						</c:when>
 					</c:choose>
+
+					<c:choose>
+						<c:when test="${isOwner == true}">
+							<div class="row">
+								<div class="col-lg-4"></div>
+								<div class="col-lg-4">
+									<form action="editListing" method="GET">
+										<input type="hidden" id="action" name="action" value="accept" />
+										<input type="hidden" id="listingID" name="listingID"
+											value="${ListingObj.getId()}" />
+										<button class="btn btn-success btn-block">
+											<span class="fa fa-info"></span> Edit Listing
+										</button>
+									</form>
+								</div>
+							</div>
+						</c:when>
+					</c:choose>
 				</div>
 				<div class="col-sm-3"></div>
 			</div>
@@ -80,7 +98,7 @@
 							<p class="statusMsg"></p>
 							<form role="form">
 								<div class="form-group">
-									<textarea class="form-control" id="inputMessage" 
+									<textarea class="form-control" id="inputMessage"
 										placeholder="Please enter your message to the user. Once you press send, you will see it appear on your My Messages page."></textarea>
 								</div>
 								<input type="hidden" id="targetID" name="targetID" value="${ListingObj.getUserId()}">
@@ -144,4 +162,3 @@
 	}
 </script>
 </html>
-
