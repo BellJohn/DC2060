@@ -37,31 +37,29 @@ class RequestCreateControllerTest {
 	@BeforeEach
 	@AfterEach
 	public void setup() throws GeneralSecurityException {
-		
 
-		try (HibernateUserDAOImpl dao = new HibernateUserDAOImpl(); HibernatePasswordDAOImpl passDao = new HibernatePasswordDAOImpl()) {
-			User userFound = dao.selectUser(user.getUsername());
-			if (userFound != null) {
-				if (!dao.delete(userFound)) {
-					fail("Unable to delete user. Cannot guarantee clean test bed for future tests");
-				}
-				password = passDao.selectInUseByUserId(userFound.getId());
-				passDao.deletePasswordById(password.getPwdId());
+		HibernatePasswordDAOImpl passDao = new HibernatePasswordDAOImpl();
+		HibernateUserDAOImpl dao = new HibernateUserDAOImpl();
+		User userFound = dao.selectUser(user.getUsername());
+		if (userFound != null) {
+			if (!dao.delete(userFound)) {
+				fail("Unable to delete user. Cannot guarantee clean test bed for future tests");
 			}
-			
+			password = passDao.selectInUseByUserId(userFound.getId());
+			passDao.deletePasswordById(password.getPwdId());
 		}
 	}
 
 	@Test
 	void test() throws EntityNotFoundException, GeneralSecurityException {
-		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl(); HibernatePasswordDAOImpl passDao = new HibernatePasswordDAOImpl()) {
-			userDao.save(user);
-			password.setCreatedDate(System.currentTimeMillis());
-			password.setHashedPasswordString("password");
-			password.setUserId(user.getId());
-			passDao.save(password);
-		}
-		
+		HibernatePasswordDAOImpl passDao = new HibernatePasswordDAOImpl();
+		HibernateUserDAOImpl userDao = new HibernateUserDAOImpl();
+		userDao.save(user);
+		password.setCreatedDate(System.currentTimeMillis());
+		password.setHashedPasswordString("password");
+		password.setUserId(user.getId());
+		passDao.save(password);
+
 		Authentication auth = new UsernamePasswordAuthenticationToken("user", "password");
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(auth);

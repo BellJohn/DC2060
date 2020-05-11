@@ -23,7 +23,7 @@ import com.reachout.models.User;
  * @author John
  *
  */
-public abstract class HibernateListingDAOImpl extends HibernateDAO {
+public abstract class HibernateListingDAOImpl {
 	private Logger logger = LogManager.getLogger(HibernateListingDAOImpl.class);
 
 	/**
@@ -40,7 +40,7 @@ public abstract class HibernateListingDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public boolean delete(Listing listing) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(listing);
 			session.flush();
@@ -64,7 +64,7 @@ public abstract class HibernateListingDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public synchronized boolean assignListingToUser(Listing listing, User user) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query query = session.createSQLQuery(
 					"INSERT INTO ASSIGNED_LISTINGS (AS_LISTING_ID, AS_USER_ID) VALUES (:listingID, :userID)");
@@ -98,14 +98,14 @@ public abstract class HibernateListingDAOImpl extends HibernateDAO {
 	 */
 	public Listing selectListingByIDofUnknownType(int listingID) {
 		Listing listingToReturn = null;
-		try (Session session = this.getSessionFactory().openSession();
-				HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
-				HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query query = session.createSQLQuery("SELECT LST_TYPE FROM LISTINGS WHERE LST_ID = :lst_id");
 			query.setParameter("lst_id", listingID);
 			Integer listingType = (Integer) query.getSingleResult();
 
+			HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+			HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
 			if (ListingType.REQUEST.ordinal() == listingType) {
 				listingToReturn = reqDAO.selectById(listingID);
 			}

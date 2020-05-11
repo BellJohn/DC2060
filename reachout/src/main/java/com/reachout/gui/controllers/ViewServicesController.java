@@ -20,10 +20,8 @@ import com.reachout.dao.HibernateUserDAOImpl;
 public class ViewServicesController {
 	public final Logger logger = LogManager.getLogger(ViewServicesController.class);
 
-
 	private Authentication auth;
 	private HibernateUserDAOImpl userDAO;
-
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -33,21 +31,17 @@ public class ViewServicesController {
 		ModelAndView mv = new ModelAndView("viewServices");
 		mv.addObject("currentPage", "viewServices");
 
-
 		auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
-			username =  (String) auth.getPrincipal();
+			username = (String) auth.getPrincipal();
 		}
 		int userId = userDAO.getUserIdByUsername(username);
 
-
-
-		try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
-			mv.addObject("liveServices", serDAO.getAllServicesForDisplay(userId));
-		}
+		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+		mv.addObject("liveServices", serDAO.getAllServicesForDisplay(userId));
 		return mv;
 	}
 }

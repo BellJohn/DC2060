@@ -64,20 +64,18 @@ public class ServiceCreateController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth instanceof UsernamePasswordAuthenticationToken) {
 			String username = ((UsernamePasswordAuthenticationToken) auth).getName();
-			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-				User user = userDAO.selectUser(username);
-				if (user != null) {
-					userId = user.getId();
-				}
+			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+			User user = userDAO.selectUser(username);
+			if (user != null) {
+				userId = user.getId();
 			}
 		}
 		// Build a new request which will be given the status of "new"
 		Service newService = new Service(title, description, county, city, userId);
 		boolean createSuccess = false;
-		try (HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl()) {
-			createSuccess = serviceDAO.save(newService);
+		HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl();
+		createSuccess = serviceDAO.save(newService);
 
-		}
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		if (createSuccess) {
 			logger.debug(String.format("Built new service as %s", newService.toString()));

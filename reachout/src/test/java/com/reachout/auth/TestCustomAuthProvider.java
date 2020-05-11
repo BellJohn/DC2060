@@ -41,10 +41,12 @@ public class TestCustomAuthProvider {
 
 	/**
 	 * Tests to see if we can log in as a user which we are already aware of.
-	 * @throws GeneralSecurityException 
+	 * 
+	 * @throws GeneralSecurityException
+	 * @throws EntityNotFoundException 
 	 */
 	@Test
-	public void testAuthenticateExistingUser() throws GeneralSecurityException {
+	public void testAuthenticateExistingUser() throws GeneralSecurityException, EntityNotFoundException {
 		// Prep the test by building and storing a User and a Password
 		User user = new User(firstName, lastName, username, email, dob);
 		user.setId(1);
@@ -52,13 +54,11 @@ public class TestCustomAuthProvider {
 		password.setHashedPasswordString(passwordString);
 		password.setUserId(user.getId());
 
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-				HibernatePasswordDAOImpl passDAO = new HibernatePasswordDAOImpl()) {
-			userDAO.save(user);
-			passDAO.save(password);
-		} catch (EntityNotFoundException e) {
-			fail(e);
-		}
+		HibernatePasswordDAOImpl passDAO = new HibernatePasswordDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userDAO.save(user);
+		passDAO.save(password);
+
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, passwordString,
 				new ArrayList<>());
 		CustomAuthProvider cap = new CustomAuthProvider();

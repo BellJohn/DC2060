@@ -51,9 +51,9 @@ public class InternalMessageHandler {
 		}
 
 		InternalMessage im = new InternalMessage(origin, target, message);
-		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
-			return imDAO.save(im);
-		}
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		return imDAO.save(im);
+
 	}
 
 	/**
@@ -78,9 +78,8 @@ public class InternalMessageHandler {
 	 * @return true if they exist, false otherwise
 	 */
 	private boolean userExists(int uid) {
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			return (userDAO.selectByID(uid) != null);
-		}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		return (userDAO.selectByID(uid) != null);
 	}
 
 	/**
@@ -98,19 +97,19 @@ public class InternalMessageHandler {
 		}
 
 		List<InternalMessage> allIMs = new ArrayList<>();
-		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
-			allIMs = imDAO.getAllMessagesBetween(userBrowsing, userOther);
-		}
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		allIMs = imDAO.getAllMessagesBetween(userBrowsing, userOther);
+
 		// Check to see if we found any messages between the two users
 		if (allIMs.isEmpty()) {
 			return null;
 		}
 		String otherUserName;
 		String browsingUserName;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			otherUserName = userDAO.selectByID(userOther).getUsername();
-			browsingUserName = userDAO.selectByID(userBrowsing).getUsername();
-		}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		otherUserName = userDAO.selectByID(userOther).getUsername();
+		browsingUserName = userDAO.selectByID(userBrowsing).getUsername();
+
 		// If we are here, we have messages to put together into a conversation
 		Conversation conversation = new Conversation(userBrowsing, userOther, allIMs, otherUserName, browsingUserName);
 		logger.debug(String.format("Created conversation between users {%s} : {%s}", userBrowsing, userOther));
@@ -126,9 +125,9 @@ public class InternalMessageHandler {
 	 */
 	public Set<Integer> getAllUsersWithConversationWith(int userID) {
 		Set<Integer> result = new HashSet<>();
-		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
-			result = imDAO.getAllUsersConversingWith(userID);
-		}
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		result = imDAO.getAllUsersConversingWith(userID);
+
 		logger.debug(String.format("Users found associated to user {%s} : {%s}", userID, result));
 		return result;
 	}
@@ -145,20 +144,21 @@ public class InternalMessageHandler {
 	public boolean createAndStoreMessage(String userBrowsing, String userOther, String message) {
 		int origin;
 		int target;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			// We need user IDs for the subsequent call to createAndStoreMessage
-			// If we have numeric IDs then we can make use of that straight away
-			// If we fail the parseInt, it must be alphanumeric so search for matching usernames
-			try {
-				origin = Integer.parseInt(userBrowsing);
-			} catch (NumberFormatException e) {
-				origin = userDAO.getUserIdByUsername(userBrowsing);
-			}
-			try {
-				target = Integer.parseInt(userOther);
-			} catch (NumberFormatException e) {
-				target = userDAO.getUserIdByUsername(userOther);
-			}
+
+		// We need user IDs for the subsequent call to createAndStoreMessage
+		// If we have numeric IDs then we can make use of that straight away
+		// If we fail the parseInt, it must be alphanumeric so search for matching
+		// usernames
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		try {
+			origin = Integer.parseInt(userBrowsing);
+		} catch (NumberFormatException e) {
+			origin = userDAO.getUserIdByUsername(userBrowsing);
+		}
+		try {
+			target = Integer.parseInt(userOther);
+		} catch (NumberFormatException e) {
+			target = userDAO.getUserIdByUsername(userOther);
 		}
 		if (target == -1 || origin == -1) {
 			logger.debug("Unknown error to send message to");

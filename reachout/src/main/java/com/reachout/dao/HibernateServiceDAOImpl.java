@@ -34,7 +34,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public boolean save(Service service) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.save(service);
 			session.flush();
@@ -51,7 +51,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public List<Service> getAllServices() {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT service FROM Service service where LST_TYPE = :lstType",
 					Service.class);
 			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
@@ -73,7 +73,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public boolean delete(Service service) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(service);
 			Query query = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
@@ -88,7 +88,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	public Service selectById(int serId) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT service FROM Service service where id = :serId", Service.class);
 			query.setParameter("serId", serId);
 			return (Service) query.getSingleResult();
@@ -99,7 +99,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	public boolean update(Service service) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.update(service);
 			session.flush();
@@ -114,9 +114,9 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	public List<Listing> getAllListings() {
 		ArrayList<Listing> allResults = new ArrayList<>();
 		allResults.addAll(getAllServices());
-		try(HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()){
-			allResults.addAll(reqDAO.getAllRequests());
-		}
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		allResults.addAll(reqDAO.getAllRequests());
+
 		return allResults;
 	}
 
@@ -128,8 +128,9 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 */
 	public List<Service> getAllServicesForUser(int userId) {
 		ArrayList<Service> returnList = new ArrayList<>();
-		try (Session session = this.getSessionFactory().openSession()) {
-			Query query = session.createQuery("SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID = :userId",
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID = :userId",
 					Service.class);
 			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
 			query.setParameter("userId", userId);
@@ -147,7 +148,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		return getAllServicesForUser(userId).size();
 	}
 
-	/** 
+	/**
 	 * Returns all open services made by anyone other than the current user
 	 * 
 	 * @param userId the users ID
@@ -155,8 +156,9 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 */
 	public List<Service> getAllServicesForDisplay(int userId) {
 		ArrayList<Service> returnList = new ArrayList<>();
-		try (Session session = this.getSessionFactory().openSession()) {
-			Query query = session.createQuery("SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status",
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status",
 					Service.class);
 			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
 			query.setParameter("userId", userId);
