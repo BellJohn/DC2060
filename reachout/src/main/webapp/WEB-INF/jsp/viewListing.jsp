@@ -54,7 +54,7 @@
 										</button>
 									</form>
 								</div>
-								
+
 							</div>
 						</c:when>
 					</c:choose>
@@ -69,10 +69,10 @@
 					<div class="modal-content">
 						<!-- Modal Header -->
 						<div class="modal-header">
+							<h4 class="modal-title" id="myModalLabel">Message User</h4>
 							<button type="button" class="close" data-dismiss="modal">
 								<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
 							</button>
-							<h4 class="modal-title" id="myModalLabel">Contact Form</h4>
 						</div>
 
 						<!-- Modal Body -->
@@ -80,21 +80,17 @@
 							<p class="statusMsg"></p>
 							<form role="form">
 								<div class="form-group">
-									<label for="inputMessage">Message</label>
-									<textarea class="form-control" id="inputMessage"
-										placeholder="Enter your message"></textarea>
+									<textarea class="form-control" id="inputMessage" 
+										placeholder="Please enter your message to the user. Once you press send, you will see it appear on your My Messages page."></textarea>
 								</div>
-								<input type="hidden" id="targetID" name="targetID"
-									value="${ListingObj.getUserId()}">
+								<input type="hidden" id="targetID" name="targetID" value="${ListingObj.getUserId()}">
 							</form>
 						</div>
 
 						<!-- Modal Footer -->
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary submitBtn"
-								onclick="submitContactForm()">SUBMIT</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<button type="button" class="btn btn-info submitBtn" onclick="submitContactForm()">SEND</button>
 						</div>
 					</div>
 				</div>
