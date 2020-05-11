@@ -105,7 +105,7 @@
 							<p class="card-text">${request.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-9"></div>
+								<div class="col-lg-6"></div>
 
 								<div class="col-lg-3">
 									<form action="viewListing" method="POST">
@@ -156,7 +156,7 @@
 							<p class="card-text">${service.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-9"></div>
+								<div class="col-lg-6"></div>
 
 								<div class="col-lg-3">
 									<form action="viewListing" method="POST">
