@@ -145,7 +145,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	/** 
-	 * Returns all services made by anyone other than the current user
+	 * Returns all open services made by anyone other than the current user
 	 * 
 	 * @param userId the users ID
 	 * @return List of services made by all other users

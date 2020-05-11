@@ -145,7 +145,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	/** 
-	 * Returns all requests made by anyone other than the current user
+	 * Returns all open requests made by anyone other than the current user
 	 * 
 	 * @param userId the users ID
 	 * @return List of requests made by all other users
