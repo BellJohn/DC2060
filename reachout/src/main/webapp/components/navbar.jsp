@@ -10,12 +10,12 @@
 	<div class="col-md-12">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
 
-			<button class="navbar-toggler" type="button" data-toggle="collapse"
-				data-target="#bs-example-navbar-collapse-1">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse"
-				id="bs-example-navbar-collapse-1">
+			  </button>
+
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
 				<a class="navbar-brand" href="/profile"><img
 					alt="ReachOut Logo" class="brand-img"
 					src="images/reachout-logo-dark.png" /></a>
