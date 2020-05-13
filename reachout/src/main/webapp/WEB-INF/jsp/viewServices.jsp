@@ -25,6 +25,11 @@
 							</button>
 						</form>
 					</div>
+					<div class="col-lg-12 text-justify">
+						<p>Here you can view all open service offers that have been created by other users. 
+							In order to see your own offered services, please visit your profile. 
+							For more information on Services, please see the help page.</p>
+					</div>
 				</div>
 				<c:forEach items="${liveServices}" var="service">
 

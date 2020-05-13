@@ -57,6 +57,9 @@
 						</div>
 						<div class="ml-auto button-group">
 							<ul class="navbar-nav">
+								<li
+									class="nav-item ${pagina.endsWith('/help') ? 'active' : ''}"><a
+									class="nav-link" href="help">Help${pagina.endsWith('/help') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
 								<li class="nav-item"><a class="nav-link" href="logout">Logout</a></li>
 							</ul>
 						</div>
