@@ -76,14 +76,9 @@
 							// Test to see how many conversations we have to build.
 							// If there are none, display a relevant message instead.
 							if (obj.length == 0) {
-								content = "<div class=\"row\">";
-								content += "<div class=\"col-lg-1\"></div>";
-								content += "<div class=\"col-lg-10\">";
-								content += "<div class=\"alert alert-primary\" role=\"alert\" style=\"text-align: center;\">";
+								content = "<div class=\"alert alert-primary\" role=\"alert\" style=\"text-align: center;\">";
 								content += "<p>Page looking a bit empty? Try striking up a conversation with another user first!</p>";
 								content += "<p>Why not start by seeing if there is a Request out there which you can help with?</p>";
-								content += "</div>";
-								content += "<div class=\"col-lg-1\"></div>";
 								content += "</div>";
 								// Populate with the new data
 								var displayDiv = document
