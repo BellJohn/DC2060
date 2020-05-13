@@ -38,7 +38,7 @@
 					</c:when>
 					<c:otherwise>
 						<!-- Logged In -->
-						<div class="ml-auto button-group">
+						<div class="button-group">
 							<ul class="navbar-nav">
 								<li
 									class="nav-item ${pagina.endsWith('/profile') ? 'active' : ''}"><a
