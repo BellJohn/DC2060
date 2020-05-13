@@ -16,7 +16,7 @@
 			<c:choose>
 				<c:when test="${empty postSent}">
 					<div class="col-sm-4">
-						<form action="" method="POST">
+						<form action="" method="POST" id="editListing">
 							<sec:csrfInput />
 							<div class="form-group row">
 								<label for="Title" class="col-4 col-form-label">Title</label>
@@ -93,6 +93,19 @@
 			</c:when>
 		</c:choose>
 	</div>
+
+	<script>
+		//Disable the submit button if there were no validation errors on the form
+		$(document).ready(function () {
+			$("#editListing").submit(function () {
+				$(this).find(':submit').attr('disabled', 'disabled');
+			});
+	
+			$("#editListing").bind("invalid-form.validate", function () {
+				$(this).find(':submit').prop('disabled', false);
+			});
+		});
+	</script>
 </body>
 
 </html>

@@ -20,7 +20,7 @@
 							<h2><strong>Create Request</strong></h2>
 		
 							<!-- New Request Form -->
-							<form action="createRequest" method="POST">
+							<form action="createRequest" method="POST" id="createRequest">
 								<sec:csrfInput />
 								<fieldset>
 
@@ -57,7 +57,7 @@
 									</div>
 
 									<!-- Create Button -->
-									<button name="submit" type="submit" class="btn btn-primary btn-large btn-block">Create Request</button>
+									<button name="submit" type="submit" class="btn btn-primary btn-large btn-block" id="submit">Create Request</button>
 
 								</fieldset>
 							</form>
@@ -80,6 +80,19 @@
 		</div>	
 		<div class="col-sm-4"></div>
 	</div>
+
+	<script>
+		//Disable the submit button if there were no validation errors on the form
+		$(document).ready(function () {
+			$("#createRequest").submit(function () {
+				$(this).find(':submit').attr('disabled', 'disabled');
+			});
+
+			$("#createRequest").bind("invalid-form.validate", function () {
+				$(this).find(':submit').prop('disabled', false);
+			});
+		});
+	</script>
 </body>
 
 </html>

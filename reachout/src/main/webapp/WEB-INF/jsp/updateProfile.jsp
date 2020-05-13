@@ -32,7 +32,7 @@
 
 					<!-- Edit Profile Form -->
 					<div class="profile-form">
-						<form action="" method="POST">
+						<form action="" method="POST" id="updateProfile">
 							<sec:csrfInput />
 							<fieldset>
 
@@ -82,21 +82,29 @@
 
 <script>
 	$(document).ready(function() {
-	var len = 0;
-	var maxchar = 160;
+		var len = 0;
+		var maxchar = 160;
 
-	$( '#userBio' ).keyup(function(){
-		len = this.value.length
-		if(len > maxchar){
-			return false;
-		}
-		else if (len > 0) {
-			$( "#remainingC" ).html(maxchar - len);
-		}
-		else {
-			$( "#remainingC" ).html(maxchar);
-		}
-	})
+		$( '#userBio' ).keyup(function(){
+			len = this.value.length
+			if(len > maxchar){
+				return false;
+			}
+			else if (len > 0) {
+				$( "#remainingC" ).html(maxchar - len);
+			}
+			else {
+				$( "#remainingC" ).html(maxchar);
+			}
+		})
+
+		$("#updateProfile").submit(function () {
+            $(this).find(':submit').attr('disabled', 'disabled');
+        });
+
+        $("#updateProfile").bind("invalid-form.validate", function () {
+            $(this).find(':submit').prop('disabled', false);
+        });
 	});
 </script>
 

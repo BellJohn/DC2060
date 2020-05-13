@@ -20,7 +20,7 @@
 							<h2><strong>Create Service</strong></h2>
 		
 							<!-- New Service Form -->
-							<form action="createService" method="POST">
+							<form action="createService" method="POST" id="createService">
 								<sec:csrfInput />
 								<fieldset>
 
@@ -80,6 +80,19 @@
 		</div>	
 		<div class="col-sm-4"></div>
 	</div>
+
+	<script>
+		//Disable the submit button if there were no validation errors on the form
+		$(document).ready(function () {
+			$("#createService").submit(function () {
+				$(this).find(':submit').attr('disabled', 'disabled');
+			});
+	
+			$("#createService").bind("invalid-form.validate", function () {
+				$(this).find(':submit').prop('disabled', false);
+			});
+		});
+	</script>
 </body>
 
 </html>
