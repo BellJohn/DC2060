@@ -34,7 +34,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public boolean save(Request request) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.save(request);
 			session.flush();
@@ -51,7 +51,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public List<Request> getAllRequests() {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT request FROM Request request where LST_TYPE = :lstType",
 					Request.class);
 			query.setParameter("lstType", ListingType.REQUEST.getOrdindal());
@@ -73,9 +73,12 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public boolean delete(Request request) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(request);
+			Query query = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
+			query.setParameter("lst_id", request.getId());
+			query.executeUpdate();
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
@@ -85,7 +88,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	public Request selectById(int reqId) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT request FROM Request request where id = :reqId", Request.class);
 			query.setParameter("reqId", reqId);
 			return (Request) query.getSingleResult();
@@ -96,7 +99,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	public boolean update(Request request) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.update(request);
 			session.flush();
@@ -111,9 +114,8 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	public List<Listing> getAllListings() {
 		ArrayList<Listing> allResults = new ArrayList<>();
 		allResults.addAll(getAllRequests());
-		try(HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()){
-			allResults.addAll(serDAO.getAllServices());
-		}
+		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+		allResults.addAll(serDAO.getAllServices());
 		return allResults;
 	}
 
@@ -125,8 +127,9 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	 */
 	public List<Request> getAllRequestsForUser(int userId) {
 		ArrayList<Request> returnList = new ArrayList<>();
-		try (Session session = this.getSessionFactory().openSession()) {
-			Query query = session.createQuery("SELECT request FROM Request request where LST_TYPE = :lstType AND LST_USER_ID = :userId",
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT request FROM Request request where LST_TYPE = :lstType AND LST_USER_ID = :userId",
 					Request.class);
 			query.setParameter("lstType", ListingType.REQUEST.getOrdindal());
 			query.setParameter("userId", userId);
@@ -142,5 +145,30 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 
 	public int getNumRequestsForUser(int userId) {
 		return getAllRequestsForUser(userId).size();
+	}
+
+	/**
+	 * Returns all open requests made by anyone other than the current user
+	 * 
+	 * @param userId the users ID
+	 * @return List of requests made by all other users
+	 */
+	public List<Request> getAllRequestsForDisplay(int userId) {
+		ArrayList<Request> returnList = new ArrayList<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT request FROM Request request where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status",
+					Request.class);
+			query.setParameter("lstType", ListingType.REQUEST.getOrdindal());
+			query.setParameter("userId", userId);
+			query.setParameter("status", 0);
+			List<?> results = query.getResultList();
+			for (Object obj : results) {
+				if (obj instanceof Request) {
+					returnList.add((Request) obj);
+				}
+			}
+		}
+		return returnList;
 	}
 }

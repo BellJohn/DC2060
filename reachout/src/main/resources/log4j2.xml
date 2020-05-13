@@ -8,7 +8,6 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-	<!-- 
 		<Logger name="org.springframework.jndi" level="off">
 			<AppenderRef ref="Console" />
 		</Logger>
@@ -17,11 +16,11 @@
 		</Logger>
 		<Logger name="org.springframework.web" level="off">
 			<AppenderRef ref="Console" />
-		</Logger>-->
+		</Logger>
 		<Logger name="org.hibernate" level="off">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Root level="TRACE">
+		<Root level="INFO">
 			<AppenderRef ref="Console" />
 		</Root>
 	</Loggers>

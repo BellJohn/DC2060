@@ -37,11 +37,10 @@ public class ProfileController {
 	private String bio;
 	private String healthStatus;
 
-
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 		healthDAO = new HibernateHealthStatusDAOImpl();
-		
+
 		// Test to see if the user is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
@@ -79,11 +78,10 @@ public class ProfileController {
 			bio = profile.getBio();
 			profilePic = profile.getProfilePic();
 			healthStatus = profile.getHealthStatus();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("No result found");
 		}
-		
+
 		mv.addObject("firstName", firstName);
 		mv.addObject("lastName", lastName);
 		mv.addObject("bio", bio);
@@ -115,24 +113,21 @@ public class ProfileController {
 		} else {
 			username = (String) auth.getPrincipal();
 		}
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			int userId = userDAO.getUserIdByUsername(username);
-			
-			UserProfile profile = new UserProfile("TESTIMAGE", bio, healthStatus, userId);
-			// Populate the user profile db
-			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
-				saveUserDetailsSuccess = userProfileDAO.saveOrUpdate(profile);
-				if (!saveUserDetailsSuccess) {
-					// Something went wrong updating the profile
-					logger.error("Unable to update profile at this time");
-				}
-			}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		int userId = userDAO.getUserIdByUsername(username);
+
+		UserProfile profile = new UserProfile("TESTIMAGE", bio, healthStatus, userId);
+		// Populate the user profile db
+		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
+		saveUserDetailsSuccess = userProfileDAO.saveOrUpdate(profile);
+		if (!saveUserDetailsSuccess) {
+			// Something went wrong updating the profile
+			logger.error("Unable to update profile at this time");
 		}
-		
-		if(saveUserDetailsSuccess) {
+
+		if (saveUserDetailsSuccess) {
 			return new ModelAndView("redirect:/profile");
-		}
-		else {
+		} else {
 			ModelAndView mv = new ModelAndView(VIEW_NAME);
 			mv.addObject("currentPage", VIEW_NAME);
 			mv.addObject("postSent", saveUserDetailsSuccess);

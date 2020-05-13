@@ -12,11 +12,11 @@
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="row">
-			<div class="col-sm-4"></div>
-			<div class="col-sm-4">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
 				<c:choose>
 					<c:when test="${empty postSent}">
-						<div class="signup-form">
+						<div class="signup-login-form">
 							<form action="" method="POST">
 								<sec:csrfInput />
 								<fieldset>
@@ -25,102 +25,106 @@
 											<h2>Sign Up</h2>
 										</legend>
 									</div>
-									<p>Please fill in this form to create an account!</p>
+									<p>Please fill in the fields below to create an account.</p>
 									<hr>
-									<div class="control-group">
-										<!-- First name -->
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-user"></i></span>
+									<div class="row">
+										<div class="col">
+											<!-- First name -->
+											<div class="control-group">
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text" id="basic-addon1">
+															<i class="fa fa-user fa-fw"></i></span>
+													</div>
+													<input type="text" class="form-control" name="firstName" id="firstName"
+														placeholder="First Name" required="required" maxlength="50">
+												</div>
 											</div>
-											
-											<input type="text" class="form-control" name="firstName" id="firstName"
-												placeholder="First Name" required="required">
+										</div>
+										<div class="col">
+											<!-- Last Name -->
+											<div class="control-group">
+												<div class="input-group">
+													<input type="text" class="form-control" name="lastName" id="lastName"
+														placeholder="Last Name" required="required" maxlength="50">
+												</div>
+											</div>
 										</div>
 									</div>
+
+									<!-- Username -->
 									<div class="control-group">
-										<!-- Last Name -->
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-user"></i></span>
-											</div>
-											<input type="text" class="form-control" name="lastName" id="lastName"
-												placeholder="Last Name" required="required">
-										</div>
-									</div>
-									<div class="control-group">
-										<!-- Username -->
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-user"></i></span>
+													<i class="fa fa-at fa-fw"></i></span>
 											</div>
 											<input type="text" class="form-control" name="username" id="username"
-												placeholder="Username" required="required">
+												placeholder="Username" required="required" maxlength="50">
 										</div>
 									</div>
+
+									<!-- Email Address -->
 									<div class="control-group">
-										<!-- Email Address -->
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-user"></i></span>
+													<i class="fa fa-envelope-square fa-fw"></i></span>
 											</div>
 											<input type="text" class="form-control" name="email" id="email"
-												placeholder="Email Address" required="required">
-												
-												<form:textarea path="address" rows="5" cols="30" />
+												placeholder="Email Address" required="required" maxlength="90"
+												pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
+												title="Please enter a valid email address">
 										</div>
 									</div>
+
+									<!-- Date of Birth-->
 									<div class="control-group">
-										<!-- Date of Birth-->
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-paper-plane"></i></span>
+													<i class="fa fa-calendar fa-fw"></i></span>
 											</div>
 											<!-- check date of birth is a suitable date including leap years -->
 											<input type="text" pattern="(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)" 
 											class="form-control" name="dob" id="dob" title="Please use format DD/MM/YYYY"
-												placeholder="Date of Birth" required="required" >
+												placeholder="Date of Birth (DD/MM/YYYY)" required="required" >
 										</div>
 									</div>
+
+									<!-- Password-->
 									<div class="control-group">
-										<!-- Password-->
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1"><i
-														class="fa fa-lock"></i></span>
+														class="fa fa-lock fa-fw"></i></span>
 											</div>
 											<input type="password" class="form-control" name="password" id="password" minLength="8"
-												placeholder="Password" required="required">
+												placeholder="Password" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+												onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please match the specified format.' : ''); if(this.checkValidity()) form.password_confirm.pattern = this.value;">
+											<small id="passwordHelp" class="form-text text-muted">Your password must have at least 8 characters, a number, an uppercase letter and a lowercase letter.</small>
 										</div>
 									</div>
-									<div class="control-group">
-										<!-- Terms and Conditions Checkbox -->
+
+									<!-- Confirm Password -->
+									<div class="control-group">	
 										<div class="input-group">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-lock"></i>
-													<i class="fa fa-check"></i>
+													<i class="fa fa-lock fa-fw"></i>
 												</span>
 											</div>
 											<input type="password" class="form-control" name="password_confirm" minLength="8"
-												id="password_confirm" placeholder="Confirm Password"
-												required="required">
+												id="password_confirm" placeholder="Confirm Password" required="required"
+												onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Passwords do not match.' : '');">
 										</div>
 									</div>
+									
+									<!-- Sign Up Button -->
 									<div class="control-group">
-										<label class="checkbox-inline"><input type="checkbox" required="required"> I
-											accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy
-												Policy</a></label>
-									</div>
-									<div class="control-group">
-										<!-- Button -->
 										<button class="btn btn-primary btn-lg">Sign Up</button>
 									</div>
+
 								</fieldset>
 							</form>
 							<div class="text-center">Already have an account? <a href="login">Login here</a></div>
@@ -150,10 +154,9 @@
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<div class="col-sm-4"></div>
+			<div class="col-sm-3"></div>
 		</div>
 	</div>
-
 </body>
 
 </html>

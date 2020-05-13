@@ -21,7 +21,7 @@ import com.reachout.models.UserProfile;
  * @author Jessica
  *
  */
-public class HibernateUserProfileDAOImpl extends HibernateDAO {
+public class HibernateUserProfileDAOImpl {
 
 	Logger logger = LogManager.getLogger(HibernateUserProfileDAOImpl.class);
 
@@ -33,7 +33,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 */
 
 	public boolean saveOrUpdate(UserProfile userProfile) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.saveOrUpdate(userProfile);
 			session.flush();
@@ -51,7 +51,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public UserProfile getProfileById(int userID) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT profile FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userID", userID);
 			return (UserProfile) query.getSingleResult();
@@ -66,7 +66,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public boolean deleteUserById(int userID) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			User userToDelete = session.get(User.class, userID);
 			session.delete(userToDelete);
@@ -80,8 +80,8 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	}
 	
 	public List<UserProfile> getAllProfiles(){
-		List<UserProfile> profiles = new ArrayList<UserProfile>();
-		try( Session session = this.getSessionFactory().openSession()){
+		List<UserProfile> profiles = new ArrayList<>();
+		try( Session session = HibernateUtil.getInstance().getSession()){
 			Query query = session.createQuery("SELECT userprofile from UserProfile userprofile", UserProfile.class);
 			profiles = query.getResultList();
 			return profiles;
@@ -94,7 +94,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public String getProfilePicById(int userID) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userId", userID);
 			return (String) query.getSingleResult();
@@ -108,7 +108,7 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public boolean updateUserProfile(UserProfile userProfile) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.update(userProfile);
 			session.getTransaction().commit();

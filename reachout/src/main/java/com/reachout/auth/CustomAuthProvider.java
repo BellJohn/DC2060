@@ -72,8 +72,9 @@ public class CustomAuthProvider implements AuthenticationProvider {
 		// Check to see if the user is valid
 		User userFound = null;
 		Password passwordFound = null;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-				HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
+		try {
+			HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl();
+			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 			userFound = userDAO.selectUser(username);
 			if (userFound != null) {
 				passwordFound = passwordDAO.selectInUseByUserId(userFound.getId());

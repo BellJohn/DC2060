@@ -19,7 +19,7 @@ public abstract class Listing implements Serializable {
 	protected String city;
 	protected int userId;
 	protected int id;
-	protected EntityStatus status;
+	protected ListingStatus status;
 	protected long createdDate;
 	protected ListingType listingType;
 
@@ -39,7 +39,7 @@ public abstract class Listing implements Serializable {
 	 * @param userId
 	 * @param status
 	 */
-	public Listing(String title, String description, String county, String city, int userId, EntityStatus status) {
+	public Listing(String title, String description, String county, String city, int userId, ListingStatus status) {
 		this(title, description, county, city, userId);
 		this.status = status;
 	}
@@ -58,7 +58,7 @@ public abstract class Listing implements Serializable {
 		this.county = county;
 		this.city = city;
 		this.userId = userId;
-		status = EntityStatus.OPEN;
+		status = ListingStatus.OPEN;
 		this.createdDate = (System.currentTimeMillis());
 	}
 
@@ -76,6 +76,21 @@ public abstract class Listing implements Serializable {
 	 */
 	public String getDescription() {
 		return description;
+	}
+
+	/**
+	 * @return the description ready to be dislpayed on a page
+	 */
+	public String getFormattedDescription() {
+		int strLen = description.length();
+		int cutoff = 300;
+		if (strLen > cutoff) {
+			String formattedDescription = description.substring(0, cutoff);
+			formattedDescription += "... (View Details to read more)";
+			return formattedDescription;
+		} else {
+			return description;
+		}
 	}
 
 	/**
@@ -109,7 +124,7 @@ public abstract class Listing implements Serializable {
 	/**
 	 * @return the status
 	 */
-	public EntityStatus getStatus() {
+	public ListingStatus getStatus() {
 		return status;
 	}
 
@@ -178,17 +193,17 @@ public abstract class Listing implements Serializable {
 	}
 
 	/**
-	 * Sets the status by the EntityStatus passed
+	 * Sets the status by the ListingStatus passed
 	 * 
 	 * @param status the status to set
 	 */
-	public void setStatus(EntityStatus status) {
+	public void setStatus(ListingStatus status) {
 		this.status = status;
 	}
 
 	/**
 	 * Sets the status via ordinal value passed. </br>
-	 * Value passed must be valid within {@link com.reachout.models.EntityStatus}
+	 * Value passed must be valid within {@link com.reachout.models.ListingStatus}
 	 * 
 	 * @param statusValue
 	 */
@@ -198,7 +213,7 @@ public abstract class Listing implements Serializable {
 
 
 	/**
-	 * Sets the status by the EntityStatus passed
+	 * Sets the status by the ListingStatus passed
 	 * 
 	 * @param status the status to set
 	 */
@@ -208,12 +223,12 @@ public abstract class Listing implements Serializable {
 
 	/**
 	 * Sets the status via ordinal value passed. </br>
-	 * Value passed must be valid within {@link com.reachout.models.EntityStatus}
+	 * Value passed must be valid within {@link com.reachout.models.ListingStatus}
 	 * 
 	 * @param statusValue
 	 */
 	public void setStatus(int statusValue) {
-		status = EntityStatus.getByOrdinal(statusValue);
+		status = ListingStatus.getByOrdinal(statusValue);
 	}
 	
 	/**

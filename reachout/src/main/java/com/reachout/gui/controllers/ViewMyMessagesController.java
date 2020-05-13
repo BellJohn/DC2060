@@ -55,16 +55,15 @@ public class ViewMyMessagesController {
 		List<Conversation> convos = getAllMyConversations(username);
 		mv.addObject("conversations", convos);
 		mv.addObject("previousUser", previousUserSelected);
-		
-		ObjectMapper mapper = new ObjectMapper(); 
+
+		ObjectMapper mapper = new ObjectMapper();
 		String jsonStr = "";
-        try { 
-        	// Convert conversations to JSON for the AJAX script
-            jsonStr = mapper.writeValueAsString(convos); 
-        } 
-        catch (IOException e) { 
-            logger.error("An error occured generating the JSON of the user's conversations",e); 
-        } 
+		try {
+			// Convert conversations to JSON for the AJAX script
+			jsonStr = mapper.writeValueAsString(convos);
+		} catch (IOException e) {
+			logger.error("An error occured generating the JSON of the user's conversations", e);
+		}
 		response.setHeader("conversationString", jsonStr);
 		return mv;
 	}
@@ -77,10 +76,8 @@ public class ViewMyMessagesController {
 	 * @return conversations containing this user
 	 */
 	private List<Conversation> getAllMyConversations(String username) {
-		int userID = -1;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			userID = userDAO.getUserIdByUsername(username);
-		}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		int userID = userDAO.getUserIdByUsername(username);
 		logger.debug(String.format("Fetching messages for user: %s", username));
 		InternalMessageHandler imh = InternalMessageHandler.getInstance();
 		Set<Integer> associatedUserIDS = imh.getAllUsersWithConversationWith(userID);

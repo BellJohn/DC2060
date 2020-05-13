@@ -1,29 +1,16 @@
 package com.reachout.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.reachout.models.HealthStatus;
-import com.reachout.models.User;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Database accessor for a Hea object. Stored in table USER_PROFILE.
@@ -31,7 +18,7 @@ import org.springframework.jdbc.core.RowMapper;
  * @author Jessica
  *
  */
-public class HibernateHealthStatusDAOImpl extends HibernateDAO {
+public class HibernateHealthStatusDAOImpl {
 
 	Logger logger = LogManager.getLogger(HibernateHealthStatusDAOImpl.class);
 
@@ -43,7 +30,7 @@ public class HibernateHealthStatusDAOImpl extends HibernateDAO {
 		
 	public List<String> getAllHealthStatuses() {
 		List<String> statuses = null;
-		try (Session session = this.getSessionFactory().openSession())
+		try (Session session = HibernateUtil.getInstance().getSession())
 		{
 			Query q = session.createQuery("SELECT status.status FROM HealthStatus status");
 			statuses = q.getResultList();
@@ -52,7 +39,7 @@ public class HibernateHealthStatusDAOImpl extends HibernateDAO {
 	}
 	
 	public boolean save(HealthStatus hs) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.save(hs);
 			session.flush();

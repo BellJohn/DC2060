@@ -37,6 +37,7 @@ import com.reachout.gui.validators.ValidationResult;
 import com.reachout.models.Password;
 import com.reachout.models.User;
 import com.reachout.processors.EmailHandler;
+
 @Controller
 @RequestMapping("/signup")
 public class SignupController {
@@ -67,8 +68,8 @@ public class SignupController {
 	}
 
 	/**
-	 * Register a new user. Required parameters are
-	 *  firstname, lastname, username, email, dob,password,password_confirm
+	 * Register a new user. Required parameters are firstname, lastname, username,
+	 * email, dob,password,password_confirm
 	 * 
 	 * @param request
 	 * @return
@@ -76,6 +77,7 @@ public class SignupController {
 	 */
 	@PostMapping
 	public ModelAndView signup(HttpServletRequest request) throws MessagingException{
+
 		boolean saveUserSuccess = false;
 		String username = request.getParameter("username");
 		String firstName = request.getParameter("firstName");
@@ -84,7 +86,6 @@ public class SignupController {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String passwordConfirm = request.getParameter("password_confirm");
-
 
 		Map<String, String> userData = new HashMap<>();
 		userData.put("firstName", firstName);
@@ -102,14 +103,16 @@ public class SignupController {
 				logger.error(String.format("%s : %s", s, result.getErrors().get(s)));
 			}
 		} else {
-			//TODO Extract the user/password creation out into a support class as it doesn't belong here
+			// TODO Extract the user/password creation out into a support class as it
+			// doesn't belong here
 			// Otherwise, build a new User and populate the db
 			User newUser = new User(firstName, lastName, username, email, dob);
 
-			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl(); 
-					HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
+			try {
+				HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+				HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl();
 				saveUserSuccess = userDAO.save(newUser);
-				if(saveUserSuccess) {
+				if (saveUserSuccess) {
 					Password newPassword = new Password();
 					newPassword.setUserId(newUser.getId());
 					newPassword.setHashedPasswordString(password);
@@ -136,11 +139,10 @@ public class SignupController {
 				logger.error(e.getStackTrace());
 			}
 		}
-		
-		
+
 		//send new email to the user to confirm they have signed up
 		EmailHandler.generateAndSendEmail(email, username, "emails/signupEmail.html", "Welcome to ReachOut...");
-		
+
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("postSent", true);
@@ -148,11 +150,5 @@ public class SignupController {
 		mv.addObject("emailAddress", request.getParameter("email"));
 		mv.addObject("validationErrors", result.getErrors());
 		return mv;
-
-
-		
 	}
 }
-
-
-

@@ -64,20 +64,18 @@ public class RequestCreateController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth instanceof UsernamePasswordAuthenticationToken) {
 			String username = ((UsernamePasswordAuthenticationToken) auth).getName();
-			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-				User user = userDAO.selectUser(username);
-				if (user != null) {
-					userId = user.getId();
-				}
+			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+			User user = userDAO.selectUser(username);
+			if (user != null) {
+				userId = user.getId();
 			}
 		}
 		// Build a new request which will be given the status of "new"
 		Request newRequest = new Request(title, description, county, city, userId);
 		boolean createSuccess = false;
-		try (HibernateRequestDAOImpl requestDAO = new HibernateRequestDAOImpl()) {
-			createSuccess = requestDAO.save(newRequest);
+		HibernateRequestDAOImpl requestDAO = new HibernateRequestDAOImpl();
+		createSuccess = requestDAO.save(newRequest);
 
-		}
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		if (createSuccess) {
 			logger.debug(String.format("Built new request as %s", newRequest.toString()));

@@ -6,71 +6,80 @@
 <meta charset="ISO-8859-1">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="/components/stylesheets.jsp"%>
-<title>New Request</title>
+<title>ReachOut | Create Request</title>
 </head>
 <body>
 	<div class="container-fluid">
 		<%@ include file="/components/navbar.jsp"%>
-		<div class="row">
+		<div class="row profile-row">
 			<div class="col-sm-4"></div>
-			<c:choose>
-				<c:when test="${empty postSent}">
-					<div class="col-sm-4">
-						<form action="createRequest" method="POST">
-							<sec:csrfInput />
-							<div class="form-group row">
-								<label for="reqTitle" class="col-4 col-form-label">Request
-									Title</label>
-								<div class="col-8">
-									<input id="reqTitle" name="reqTitle"
-										placeholder="Quick summary of your request" type="text"
-										required="required" class="form-control">
+			<div class="col-md-4">
+				<c:choose>
+					<c:when test="${empty postSent}">
+						<div class="card card-bkg">
+							<h2><strong>Create Request</strong></h2>
+		
+							<!-- New Request Form -->
+							<form action="createRequest" method="POST">
+								<sec:csrfInput />
+								<fieldset>
+
+									<!-- Request Title -->
+									<div class="form-group">
+										<label for="userBio">Title</label>
+										<input id="reqTitle" name="reqTitle"
+											placeholder="Please give a quick summary of your request." type="text"
+											required="required" class="form-control" maxlength="128" minlength="10">
+									</div>
+
+									<!-- Request Description -->
+									<div class="form-group">
+										<label for="reqDesc">Description</label>
+										<textarea id="reqDesc" name="reqDesc" cols="40" rows="5"
+											placeholder="Tell us a little about your request. Please note, everyone on the site will be able to view this information."
+											class="form-control" maxlength="2000" minlength="50" required="required"></textarea>
+									</div>
+
+									<!-- Request County -->
+									<div class="form-group">
+										<label for="reqCounty" >County of Request (e.g. Cambridgeshire)</label>
+										<input id="reqCounty" name="reqCounty"
+											placeholder="Countyshire" type="text"
+											class="form-control" required="required" maxlength="26">
+									</div>
+
+									<!-- Request Town -->
+									<div class="form-group">
+										<label for="reqCity">City/Town of Request (e.g. Chelsea)</label>
+										<input id="reqCity" name="reqCity" required="required"
+											placeholder="Town city" type="text"
+											class="form-control" maxlength="60">
+									</div>
+
+									<!-- Create Button -->
+									<button name="submit" type="submit" class="btn btn-primary btn-large btn-block">Create Request</button>
+
+								</fieldset>
+							</form>
+						</div>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${createSuccess}">
+
+								<!-- Display success message -->
+								<div class="alert alert-success alert-spacing" role="alert">
+									<p>Success! Your request is now live. Please visit your <a href="profile">Profile</a> to see your open requests.</p>
 								</div>
-							</div>
-							<div class="form-group row">
-								<label for="reqDesc" class="col-4 col-form-label">Description</label>
-								<div class="col-8">
-									<textarea id="reqDesc" name="reqDesc" cols="40" rows="5"
-										placeholder="Tell us a little about your request. How can people help you?"
-										class="form-control"></textarea>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="reqCounty" class="col-4 col-form-label">Location
-									(County)</label>
-								<div class="col-8">
-									<input id="reqCounty" name="reqCounty"
-										placeholder="What county is this request for?" type="text"
-										class="form-control" required="required">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="reqCity" class="col-4 col-form-label">Location
-									(City/Town)</label>
-								<div class="col-8">
-									<input id="reqCity" name="reqCity"
-										placeholder="What City/Town is this request for?" type="text"
-										class="form-control">
-								</div>
-							</div>
-							<div class="form-group row">
-								<div class="offset-4 col-8">
-									<button name="submit" type="submit" class="btn btn-primary">Create
-										Request</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</c:when>
-				<c:otherwise>
-					<c:choose>
-						<c:when test="${createSuccess}">
-						<div class="col-sm-4">Hooray! Your post is now live</div>
-						</c:when>
-					</c:choose>
-				</c:otherwise>
+
+							</c:when>
+						</c:choose>
+					</c:otherwise>
 				</c:choose>
-		</div>
+			</div>
+		</div>	
+		<div class="col-sm-4"></div>
 	</div>
 </body>
+
 </html>
