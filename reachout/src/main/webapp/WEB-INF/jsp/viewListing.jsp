@@ -117,7 +117,7 @@
 	</div>
 </body>
 <script>
-<!-- ajax function to send message. Targets the SendUserMessage class-->
+	// ajax function to send message. Targets the SendUserMessage class
 	function submitContactForm() {
 		var targetID = $('#targetID').val();
 		var message = $('#inputMessage').val();
@@ -156,6 +156,8 @@
 							$('.modal-body').css('opacity', '');
 							$('.statusMsg').html('');
 							$('#modalForm').modal('hide');
+							$('body').removeClass('modal-open');
+							$('.modal-backdrop').remove();
 						}
 					});
 		}
