@@ -41,11 +41,11 @@ class ProfileControllerTest {
 
 	@BeforeAll
 	public static void setup() throws MessagingException {
-		try (HibernateHealthStatusDAOImpl dao = new HibernateHealthStatusDAOImpl()) {
-			List<String> list = dao.getAllHealthStatuses();
-			if (list == null) {
-				fail("Retrieve health statuses");
-			}
+		HibernateHealthStatusDAOImpl dao = new HibernateHealthStatusDAOImpl();
+		List<String> list = dao.getAllHealthStatuses();
+		if (list == null) {
+			fail("Retrieve health statuses");
+		}
 
 		// set up a user account
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
