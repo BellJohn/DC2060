@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -51,17 +53,17 @@ public class SignupController {
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
+		logger.debug("Reached SignUp Controller");
 
 		// Test to see if the user is logged in
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		SystemUser sysUser = null;
-		if (auth instanceof UserDetails) {
-			sysUser = (SystemUser) auth;
-			// Should not be able to reach this page. Send them to home
-			ModelAndView mv = new ModelAndView("home");
-			mv.addObject("user", sysUser.getUsername());
+		for (GrantedAuthority ga : auth.getAuthorities()) {
+			if (ga.getAuthority().equals("USER")) {
+				logger.debug("User is already logged in, redirecting to their profile");
+				return new ModelAndView("redirect:/profile");
+			}
 		}
-		logger.debug("Reached SignUp Controller");
+
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		return mv;
@@ -73,10 +75,10 @@ public class SignupController {
 	 * 
 	 * @param request
 	 * @return
-	 * @throws MessagingException 
+	 * @throws MessagingException
 	 */
 	@PostMapping
-	public ModelAndView signup(HttpServletRequest request) throws MessagingException{
+	public ModelAndView signup(HttpServletRequest request) throws MessagingException {
 
 		boolean saveUserSuccess = false;
 		String username = request.getParameter("username");
@@ -140,7 +142,7 @@ public class SignupController {
 			}
 		}
 
-		//send new email to the user to confirm they have signed up
+		// send new email to the user to confirm they have signed up
 		EmailHandler.generateAndSendEmail(email, username, "emails/signupEmail.html", "Welcome to ReachOut...");
 
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
