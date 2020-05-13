@@ -52,14 +52,14 @@ public class SignupController {
 	}
 
 	/**
-	 * Register a new user. Required parameters are
-	 *  firstname, lastname, username, email, dob,password,password_confirm
+	 * Register a new user. Required parameters are firstname, lastname, username,
+	 * email, dob,password,password_confirm
 	 * 
 	 * @param request
 	 * @return
 	 */
 	@PostMapping
-	public ModelAndView signup(HttpServletRequest request){
+	public ModelAndView signup(HttpServletRequest request) {
 		boolean saveUserSuccess = false;
 		String username = request.getParameter("username");
 		String firstName = request.getParameter("firstName");
@@ -68,8 +68,7 @@ public class SignupController {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String passwordConfirm = request.getParameter("password_confirm");
-		
-		
+
 		Map<String, String> userData = new HashMap<>();
 		userData.put("firstName", firstName);
 		userData.put("lastName", lastName);
@@ -78,7 +77,7 @@ public class SignupController {
 		userData.put("email", email);
 		userData.put("password", password);
 		userData.put("passwordConfirm", passwordConfirm);
-		
+
 		ValidationResult result = SignupValidator.validateSignupForm(userData);
 		// If we failed the validation, log some reasons why to the console for now
 		if (!result.getOutcome()) {
@@ -86,14 +85,16 @@ public class SignupController {
 				logger.error(String.format("%s : %s", s, result.getErrors().get(s)));
 			}
 		} else {
-			//TODO Extract the user/password creation out into a support class as it doesn't belong here
+			// TODO Extract the user/password creation out into a support class as it
+			// doesn't belong here
 			// Otherwise, build a new User and populate the db
 			User newUser = new User(firstName, lastName, username, email, dob);
 
-			try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl(); 
-					HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl()) {
+			try {
+				HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+				HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl();
 				saveUserSuccess = userDAO.save(newUser);
-				if(saveUserSuccess) {
+				if (saveUserSuccess) {
 					Password newPassword = new Password();
 					newPassword.setUserId(newUser.getId());
 					newPassword.setHashedPasswordString(password);
@@ -115,12 +116,12 @@ public class SignupController {
 		if (saveUserSuccess) {
 			try {
 				request.login(username, password);
-			    
+
 			} catch (ServletException e) {
 				logger.error(e.getStackTrace());
 			}
 		}
-		
+
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("postSent", true);
@@ -130,7 +131,3 @@ public class SignupController {
 		return mv;
 	}
 }
-
-
-
-

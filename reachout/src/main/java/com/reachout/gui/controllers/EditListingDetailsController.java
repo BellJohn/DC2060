@@ -61,9 +61,8 @@ public class EditListingDetailsController {
 		int listingID = Integer.parseInt(listingIDFromRequest);
 
 		Listing listingRequested;
-		try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-			listingRequested = reqDAO.selectListingByIDofUnknownType(listingID);
-		}
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		listingRequested = reqDAO.selectListingByIDofUnknownType(listingID);
 
 		// if it's null, something went wrong so return to the user's profile
 		if (listingRequested == null) {
@@ -135,11 +134,10 @@ public class EditListingDetailsController {
 		}
 		int userId = -1;
 		Listing listingToUpdate;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-				HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl()) {
-			userId = userDAO.getUserIdByUsername(username);
-			listingToUpdate = listingDAO.selectListingByIDofUnknownType(listingID);
-		}
+		HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userId = userDAO.getUserIdByUsername(username);
+		listingToUpdate = listingDAO.selectListingByIDofUnknownType(listingID);
 
 		if (listingToUpdate.getUserId() != userId) {
 			// This user should not be able to update this listing. Something has gone
@@ -159,13 +157,11 @@ public class EditListingDetailsController {
 
 		boolean changeSuccess = false;
 		if (listingToUpdate instanceof Request) {
-			try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-				changeSuccess = reqDAO.update((Request) listingToUpdate);
-			}
+			HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+			changeSuccess = reqDAO.update((Request) listingToUpdate);
 		} else {
-			try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
-				changeSuccess = serDAO.update((Service) listingToUpdate);
-			}
+			HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+			changeSuccess = serDAO.update((Service) listingToUpdate);
 		}
 
 		logger.info(String.format("Update success [%s]", changeSuccess));
@@ -200,11 +196,10 @@ public class EditListingDetailsController {
 		}
 		int userId = -1;
 		Listing listingToDelete;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-				HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl()) {
-			userId = userDAO.getUserIdByUsername(username);
-			listingToDelete = listingDAO.selectListingByIDofUnknownType(listingID);
-		}
+		HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userId = userDAO.getUserIdByUsername(username);
+		listingToDelete = listingDAO.selectListingByIDofUnknownType(listingID);
 
 		if (listingToDelete == null) {
 			logger.error("No listing found to delete");
@@ -224,13 +219,11 @@ public class EditListingDetailsController {
 
 		boolean changeSuccess = false;
 		if (listingToDelete instanceof Request) {
-			try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-				changeSuccess = reqDAO.delete((Request) listingToDelete);
-			}
+			HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+			changeSuccess = reqDAO.delete((Request) listingToDelete);
 		} else {
-			try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
-				changeSuccess = serDAO.delete((Service) listingToDelete);
-			}
+			HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+			changeSuccess = serDAO.delete((Service) listingToDelete);
 		}
 
 		logger.info(String.format("Delete success [%s]", changeSuccess));

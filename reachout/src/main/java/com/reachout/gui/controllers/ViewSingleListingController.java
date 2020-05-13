@@ -72,7 +72,8 @@ public class ViewSingleListingController {
 		boolean enableOfferButton = true;
 		// If it is not currently open or the user browsing owns this post, hide the
 		// button
-		if (result.getListingType().equals(ListingType.SERVICE) || result.getStatus() != ListingStatus.OPEN || isOwner) {
+		if (result.getListingType().equals(ListingType.SERVICE) || result.getStatus() != ListingStatus.OPEN
+				|| isOwner) {
 			enableOfferButton = false;
 		}
 
@@ -120,13 +121,12 @@ public class ViewSingleListingController {
 		} else {
 			username = (String) auth.getPrincipal();
 		}
-		User userBrowsing;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			userBrowsing = userDAO.selectUser(username);
-			if (userBrowsing == null) {
-				logger.error(String.format("Unable to find the user offering to help with request ID {%s}", listingID));
-				return getErrorPage();
-			}
+
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		User userBrowsing = userDAO.selectUser(username);
+		if (userBrowsing == null) {
+			logger.error(String.format("Unable to find the user offering to help with request ID {%s}", listingID));
+			return getErrorPage();
 		}
 		boolean offerAccepted = false;
 		try {
@@ -162,13 +162,12 @@ public class ViewSingleListingController {
 		} else {
 			username = (String) auth.getPrincipal();
 		}
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			User userBrowsing = userDAO.selectUser(username);
-			if (userBrowsing != null) {
-				boolean userOwnsPost = userBrowsing.getId() == listingOwnerId;
-				logger.debug(String.format("Listing viewed owned by user browsing:{%s}", userOwnsPost));
-				return userOwnsPost;
-			}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		User userBrowsing = userDAO.selectUser(username);
+		if (userBrowsing != null) {
+			boolean userOwnsPost = userBrowsing.getId() == listingOwnerId;
+			logger.debug(String.format("Listing viewed owned by user browsing:{%s}", userOwnsPost));
+			return userOwnsPost;
 		}
 		// If we get here, something likely went wrong so err on the side of safety and
 		// don't allow the current user to accept this post
@@ -185,13 +184,13 @@ public class ViewSingleListingController {
 	private Listing getListingByIdAndType(int listingId, String listingType) {
 		Listing result;
 		if (ListingType.REQUEST.getName().equalsIgnoreCase(listingType)) {
-			try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-				result = reqDAO.selectById(listingId);
-			}
+			HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+			result = reqDAO.selectById(listingId);
+
 		} else if (ListingType.SERVICE.getName().equalsIgnoreCase(listingType)) {
-			try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
-				result = serDAO.selectById(listingId);
-			}
+			HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+			result = serDAO.selectById(listingId);
+
 		} else {
 			logger.error("Received neither Request nor Service specifier, returning error page");
 			return null;

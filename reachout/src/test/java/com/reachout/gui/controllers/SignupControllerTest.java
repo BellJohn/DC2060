@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +22,12 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reachout.dao.HibernateHealthStatusDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Password;
 import com.reachout.models.User;
 
-class SignupControllerTest {
+public class SignupControllerTest {
 
 	private static User user = new User("first", "last", "testUser", "test@test.com", "2000/10/02");
 
@@ -35,18 +35,17 @@ class SignupControllerTest {
 	@AfterEach
 	public void setup() {
 
-		try (HibernateUserDAOImpl dao = new HibernateUserDAOImpl()) {
-			User userFound = dao.selectUser(user.getUsername());
-			if (userFound != null) {
-				if (!dao.delete(userFound)) {
-					fail("Unable to delete user. Cannot guarantee clean test bed for future tests");
-				}
+		HibernateUserDAOImpl dao = new HibernateUserDAOImpl();
+		User userFound = dao.selectUser(user.getUsername());
+		if (userFound != null) {
+			if (!dao.delete(userFound)) {
+				fail("Unable to delete user. Cannot guarantee clean test bed for future tests");
 			}
 		}
 	}
 
 	@Test
-	void initPageTest() throws ParseException{
+	void initPageTest() throws ParseException {
 
 		Authentication auth = new UsernamePasswordAuthenticationToken("username", "password");
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
@@ -62,7 +61,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpValidUserTest() throws ParseException {
+	public void signUpValidUserTest() throws ParseException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn(user.getFirstName());
 		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn(user.getLastName());
@@ -71,7 +70,7 @@ class SignupControllerTest {
 		Mockito.when(mockedRequest.getParameter("dob")).thenReturn("20/09/1993");
 		Mockito.when(mockedRequest.getParameter("password")).thenReturn("password");
 		Mockito.when(mockedRequest.getParameter("password_confirm")).thenReturn("password");
-		
+
 		SignupController sc = new SignupController();
 		ModelAndView result = sc.signup(mockedRequest);
 		assertNotNull(result);
@@ -86,11 +85,10 @@ class SignupControllerTest {
 			}
 			assertTrue(errors.isEmpty());
 		}
-		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
-			List<Password> list = dao.getAllPasswords();
-			assertEquals(1,list.get(0).getPwdId());
-		}
-		
+		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
+		List<Password> list = dao.getAllPasswords();
+		assertEquals(1, list.get(0).getPwdId());
+
 	}
 
 	@Test
@@ -129,7 +127,7 @@ class SignupControllerTest {
 	}
 
 	@Test
-	void signUpInvalidEmailTest() throws ParseException{
+	void signUpInvalidEmailTest() throws ParseException {
 		String badEmail = "NOT_A_GOOD_EMAIL.com";
 
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
@@ -157,12 +155,11 @@ class SignupControllerTest {
 			assertEquals(badEmail, errors.get("Email is not of valid form"));
 			assertTrue(errors.keySet().contains("Passwords do not match"));
 		}
-		
-		
+
 	}
 
 	@Test
-	void signUpUnderageUserTest() throws ParseException{
+	void signUpUnderageUserTest() throws ParseException {
 		String dobString = ("20/09/2010");
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn("first");
@@ -175,7 +172,7 @@ class SignupControllerTest {
 
 		SignupController sc = new SignupController();
 		ModelAndView result = sc.signup(mockedRequest);
-		
+
 		assertNotNull(result);
 		assertEquals("signup", result.getViewName());
 		assertTrue((boolean) result.getModel().get("postSent"));
@@ -189,5 +186,5 @@ class SignupControllerTest {
 			assertEquals(dobString, errors.get("You must be over 18 to sign up"));
 		}
 	}
-		
+
 }

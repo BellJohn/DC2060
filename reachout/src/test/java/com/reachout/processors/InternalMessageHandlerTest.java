@@ -46,60 +46,57 @@ class InternalMessageHandlerTest {
 		origin.setUsername("origin");
 		User target = TestUtils.makeTestUser();
 		target.setUsername("target");
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			assertTrue(userDAO.save(origin));
-			origin = null;
-			origin = userDAO.selectUser("origin");
-			assertNotNull(origin);
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		assertTrue(userDAO.save(origin));
+		origin = null;
+		origin = userDAO.selectUser("origin");
+		assertNotNull(origin);
 
-			assertTrue(userDAO.save(target));
-			target = null;
-			target = userDAO.selectUser("target");
-			assertNotNull(target);
-		}
+		assertTrue(userDAO.save(target));
+		target = null;
+		target = userDAO.selectUser("target");
+		assertNotNull(target);
 
 		InternalMessageHandler imHandler = InternalMessageHandler.getInstance();
 		assertTrue(imHandler.createAndStoreMessage(origin.getId(), target.getId(), "Test Message"));
-		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
-			InternalMessage im = imDAO.selectById(1);
-			assertEquals("Test Message", im.getMessage());
-			assertEquals(origin.getId(), im.getOrigin());
-			assertEquals(target.getId(), im.getTarget());
-		}
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		InternalMessage im = imDAO.selectById(1);
+		assertEquals("Test Message", im.getMessage());
+		assertEquals(origin.getId(), im.getOrigin());
+		assertEquals(target.getId(), im.getTarget());
 	}
 
 	/**
-	 * Test to show that different types of invalid data will result in no InternalMessage being created and instead return false
+	 * Test to show that different types of invalid data will result in no
+	 * InternalMessage being created and instead return false
 	 */
 	@Test
 	public void testCreateAndStoreMessageInvalidData() {
 		InternalMessageHandler imh = InternalMessageHandler.getInstance();
 		// neither user exists
 		assertFalse(imh.createAndStoreMessage(1, 2, "test"));
-		
+
 		User user1 = TestUtils.makeTestUser();
 		user1.setUsername("user1");
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			userDAO.save(user1);
-		}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userDAO.save(user1);
 		// user 2 still doesn't exist
 		assertFalse(imh.createAndStoreMessage(1, 2, "test"));
-		
+
 		User user2 = TestUtils.makeTestUser();
 		user2.setUsername("user2");
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			userDAO.save(user2);
-		}
+		userDAO.save(user2);
 		// All data is valid
 		assertTrue(imh.createAndStoreMessage(1, 2, "test"));
-		
+
 		// Empty Message
 		assertFalse(imh.createAndStoreMessage(1, 2, ""));
-		
+
 		// Null Message
 		assertFalse(imh.createAndStoreMessage(1, 2, null));
 
 	}
+
 	/**
 	 * Positive case test method for
 	 * {@link com.reachout.processors.InternalMessageHandler#getConversationBetween(int, int)}
@@ -112,17 +109,16 @@ class InternalMessageHandlerTest {
 		origin.setUsername("origin");
 		User target = TestUtils.makeTestUser();
 		target.setUsername("target");
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			assertTrue(userDAO.save(origin));
-			origin = null;
-			origin = userDAO.selectUser("origin");
-			assertNotNull(origin);
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		assertTrue(userDAO.save(origin));
+		origin = null;
+		origin = userDAO.selectUser("origin");
+		assertNotNull(origin);
 
-			assertTrue(userDAO.save(target));
-			target = null;
-			target = userDAO.selectUser("target");
-			assertNotNull(target);
-		}
+		assertTrue(userDAO.save(target));
+		target = null;
+		target = userDAO.selectUser("target");
+		assertNotNull(target);
 
 		// Set up a conversation of 4 messages with clearly separate time stamps
 		InternalMessageHandler imHandler = InternalMessageHandler.getInstance();
@@ -149,16 +145,16 @@ class InternalMessageHandlerTest {
 	}
 
 	/**
-	 * Test case to ensure we can return all the user IDs who a given user has had a conversation with (ie, there are InternalMessages between the two)
+	 * Test case to ensure we can return all the user IDs who a given user has had a
+	 * conversation with (ie, there are InternalMessages between the two)
 	 */
 	@Test
 	public void testGetAllUsersWithConversationWith() {
 		// populate db with some data
-		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
-			for (int i = 2; i < 5; i++) {
-				InternalMessage im = new InternalMessage(1, i, "message1");
-				imDAO.save(im);
-			}
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		for (int i = 2; i < 5; i++) {
+			InternalMessage im = new InternalMessage(1, i, "message1");
+			imDAO.save(im);
 		}
 
 		InternalMessageHandler imh = InternalMessageHandler.getInstance();
@@ -172,7 +168,9 @@ class InternalMessageHandlerTest {
 	}
 
 	/**
-	 * Positive Test case for storage of a message between two users as denoted by their usernames
+	 * Positive Test case for storage of a message between two users as denoted by
+	 * their usernames
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -183,10 +181,9 @@ class InternalMessageHandlerTest {
 		User user2 = TestUtils.makeTestUser();
 		user2.setUsername("user2");
 
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			userDAO.save(user1);
-			userDAO.save(user2);
-		}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userDAO.save(user1);
+		userDAO.save(user2);
 
 		InternalMessageHandler imh = InternalMessageHandler.getInstance();
 
@@ -195,9 +192,8 @@ class InternalMessageHandlerTest {
 		Date dateAfterCreate = new Date();
 
 		InternalMessage im = null;
-		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
-			im = imDAO.selectById(1);
-		}
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		im = imDAO.selectById(1);
 
 		assertNotNull(im);
 		assertTrue(dateBeforeCreate.getTime() < im.getCreatedDate());
@@ -206,6 +202,7 @@ class InternalMessageHandlerTest {
 
 	/**
 	 * Negative case test for user which doesn't exist
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -213,10 +210,9 @@ class InternalMessageHandlerTest {
 		User user1 = TestUtils.makeTestUser();
 		user1.setUsername("realUser1");
 
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			userDAO.save(user1);
-		}
-		
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userDAO.save(user1);
+
 		InternalMessageHandler imh = InternalMessageHandler.getInstance();
 		assertFalse(imh.createAndStoreMessage("realUser1", "fakeUser1", "testMessage"));
 		assertFalse(imh.createAndStoreMessage("fakeUser1", "realUser1", "testMessage"));

@@ -20,10 +20,8 @@ import com.reachout.dao.HibernateUserDAOImpl;
 public class ViewRequestsController {
 	public final Logger logger = LogManager.getLogger(ViewRequestsController.class);
 
-
 	private Authentication auth;
 	private HibernateUserDAOImpl userDAO;
-
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -33,21 +31,18 @@ public class ViewRequestsController {
 		ModelAndView mv = new ModelAndView("viewRequests");
 		mv.addObject("currentPage", "viewRequests");
 
-
 		auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
-			username =  (String) auth.getPrincipal();
+			username = (String) auth.getPrincipal();
 		}
 		int userId = userDAO.getUserIdByUsername(username);
 
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		mv.addObject("liveRequests", reqDAO.getAllRequestsForDisplay(userId));
 
-
-		try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-			mv.addObject("liveRequests", reqDAO.getAllRequestsForDisplay(userId));
-		}
 		return mv;
 	}
 }

@@ -25,6 +25,7 @@ class TestHibernateListingDAOImpl {
 	public void tearDown() {
 		TestUtils.clearAllAssignedListings();
 	}
+
 	/**
 	 * Test method for
 	 * {@link com.reachout.dao.HibernateListingDAOImpl#getAllListings()}.
@@ -53,12 +54,10 @@ class TestHibernateListingDAOImpl {
 		User user = new User();
 		user.setId(3);
 
-		try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-			assertTrue(reqDAO.save(request));
-			assertTrue(reqDAO.assignListingToUser(request, user));
-			assertFalse(reqDAO.assignListingToUser(request, user));
-		}
-
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		assertTrue(reqDAO.save(request));
+		assertTrue(reqDAO.assignListingToUser(request, user));
+		assertFalse(reqDAO.assignListingToUser(request, user));
 	}
 
 }
