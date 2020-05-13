@@ -271,6 +271,13 @@
 				});
 			}
 		}
+
+		$(document).ready(function(){
+			$('#inputMessage').keypress(function(e){
+			if(e.keyCode==13)
+				$('#button-sendMSG').click();
+			});
+		});
 	</script>
 </body>
 
