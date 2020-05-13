@@ -1,5 +1,8 @@
 package com.reachout.gui.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,27 +14,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.auth.SystemUser;
+import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.ListingGUIWrapper;
+import com.reachout.models.Request;
 
 @Controller
 @RequestMapping("/viewRequests")
 public class ViewRequestsController {
 	public final Logger logger = LogManager.getLogger(ViewRequestsController.class);
 
-	private Authentication auth;
-	private HibernateUserDAOImpl userDAO;
-
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
-		userDAO = new HibernateUserDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 
 		logger.debug("Reached viewRequests Controller");
 		ModelAndView mv = new ModelAndView("viewRequests");
 		mv.addObject("currentPage", "viewRequests");
 
-		auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
@@ -41,7 +43,15 @@ public class ViewRequestsController {
 		int userId = userDAO.getUserIdByUsername(username);
 
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
-		mv.addObject("liveRequests", reqDAO.getAllRequestsForDisplay(userId));
+		List<Request> allRequests = reqDAO.getAllRequestsForDisplay(userId);
+		List<ListingGUIWrapper> guiData = new ArrayList<>();
+
+		// Build up data for presenting on the GUI
+		for (Request req : allRequests) {
+			guiData.add(new ListingGUIWrapper(req, userDAO.selectByID(req.getUserId())));
+		}
+
+		mv.addObject("liveRequests", guiData);
 
 		return mv;
 	}

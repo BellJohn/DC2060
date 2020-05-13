@@ -33,7 +33,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 * @param request
 	 * @return
 	 */
-	public boolean save(Service service) {
+	public synchronized boolean save(Service service) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.save(service);
