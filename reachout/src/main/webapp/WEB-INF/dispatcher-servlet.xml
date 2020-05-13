@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd 
@@ -10,15 +9,12 @@
     http://www.springframework.org/schema/mvc
     http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-
 	<mvc:annotation-driven />
-	<!-- <mvc:view-controller path="/" view-name="home" />-->
+	<!-- <mvc:view-controller path="/" view-name="home" /> -->
 	<mvc:resources location="/css/" mapping="/css/**" />
 	<mvc:resources location="/images/" mapping="/images/**" />
-	
 
-	<context:component-scan
-		base-package="com.reachout.gui.controllers"></context:component-scan>
+	<context:component-scan base-package="com.reachout.gui.controllers"></context:component-scan>
 
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
@@ -43,5 +39,7 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+
+	
 
 </beans>

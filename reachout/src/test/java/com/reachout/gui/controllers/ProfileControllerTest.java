@@ -23,6 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.dao.HibernateHealthStatusDAOImpl;
@@ -124,7 +125,8 @@ class ProfileControllerTest {
 
 		ProfileController pc = new ProfileController();
 		pc.initPage(mockedRequest);
-		ModelAndView result = pc.update(mockedRequest);
+		//MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+		ModelAndView result = pc.update(mockedRequest, null);
 		assertNotNull(result);
 
 		assertEquals("redirect:/profile", result.getViewName());

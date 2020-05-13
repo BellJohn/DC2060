@@ -1,5 +1,8 @@
 package com.reachout.gui.controllers;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
@@ -100,10 +105,35 @@ public class ProfileController {
 	 * @return
 	 */
 	@PostMapping()
-	public ModelAndView update(HttpServletRequest request) {
+	public ModelAndView update(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 		logger.debug("Attempting profile update");
 
 		boolean saveUserDetailsSuccess = false;
+		
+		try {
+			byte[] bytes = file.getBytes();
+
+			// Creating the directory to store file
+			String rootPath = System.getProperty("catalina.home");
+			File dir = new File(rootPath + File.separator + "images");
+			if (!dir.exists())
+				dir.mkdirs();
+
+			// Create the file on server
+			File serverFile = new File(dir.getAbsolutePath()
+					+ File.separator + file.getName());
+			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
+
+			logger.info("Server File Location="
+					+ serverFile.getAbsolutePath());
+
+			logger.info ("You successfully uploaded file=" + file.getName());
+		} catch (Exception e) {
+			logger.error("You failed to upload " + file.getName() + " => " + e.getMessage());
+		}
+		
 //		String profilePic = request.getParameter("profilePic");
 		String bio = request.getParameter("userBio");
 		String healthStatus = request.getParameter("healthStatus");
@@ -118,7 +148,7 @@ public class ProfileController {
 		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
 			int userId = userDAO.getUserIdByUsername(username);
 			
-			UserProfile profile = new UserProfile("TESTIMAGE", bio, healthStatus, userId);
+			UserProfile profile = new UserProfile(file.getName(), bio, healthStatus, userId);
 			// Populate the user profile db
 			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
 				saveUserDetailsSuccess = userProfileDAO.saveOrUpdate(profile);

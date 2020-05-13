@@ -26,13 +26,11 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/accessDenied"
 			access="permitAll" />
-		<security:intercept-url pattern="/blog"
-			access="permitAll" />
 		<security:intercept-url pattern="/*"
 			access="isAuthenticated()" />
 
 		<security:form-login login-page="/login"
-			default-target-url="/home"
+			default-target-url="/login"
 			login-processing-url="/j_spring_security_check"
 			authentication-success-handler-ref="successHandler"
 			authentication-failure-handler-ref="failureHandler"
