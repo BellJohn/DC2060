@@ -5,11 +5,6 @@
 <title>ReachOut | Update Profile</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="/components/stylesheets.jsp"%>
-
-<!-- Finding a way of sending csrf token with the header, one attempt: -->
-<meta name="_csrf" th:content="${_csrf.token}" />
-<!-- default header name is X-CSRF-TOKEN -->
-<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 
 <body>
@@ -29,10 +24,11 @@
 
 					<!-- Edit Profile Form -->
 					<div class="profile-form">
-					<!--  Another attempt, sending it as -->
-						<form action="/updateProfle?${_csrf.parameterName}=${_csrf.token}" method="POST" enctype="multipart/form-data">
-							<fieldset>
+						<!--  Another attempt, sending it as -->
+						<form action="" method="POST" enctype="multipart/form-data">
+							<sec:csrfInput />
 
+							<fieldset>
 								<!-- Profile Picture -->
 								<figure>
 									<img src="images/no-profile-pic.png" alt=""
