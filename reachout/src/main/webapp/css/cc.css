@@ -236,3 +236,13 @@
 .message-card {
 	margin: 10px;
 }
+
+/** Remaining number of characters css */
+
+.remainingCounterText {
+	margin-bottom: 0px;
+}
+
+.remainingCounter {
+	margin-bottom: 16px;
+}

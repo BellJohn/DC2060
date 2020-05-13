@@ -17,7 +17,7 @@
 				<c:choose>
 					<c:when test="${empty postSent}">
 						<div class="signup-login-form">
-							<form action="" method="POST">
+							<form action="" method="POST" id="signup">
 								<sec:csrfInput />
 								<fieldset>
 									<div id="legend">
@@ -157,6 +157,19 @@
 			<div class="col-sm-3"></div>
 		</div>
 	</div>
+
+	<script>
+		//Disable the submit button if there were no validation errors on the form
+		$(document).ready(function () {
+			$("#signup").submit(function () {
+				$(this).find(':submit').attr('disabled', 'disabled');
+			});
+	
+			$("#signup").bind("invalid-form.validate", function () {
+				$(this).find(':submit').prop('disabled', false);
+			});
+		});
+	</script>
 </body>
 
 </html>

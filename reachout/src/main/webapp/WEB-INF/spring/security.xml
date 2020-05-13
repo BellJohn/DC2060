@@ -30,7 +30,7 @@
 			access="isAuthenticated()" />
 
 		<security:form-login login-page="/login"
-			default-target-url="/home"
+			default-target-url="/profile"
 			login-processing-url="/j_spring_security_check"
 			authentication-success-handler-ref="successHandler"
 			authentication-failure-handler-ref="failureHandler"

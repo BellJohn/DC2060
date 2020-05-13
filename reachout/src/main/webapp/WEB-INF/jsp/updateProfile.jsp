@@ -32,7 +32,7 @@
 
 					<!-- Edit Profile Form -->
 					<div class="profile-form">
-						<form action="" method="POST">
+						<form action="" method="POST" id="updateProfile">
 							<sec:csrfInput />
 							<fieldset>
 
@@ -42,7 +42,7 @@
 								</figure>
 
 								<!-- Edit Bio -->
-								<div class="form-group">
+								<div class="form-group remainingCounterText">
 									<label for="userBio">Bio</label>
 									<textarea class="form-control" name="userBio" path="bio" id="userBio" 
 										placeholder="Please enter a short sentence or two about yourself."
@@ -50,7 +50,7 @@
 								</div>
 
 								<!-- Remaining Characters -->
-								<div class="row">
+								<div class="row remainingCounter">
 									<div class="col-sm-3"></div>
 									<div class="col-sm-6"><br></div>
 									<div class="col-sm-3">
@@ -82,21 +82,29 @@
 
 <script>
 	$(document).ready(function() {
-	var len = 0;
-	var maxchar = 160;
+		var len = 0;
+		var maxchar = 160;
 
-	$( '#userBio' ).keyup(function(){
-		len = this.value.length
-		if(len > maxchar){
-			return false;
-		}
-		else if (len > 0) {
-			$( "#remainingC" ).html(maxchar - len);
-		}
-		else {
-			$( "#remainingC" ).html(maxchar);
-		}
-	})
+		$( '#userBio' ).keyup(function(){
+			len = this.value.length
+			if(len > maxchar){
+				return false;
+			}
+			else if (len > 0) {
+				$( "#remainingC" ).html(maxchar - len);
+			}
+			else {
+				$( "#remainingC" ).html(maxchar);
+			}
+		})
+
+		$("#updateProfile").submit(function () {
+            $(this).find(':submit').attr('disabled', 'disabled');
+        });
+
+        $("#updateProfile").bind("invalid-form.validate", function () {
+            $(this).find(':submit').prop('disabled', false);
+        });
 	});
 </script>
 
