@@ -33,11 +33,20 @@
 								</div>
 
 								<!-- Description -->
-								<div class="form-group">
+								<div class="form-group remainingCounterText">
 									<label for="Desc">Description</label>
 									<textarea id="Desc" name="Desc" cols="40" rows="5" placeholder="Description" 
 									class="form-control" maxlength="2000" minlength="50" 
 									required="required">${listing.description}</textarea>
+								</div>
+
+								<!-- Remaining Characters -->
+								<div class="row remainingCounter">
+									<div class="col-sm-3"></div>
+									<div class="col-sm-6"><br></div>
+									<div class="col-sm-3">
+										<span id='remainingC'></span>
+									</div>
 								</div>
 
 								<!-- County -->
@@ -100,6 +109,22 @@
 	<script>
 		//Disable the submit button if there were no validation errors on the form
 		$(document).ready(function () {
+			var len = 0;
+			var maxchar = 2000;
+
+			$( '#Desc' ).keyup(function(){
+				len = this.value.length
+				if(len > maxchar){
+					return false;
+				}
+				else if (len > 0) {
+					$( "#remainingC" ).html(maxchar - len);
+				}
+				else {
+					$( "#remainingC" ).html(maxchar);
+				}
+			})
+			
 			$("#editListing").submit(function () {
 				$(this).find(':submit').attr('hidden', 'hidden');
 			});

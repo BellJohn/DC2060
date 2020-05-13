@@ -42,7 +42,7 @@
 								</figure>
 
 								<!-- Edit Bio -->
-								<div class="form-group">
+								<div class="form-group remainingCounterText">
 									<label for="userBio">Bio</label>
 									<textarea class="form-control" name="userBio" path="bio" id="userBio" 
 										placeholder="Please enter a short sentence or two about yourself."
@@ -50,7 +50,7 @@
 								</div>
 
 								<!-- Remaining Characters -->
-								<div class="row">
+								<div class="row remainingCounter">
 									<div class="col-sm-3"></div>
 									<div class="col-sm-6"><br></div>
 									<div class="col-sm-3">

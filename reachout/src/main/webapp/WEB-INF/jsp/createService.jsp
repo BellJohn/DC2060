@@ -33,11 +33,20 @@
 									</div>
 
 									<!-- Service Description -->
-									<div class="form-group">
+									<div class="form-group remainingCounterText">
 										<label for="serDesc">Description</label>
-										<textarea id="serDesc" name="serDesc" cols="40" rows="5"
+										<textarea id="serDesc" name="serDesc" cols="40" rows="5" id="serDesc"
 											placeholder="Tell us a little about your service. Please note, everyone on the site will be able to view this information."
 											class="form-control" maxlength="2000" minlength="50" required="required"></textarea>
+									</div>
+
+									<!-- Remaining Characters -->
+									<div class="row remainingCounter">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-6"><br></div>
+										<div class="col-sm-3">
+											<span id='remainingC'></span>
+										</div>
 									</div>
 
 									<!-- Service County -->
@@ -84,6 +93,22 @@
 	<script>
 		//Disable the submit button if there were no validation errors on the form
 		$(document).ready(function () {
+			var len = 0;
+			var maxchar = 2000;
+
+			$( '#serDesc' ).keyup(function(){
+				len = this.value.length
+				if(len > maxchar){
+					return false;
+				}
+				else if (len > 0) {
+					$( "#remainingC" ).html(maxchar - len);
+				}
+				else {
+					$( "#remainingC" ).html(maxchar);
+				}
+			})
+
 			$("#createService").submit(function () {
 				$(this).find(':submit').attr('disabled', 'disabled');
 			});
