@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,12 +40,13 @@ class ProfileControllerTest {
 	public final static Logger logger = LogManager.getLogger(ProfileController.class);
 
 	@BeforeAll
-	public static void setup() {
-		HibernateHealthStatusDAOImpl dao = new HibernateHealthStatusDAOImpl();
-		List<String> list = dao.getAllHealthStatuses();
-		if (list == null) {
-			fail("Retrieve health statuses");
-		}
+	public static void setup() throws MessagingException {
+		try (HibernateHealthStatusDAOImpl dao = new HibernateHealthStatusDAOImpl()) {
+			List<String> list = dao.getAllHealthStatuses();
+			if (list == null) {
+				fail("Retrieve health statuses");
+			}
+
 		// set up a user account
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn(user.getFirstName());
