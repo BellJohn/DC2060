@@ -214,6 +214,59 @@
 
 					</c:forEach>
 				</div>
+
+				<!-- Users Accepted Requests -->
+				<div class="request-row">
+					<h3>Requests You've Offered To Help With</h3>
+
+					<c:if test="${empty acceptedRequests}">
+						<div class="card card-request">
+							<h4 class="card-title">No Requests Accepted</h4>
+							<p class="card-text">You can accept a request by visiting the Requests page from the navigation bar.</p>
+						</div>
+					</c:if>
+
+					<c:forEach items="${acceptedRequests}" var="acceptedRequest">
+
+						<div class="card card-request">
+							<h4 class="card-title">${acceptedRequest.getTitle()}</h4>
+							<h6 class="card-subtitle mb-2 text-muted">${acceptedRequest.getCity()}, ${acceptedRequest.getCounty()}</h6>
+							<p class="card-text">${acceptedRequest.getFormattedDescription()}</p>
+
+							<div class="row">
+								<div class="col-lg-2">
+									<c:choose>
+										<c:when test="${acceptedRequest.getStatus().getOrdinal()==0}">
+											<button class="btn btn-success btn-block" disabled>OPEN</button>
+										</c:when>
+										<c:when test="${acceptedRequest.getStatus().getOrdinal()==1}">
+											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+										</c:when>
+										<c:when test="${acceptedRequest.getStatus().getOrdinal()==2}">
+											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+										</c:when>
+									</c:choose>
+								</div>
+
+								<div class="col-lg-8"></div>
+
+								<div class="col-lg-2">
+									<form action="viewListing" method="POST">
+										<sec:csrfInput />
+										<input type="hidden" id="listingType" name="listingType"
+											value="${acceptedRequest.getListingType().getName()}" /> <input
+											type="hidden" id="listingID" name="listingID"
+											value="${acceptedRequest.getId()}" />
+										<button class="btn btn-info btn-block">
+											<span class="fa fa-info"></span> View Details
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>
