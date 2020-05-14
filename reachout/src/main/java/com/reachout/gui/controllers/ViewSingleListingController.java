@@ -70,18 +70,30 @@ public class ViewSingleListingController {
 		// to help" button
 		boolean isOwner = userBrowsingOwnsPost(result.getUserId());
 		boolean enableOfferButton = true;
+
 		// If it is not currently open or the user browsing owns this post, hide the
-		// button
+		// button to offer assistance
 		if (result.getListingType().equals(ListingType.SERVICE) || result.getStatus() != ListingStatus.OPEN
 				|| isOwner) {
 			enableOfferButton = false;
+		}
+
+		// set the message button to the same as the offer button as the logic so far is
+		// the same
+		boolean enableMessageButton = enableOfferButton;
+		// If it's actually a service and the user browsing doesn't own it then allow
+		// the message button
+		if (result.getListingType().equals((ListingType.SERVICE)) && !isOwner) {
+			enableMessageButton = true;
 		}
 
 		ModelAndView mv;
 		mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("ListingObj", result);
-		mv.addObject("enableButton", enableOfferButton);
+		mv.addObject("enableOfferButton", enableOfferButton);
+		mv.addObject("enableMessageButton", enableMessageButton);
+
 		mv.addObject("isOwner", isOwner);
 
 		return mv;

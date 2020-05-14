@@ -26,6 +26,7 @@ import com.reachout.models.User;
 public abstract class HibernateListingDAOImpl {
 	private Logger logger = LogManager.getLogger(HibernateListingDAOImpl.class);
 
+
 	/**
 	 * Returns all the possible listings in the system
 	 * 

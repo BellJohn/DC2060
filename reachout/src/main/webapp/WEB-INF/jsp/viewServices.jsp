@@ -42,16 +42,16 @@
 
 						<div class="row">
 							<div class="col-lg-9">
-								<p class="text-muted">Created by JoeBloggs 3d ago.</p>
+								<p class="text-muted">Created by ${service.getUsername()} on ${service.getCreatedDate()} at ${service.getCreatedTime()}.</p>
 							</div>
 
 							<div class="col-lg-3">
 								<form action="viewListing" method="POST">
 									<sec:csrfInput />
 									<input type="hidden" id="listingType" name="listingType"
-										value="${service.getListingType().getName()}" /> <input
+										value="${service.getListingType()}" /> <input
 										type="hidden" id="listingID" name="listingID"
-										value="${service.getId()}" />
+										value="${service.getListingID()}" />
 									<button class="btn btn-info btn-block">
 										<span class="fa fa-info"></span> View Details
 									</button>

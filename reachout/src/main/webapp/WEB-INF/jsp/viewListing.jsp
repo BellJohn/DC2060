@@ -24,23 +24,32 @@
 			<div class="col-sm-3"></div>
 			<div class="col-md-6">
 				<div class="card">
-					<h2><strong>${ListingObj.getTitle()}</strong></h2>
+					<h2>
+						<strong>${ListingObj.getTitle()}</strong>
+					</h2>
 					<p class="card-text">${ListingObj.getDescription()}</p>
 					<hr>
-					<p class="card-text">${ListingObj.getCity()}, ${ListingObj.getCounty()}</p>
+					<p class="card-text">${ListingObj.getCity()},
+						${ListingObj.getCounty()}</p>
 					<hr>
 					<p class="card-text">Status: ${ListingObj.getStatus()}</p>
-
-					<c:choose>
-						<c:when test="${enableButton}">
-							<div class="row">
-
+					<div class="row">
+						<c:choose>
+							<c:when  test="${!enableOfferButton || !enableMessageButton}"><div class="col-sm-3"></div></c:when>
+						</c:choose>
+						<c:choose>
+							<c:when test="${enableMessageButton}">
 								<div class="col-lg-6">
 									<!-- Button to trigger modal -->
-									<button class="btn btn-info btn-block" data-toggle="modal" data-target="#modalForm">
-										<span class="fa fa-comments-o"></span> Message User</button>
+									<button class="btn btn-info btn-block" data-toggle="modal"
+										data-target="#modalForm">
+										<span class="fa fa-comments-o"></span> Message User
+									</button>
 								</div>
-
+							</c:when>
+						</c:choose>
+						<c:choose>
+							<c:when test="${enableOfferButton}">
 								<div class="col-lg-6">
 									<form action="" method="POST">
 										<sec:csrfInput />
@@ -53,15 +62,13 @@
 											<span class="fa fa-handshake-o"></span> Offer Your Help
 										</button>
 									</form>
+
 								</div>
+							</c:when>
+						</c:choose>
 
-							</div>
-						</c:when>
-					</c:choose>
-
-					<c:choose>
-						<c:when test="${isOwner == true}">
-							<div class="row">
+						<c:choose>
+							<c:when test="${isOwner == true}">
 								<div class="col-lg-4"></div>
 								<div class="col-lg-4">
 									<form action="editListing" method="GET">
@@ -73,42 +80,45 @@
 										</button>
 									</form>
 								</div>
-							</div>
-						</c:when>
-					</c:choose>
+							</c:when>
+						</c:choose>
+
+						<div class="col-sm-3"></div>
+					</div>
+
 				</div>
-				<div class="col-sm-3"></div>
-			</div>
+				<!-- Modal -->
+				<div class="modal fade" id="modalForm" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!-- Modal Header -->
+							<div class="modal-header">
+								<h4 class="modal-title" id="myModalLabel">Message User</h4>
+								<button type="button" class="close" data-dismiss="modal">
+									<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
+								</button>
+							</div>
 
+							<!-- Modal Body -->
+							<div class="modal-body">
+								<p class="statusMsg"></p>
+								<form role="form">
+									<div class="form-group">
+										<textarea class="form-control" id="inputMessage"
+											placeholder="Please enter your message to the user. Once you press send, you will see it appear on your My Messages page."></textarea>
+									</div>
+									<input type="hidden" id="targetID" name="targetID"
+										value="${ListingObj.getUserId()}">
+								</form>
+							</div>
 
-			<!-- Modal -->
-			<div class="modal fade" id="modalForm" role="dialog">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<!-- Modal Header -->
-						<div class="modal-header">
-							<h4 class="modal-title" id="myModalLabel">Message User</h4>
-							<button type="button" class="close" data-dismiss="modal">
-								<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
-							</button>
-						</div>
-
-						<!-- Modal Body -->
-						<div class="modal-body">
-							<p class="statusMsg"></p>
-							<form role="form">
-								<div class="form-group">
-									<textarea class="form-control" id="inputMessage"
-										placeholder="Please enter your message to the user. Once you press send, you will see it appear on your My Messages page."></textarea>
-								</div>
-								<input type="hidden" id="targetID" name="targetID" value="${ListingObj.getUserId()}">
-							</form>
-						</div>
-
-						<!-- Modal Footer -->
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-							<button type="button" class="btn btn-info submitBtn" onclick="submitContactForm()">SEND</button>
+							<!-- Modal Footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Cancel</button>
+								<button type="button" class="btn btn-info submitBtn"
+									onclick="submitContactForm()">SEND</button>
+							</div>
 						</div>
 					</div>
 				</div>
