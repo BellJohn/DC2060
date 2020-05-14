@@ -80,6 +80,7 @@ public class ProfilePageController {
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
 		mv.addObject("liveRequests", reqDAO.getAllRequestsForUser(userId));
 		mv.addObject("numRequests", reqDAO.getNumRequestsForUser(userId));
+		mv.addObject("acceptedRequests", reqDAO.getAcceptedRequestsForUser(userId));
 
 		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
 		mv.addObject("liveServices", serDAO.getAllServicesForUser(userId));
