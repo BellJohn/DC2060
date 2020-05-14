@@ -19,6 +19,13 @@ import com.reachout.models.Listing;
 import com.reachout.models.ListingType;
 import com.reachout.models.Service;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.util.HashMap;
+
 /**
  * @author John
  *
@@ -171,5 +178,26 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 			}
 		}
 		return returnList;
+	}
+
+	/** 
+	 * Return a mapping of users to userIds, where the user has a listing displayed on the page 
+	 * 
+	 * */
+	public HashMap<Integer, String> getCreatedBy(int userId) {
+
+		HashMap returnMap = new HashMap<Integer, String>();
+
+		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/reach_out", "reach", "reach_pass");
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT USERS_ID, USERS_USERNAME FROM USERS u JOIN LISTINGS l ON u.USERS_ID = l.LST_USER_ID where l.LST_TYPE = " + ListingType.SERVICE.getOrdindal() + " AND u.USERS_ID != " + userId + " AND l.LST_STATUS = 0")) {
+			while (rs.next()) {
+				returnMap.put(rs.getInt("USERS_ID"), rs.getString("USERS_USERNAME"));
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return returnMap;
 	}
 }

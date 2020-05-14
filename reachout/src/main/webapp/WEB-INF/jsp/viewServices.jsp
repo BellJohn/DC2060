@@ -42,7 +42,7 @@
 
 						<div class="row">
 							<div class="col-lg-9">
-								<p class="text-muted">Created by JoeBloggs 3d ago.</p>
+								<p class="text-muted">Created by ${createdBy.get(service.getUserId())}.</p>
 							</div>
 
 							<div class="col-lg-3">

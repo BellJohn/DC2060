@@ -42,7 +42,7 @@ public class ViewRequestsController {
 
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
 		mv.addObject("liveRequests", reqDAO.getAllRequestsForDisplay(userId));
-
+		mv.addObject("createdBy", reqDAO.getCreatedBy(userId));
 		return mv;
 	}
 }

@@ -42,6 +42,7 @@ public class ViewServicesController {
 
 		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
 		mv.addObject("liveServices", serDAO.getAllServicesForDisplay(userId));
+		mv.addObject("createdBy", serDAO.getCreatedBy(userId));
 		return mv;
 	}
 }
