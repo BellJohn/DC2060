@@ -25,6 +25,11 @@
 							</button>
 						</form>
 					</div>
+					<div class="col-lg-12">
+						<p>Here you can view all open help requests that have been created by other users. 
+							In order to see your own requests, please visit your profile.
+							For more information on Requests, please see the help page.</p>
+					</div>
 				</div>
 				<c:forEach items="${liveRequests}" var="request">
 

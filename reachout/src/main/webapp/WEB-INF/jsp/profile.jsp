@@ -105,7 +105,21 @@
 							<p class="card-text">${request.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-8"></div>
+								<div class="col-lg-2">
+									<c:choose>
+										<c:when test="${request.getStatus().getOrdinal()==0}">
+											<button class="btn btn-success btn-block" disabled>OPEN</button>
+										</c:when>
+										<c:when test="${request.getStatus().getOrdinal()==1}">
+											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+										</c:when>
+										<c:when test="${request.getStatus().getOrdinal()==2}">
+											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+										</c:when>
+									</c:choose>
+								</div>
+
+								<div class="col-lg-6"></div>
 
 								<div class="col-lg-2">
 									<form action="viewListing" method="POST">
@@ -156,7 +170,21 @@
 							<p class="card-text">${service.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-8"></div>
+								<div class="col-lg-2">
+									<c:choose>
+										<c:when test="${service.getStatus().getOrdinal()==0}">
+											<button class="btn btn-success btn-block" disabled>OPEN</button>
+										</c:when>
+										<c:when test="${service.getStatus().getOrdinal()==1}">
+											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+										</c:when>
+										<c:when test="${service.getStatus().getOrdinal()==2}">
+											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+										</c:when>
+									</c:choose>
+								</div>
+
+								<div class="col-lg-6"></div>
 
 								<div class="col-lg-2">
 									<form action="viewListing" method="POST">

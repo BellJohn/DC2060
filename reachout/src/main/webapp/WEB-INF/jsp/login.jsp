@@ -22,7 +22,7 @@
 					</div>
 				</c:if>
 				<div class="signup-login-form login-form">
-					<form action="<c:url value='j_spring_security_check'/>" method="POST">
+					<form action="<c:url value='j_spring_security_check'/>" method="POST" id="login">
 						<sec:csrfInput />
 						<fieldset>
 							<div id="legend">
@@ -68,6 +68,18 @@
 		</div>
 	</div>
 
+	<script>
+		//Disable the submit button if there were no validation errors on the form
+		$(document).ready(function () {
+			$("#login").submit(function () {
+				$(this).find(':submit').attr('disabled', 'disabled');
+			});
+	
+			$("#login").bind("invalid-form.validate", function () {
+				$(this).find(':submit').prop('disabled', false);
+			});
+		});
+	</script>
 </body>
 
 </html>
