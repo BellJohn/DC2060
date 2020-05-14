@@ -35,23 +35,25 @@
 
 					<div class="card card-request">
 						<h4 class="card-title">${request.getTitle()}</h4>
-						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()}, ${request.getCounty()}</h6>
+						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},
+							${request.getCounty()}</h6>
 						<p class="card-text">${request.getFormattedDescription()}</p>
-						
+
 						<hr>
 
 						<div class="row">
 							<div class="col-lg-9">
-								<p class="text-muted">Created by ${createdBy.get(request.getUserId())}.</p>
+								<p class="text-muted">Created by ${request.getUsername()} on
+									${request.getCreatedDate()} at ${request.getCreatedTime()}.</p>
 							</div>
 
 							<div class="col-lg-3">
 								<form action="viewListing" method="POST">
 									<sec:csrfInput />
 									<input type="hidden" id="listingType" name="listingType"
-										value="${request.getListingType().getName()}" /> <input
-										type="hidden" id="listingID" name="listingID"
-										value="${request.getId()}" />
+										value="${request.getListingType()}" /> <input type="hidden"
+										id="listingID" name="listingID"
+										value="${request.getListingID()}" />
 									<button class="btn btn-info btn-block">
 										<span class="fa fa-info"></span> View Details
 									</button>
@@ -60,7 +62,7 @@
 
 						</div>
 					</div>
-						
+
 				</c:forEach>
 			</div>
 			<div class="col-lg-2"></div>

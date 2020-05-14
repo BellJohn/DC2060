@@ -41,7 +41,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	 * @param request
 	 * @return
 	 */
-	public boolean save(Request request) {
+	public synchronized boolean save(Request request) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.save(request);

@@ -1,5 +1,8 @@
 package com.reachout.gui.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,27 +14,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.auth.SystemUser;
+import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.ListingGUIWrapper;
+import com.reachout.models.Service;
 
 @Controller
 @RequestMapping("/viewServices")
 public class ViewServicesController {
 	public final Logger logger = LogManager.getLogger(ViewServicesController.class);
 
-	private Authentication auth;
-	private HibernateUserDAOImpl userDAO;
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
-		userDAO = new HibernateUserDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 
 		logger.debug("Reached viewServices Controller");
 		ModelAndView mv = new ModelAndView("viewServices");
 		mv.addObject("currentPage", "viewServices");
 
-		auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
@@ -41,8 +44,16 @@ public class ViewServicesController {
 		int userId = userDAO.getUserIdByUsername(username);
 
 		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
-		mv.addObject("liveServices", serDAO.getAllServicesForDisplay(userId));
-		mv.addObject("createdBy", serDAO.getCreatedBy(userId));
+		
+		List<Service> allServices = serDAO.getAllServicesForDisplay(userId);
+		List<ListingGUIWrapper> guiData = new ArrayList<>();
+
+		// Build up data for presenting on the GUI
+		for (Service ser : allServices) {
+			guiData.add(new ListingGUIWrapper(ser, userDAO.selectByID(ser.getUserId())));
+		}
+
+		mv.addObject("liveServices", guiData);
 		return mv;
 	}
 }
