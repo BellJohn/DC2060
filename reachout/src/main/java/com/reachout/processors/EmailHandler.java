@@ -35,14 +35,6 @@ public class EmailHandler {
 	static MimeMessage generateMailMessage;
 
 
-	public static void main(String args[]) throws AddressException, MessagingException, IOException {
-							
-		//set up for testing purposes		
-		generateAndSendEmail("test@test.co.uk", "testuser", "./src/main/resources/signupEmail.html", "Welcome to ReachOut...");
-		System.out.println("\n\n ===> Your Java Program has just sent an Email successfully. Check your email..");
-	}
-
-
 	public static void generateAndSendEmail(String email, String username, String filename, String emailSubject) throws AddressException, MessagingException{
 
 		//get actual path of file

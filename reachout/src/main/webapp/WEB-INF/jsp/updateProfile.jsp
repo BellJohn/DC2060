@@ -31,8 +31,16 @@
 							<fieldset>
 								<!-- Profile Picture -->
 								<figure>
-									<img src="images/no-profile-pic.png" alt=""
-										class="rounded-circle">
+									<c:choose>
+										<c:when test="${empty profilePic}">
+											<img src="images/no-profile-pic.png" alt="NoProfilePic"
+												class="rounded-circle">
+										</c:when>
+										<c:otherwise>
+											<img src="${profilePic}" alt="profilePic"
+												class="rounded-circle">
+										</c:otherwise>
+									</c:choose>
 								</figure>
 
 								File to upload: <input type="file" name="file">

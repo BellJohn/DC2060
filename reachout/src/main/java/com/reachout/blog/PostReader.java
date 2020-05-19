@@ -107,16 +107,14 @@ public class PostReader {
     public static String getFilePath(String fileName) {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(fileName);
-        System.out.println( url);
 
         //Check to see if file exists
         if (url == null) {
             System.out.println("File can't be found");
         }
 
-        //Return array of all files found on path
+        //Return the path of the file
         return url.getPath();
-        
      
     }
     

@@ -2,6 +2,7 @@ package com.reachout.gui.controllers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,7 @@ class ProfileControllerTest {
 
 
 	@Test
-	void updateProfileTest() {
+	void updateProfileTest() throws IOException {
 
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("profilePic")).thenReturn("picture.png");
@@ -126,7 +127,7 @@ class ProfileControllerTest {
 		ProfileController pc = new ProfileController();
 		pc.initPage(mockedRequest);
 		//MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
-		ModelAndView result = pc.update(mockedRequest, null);
+		ModelAndView result = pc.saveOrUpdate(mockedRequest, null);
 		assertNotNull(result);
 
 		assertEquals("redirect:/profile", result.getViewName());
