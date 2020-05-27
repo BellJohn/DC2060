@@ -24,12 +24,12 @@
 					<!-- Display Users Image -->
 					<figure>
 						<c:choose>
-							<c:when test="${empty image}">
+							<c:when test="${empty profilePic}">
 								<img src="images/no-profile-pic.png" alt="NoProfilePic"
 									class="rounded-circle">
 							</c:when>
 							<c:otherwise>
-								<img src="${pageContext.request.contextPath}/image/${image.id}" alt="profilePic" class="rounded-circle">
+								<img src="${profilePic}" alt="profilePic" class="rounded-circle">
 							</c:otherwise>
 						</c:choose>
 					</figure>

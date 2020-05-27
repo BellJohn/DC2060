@@ -1,14 +1,15 @@
 package com.reachout.gui.controllers;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
@@ -22,11 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
-import com.reachout.dao.HibernateHealthStatusDAOImpl;
-import com.reachout.dao.HibernateImageDAOImpl;
-import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.dao.HibernateUserProfileDAOImpl;
 import com.reachout.models.*;
+import com.reachout.dao.*;
 
 
 /**
@@ -43,21 +41,20 @@ public class ProfileController {
 	public final Logger logger = LogManager.getLogger(ProfileController.class);
 
 	private static final String VIEW_NAME = "updateProfile";
+	public static String uploadDirectory = System.getProperty("user.dir")+"/src/main/uploads";
 	private HibernateHealthStatusDAOImpl healthDAO;
-
 	private HibernateUserDAOImpl userDAO;
 	private HibernateUserProfileDAOImpl userProfileDAO;
-	private HibernateImageDAOImpl imageDAO;
 	private String firstName;
 	private String lastName;
 	private String bio;
 	private String healthStatus;
 	private UserProfile profile;
 	private boolean hasCreatedProfile;
-
+	private String profilePic;
 
 	@GetMapping
-	public ModelAndView initPage(HttpServletRequest request) {
+	public ModelAndView initPage(HttpServletRequest request) throws ServletException {
 		healthDAO = new HibernateHealthStatusDAOImpl();
 
 		// Test to see if the user is logged in
@@ -81,11 +78,11 @@ public class ProfileController {
 		// Get all relevant information to display on the page for the user to edit
 		userDAO = new HibernateUserDAOImpl();
 		userProfileDAO = new HibernateUserProfileDAOImpl();
-		imageDAO = new HibernateImageDAOImpl();
 		firstName = null;
 		lastName = null;
 		bio = null;
 		healthStatus = null;
+		profilePic = null;
 
 		firstName = userDAO.selectUser(username).getFirstName();
 		lastName = userDAO.selectUser(username).getLastName();
@@ -97,6 +94,7 @@ public class ProfileController {
 			bio = profile.getBio();
 			healthStatus = profile.getHealthStatus();
 			hasCreatedProfile = true;
+			profilePic = profile.getProfilePic();
 		}
 		catch (Exception e) {
 			hasCreatedProfile = false;
@@ -107,8 +105,9 @@ public class ProfileController {
 		mv.addObject("lastName", lastName);
 		mv.addObject("bio", bio);
 		mv.addObject("healthStatus", healthStatus);
-
+		mv.addObject("profilePic", profilePic );
 		return mv;
+
 	}
 
 	/**
@@ -117,6 +116,7 @@ public class ProfileController {
 	 * @param request
 	 * @return
 	 * @throws IOException 
+	 * @throws ServletException 
 	 */
 	@PostMapping()
 	public ModelAndView saveOrUpdate(HttpServletRequest request, @RequestParam("file") MultipartFile profilePic) throws IOException {
@@ -124,8 +124,18 @@ public class ProfileController {
 
 		boolean saveUserDetailsSuccess = false;
 
-		String bio = request.getParameter("userBio");
-		String healthStatus = request.getParameter("healthStatus");
+		//determine picture file extension
+		String extension = "";
+		if (profilePic.getOriginalFilename().contains(".png")) {
+			extension = ".png";
+		}
+		if (profilePic.getOriginalFilename().contains(".jpg")) {
+			extension = ".jpg";
+		}
+		if (profilePic.getOriginalFilename().contains(".jfif")) {
+			extension = ".jfif";
+		}
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 
@@ -134,34 +144,34 @@ public class ProfileController {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
 			username = (String) auth.getPrincipal();
-		}		
+		}
+
+		String bio = request.getParameter("userBio");
+		String healthStatus = request.getParameter("healthStatus");
+		Path fileNameAndPath = Paths.get(uploadDirectory, username + extension);
+		String profilePicName = fileNameAndPath.toString();
+
 
 		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
 			int userId = userDAO.getUserIdByUsername(username);
 
-			UserProfile profile = new UserProfile("test image", bio, healthStatus, userId);
+			UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
 
 			// Populate the user profile db
 			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
 
-				if (hasCreatedProfile = false) {
-					saveUserDetailsSuccess = userProfileDAO.save(profile);
-					if (!saveUserDetailsSuccess) {
-						// Something went wrong updating the profile
-						logger.error("Unable to create new profile at this time");
-					}
+				saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);
+				if (!saveUserDetailsSuccess) {
+					// Something went wrong updating the profile
+					logger.error("Unable to update profile at this time");
 				}
-				else {
-					saveUserDetailsSuccess = userProfileDAO.updateUserProfile(profile);
-					if (!saveUserDetailsSuccess) {
-						// Something went wrong updating the profile
-						logger.error("Unable to update profile at this time");
-					}
-					//create an image object from the file		
-					ImageController ic = new ImageController();
-					saveUserDetailsSuccess = ic.saveImage(profilePic, userId);
-				}
+
+				//save picture to directory
+				fileNameAndPath.toFile().mkdir();					
+				Files.write(fileNameAndPath, profilePic.getBytes());
+				logger.info("Successfully uploaded file " + fileNameAndPath.toString());
 			}
+
 		}
 		if(saveUserDetailsSuccess) {
 			return new ModelAndView("redirect:/profile");

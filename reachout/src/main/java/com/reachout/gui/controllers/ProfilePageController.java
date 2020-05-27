@@ -32,7 +32,6 @@ public class ProfilePageController {
 	private String profilePic;
 	private String bio;
 	private String healthStatus;
-
 	private Authentication auth;
 
 	@GetMapping

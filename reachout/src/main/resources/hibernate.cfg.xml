@@ -35,7 +35,6 @@
 		<mapping resource="com/reachout/models/UserProfile.hbm.xml" />
 		<mapping resource="com/reachout/models/HealthStatus.hbm.xml" />
 		<mapping resource="com/reachout/models/InternalMessage.hbm.xml" />
-		<mapping resource="com/reachout/models/Image.hbm.xml"/>
 
 	</session-factory>
 

@@ -101,7 +101,7 @@ class ProfileControllerTest {
 	}
 
 	@Test
-	void initPageTest(){
+	void initPageTest() throws ServletException{
 
 		Authentication auth = new UsernamePasswordAuthenticationToken("User2", "password");
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
@@ -117,7 +117,7 @@ class ProfileControllerTest {
 
 
 	@Test
-	void updateProfileTest() throws IOException {
+	void updateProfileTest() throws IOException, ServletException {
 
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("profilePic")).thenReturn("picture.png");

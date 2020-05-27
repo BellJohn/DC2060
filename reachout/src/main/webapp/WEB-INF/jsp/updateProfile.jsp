@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+<meta charset="UTF-8"></meta>
 <title>ReachOut | Update Profile</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="/components/stylesheets.jsp"%>
@@ -87,7 +88,7 @@
 				</div>
 
 				<c:choose>
-					<c:when test="${not empty errors}"> Errors : ${errors} </c:when>
+					<c:when test="${not empty errors}" > Errors : ${errors} </c:when>
 				</c:choose>
 
 			</div>

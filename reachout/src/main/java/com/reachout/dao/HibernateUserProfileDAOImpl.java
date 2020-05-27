@@ -32,17 +32,17 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 	 * @return true if successful, false otherwise
 	 */
 
-	public boolean save(UserProfile userProfile) {
+	public boolean saveOrUpdateProfile(UserProfile userProfile) {
 		try (Session session = this.getSessionFactory().openSession()) {
 			session.beginTransaction();
-			session.save(userProfile);
-			session.flush();
+			session.saveOrUpdate(userProfile);
 			session.getTransaction().commit();
-		} catch (IllegalStateException | RollbackException | ConstraintViolationException e) {
+		} catch (IllegalStateException | RollbackException e) {
 			return false;
 		}
 		return true;
 	}
+	
 	
 	
 	/**
@@ -99,23 +99,6 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 			query.setParameter("userId", userID);
 			return (String) query.getSingleResult();
 		}
-	}
-
-	/**
-	 * Attempts to update the user profile. Returns true if successful
-	 * 
-	 * @param userProfile
-	 * @return
-	 */
-	public boolean updateUserProfile(UserProfile userProfile) {
-		try (Session session = this.getSessionFactory().openSession()) {
-			session.beginTransaction();
-			session.update(userProfile);
-			session.getTransaction().commit();
-		} catch (IllegalStateException | RollbackException e) {
-			return false;
-		}
-		return true;
 	}
 
 }
