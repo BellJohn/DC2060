@@ -136,7 +136,7 @@ public class TestUtils {
 	 */
 	public static Request makeTestRequestForUser(User user) {
 		return new Request(String.format("testRequestFor%s", user.getUsername()), "Test Request", "count", "city",
-				user.getId());
+				user.getId(), "Urgent");
 	}
 
 	/**

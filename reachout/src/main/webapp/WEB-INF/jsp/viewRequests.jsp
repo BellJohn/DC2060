@@ -21,6 +21,7 @@
 						<th scope="col">Description</th>
 						<th scope="col">County</th>
 						<th scope="col">City</th>
+						<th scope="col">Priority</th>
 						<th scope="col">View</th>
 					</tr>
 				</thead>
@@ -30,6 +31,7 @@
 						<td>${request.getDescription()}</td>
 						<td>${request.getCounty()}</td>
 						<td>${request.getCity()}</td>
+						<td>${request.getPriority()} </td>
 						<td><form action="viewListing" method="POST">
 								<sec:csrfInput />
 								<input type="hidden" id="listingType" name="listingType"

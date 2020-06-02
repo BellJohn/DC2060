@@ -54,6 +54,17 @@
 								</div>
 							</div>
 							<div class="form-group row">
+								<label for="reqPriority" class="col-4 col-form-label">Priority
+								</label>
+								<div class="col-8">
+									<select id="reqPrioirty" name="reqPriority">
+										<option>Urgent</option>
+										<option>Medium</option>
+										<option>Low</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
 								<div class="offset-4 col-8">
 									<button name="submit" type="submit" class="btn btn-primary">Create
 										Request</button>
@@ -65,11 +76,11 @@
 				<c:otherwise>
 					<c:choose>
 						<c:when test="${createSuccess}">
-						<div class="col-sm-4">Hooray! Your post is now live</div>
+							<div class="col-sm-4">Hooray! Your post is now live</div>
 						</c:when>
 					</c:choose>
 				</c:otherwise>
-				</c:choose>
+			</c:choose>
 		</div>
 	</div>
 </body>

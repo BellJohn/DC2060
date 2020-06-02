@@ -22,6 +22,7 @@ public abstract class Listing implements Serializable {
 	protected EntityStatus status;
 	protected long createdDate;
 	protected ListingType listingType;
+	protected String priority;
 
 	/*
 	 * Empty request constructor for hibernate to use
@@ -38,9 +39,10 @@ public abstract class Listing implements Serializable {
 	 * @param city
 	 * @param userId
 	 * @param status
+	 * @param priority
 	 */
-	public Listing(String title, String description, String county, String city, int userId, EntityStatus status) {
-		this(title, description, county, city, userId);
+	public Listing(String title, String description, String county, String city, int userId, EntityStatus status, String priority) {
+		this(title, description, county, city, userId, priority);
 		this.status = status;
 	}
 	
@@ -52,12 +54,13 @@ public abstract class Listing implements Serializable {
 	 * @param county
 	 * @param city
 	 */
-	public Listing(String title, String description, String county, String city, int userId) {
+	public Listing(String title, String description, String county, String city, int userId, String priority) {
 		this.title = title;
 		this.description = description;
 		this.county = county;
 		this.city = city;
 		this.userId = userId;
+		this.priority = priority;
 		status = EntityStatus.OPEN;
 		this.createdDate = (System.currentTimeMillis());
 	}
@@ -221,6 +224,15 @@ public abstract class Listing implements Serializable {
 	 */
 	public void setCreatedDate(long createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	
+	public String getPriority() {
+		return priority;
+	}
+	
+	public void setPriority(String priority) {
+		this.priority = priority;
 	}
 
 	/*

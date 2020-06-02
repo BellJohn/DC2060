@@ -78,7 +78,8 @@ class RequestCreateControllerTest {
 		String description = "THIS IS A DESCRIPTION";
 		String county = "worcestershire";
 		String city = "worcester";
-		ModelAndView result = rcc.submitForm(title, description, county, city, mockedRequest);
+		String priority = "Medium";
+		ModelAndView result = rcc.submitForm(title, description, county, city, priority, mockedRequest);
 	}
 
 }

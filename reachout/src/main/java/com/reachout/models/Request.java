@@ -11,7 +11,8 @@ public class Request extends Listing {
 
 
 	private static final long serialVersionUID = -7360265992017228189L;
-
+	private String priority;
+	
 	/**
 	 * Fully formed constructor including request status.
 	 * Calls other partially formed constructor which handles setting this Listing child type as a Request Type for the database
@@ -21,9 +22,10 @@ public class Request extends Listing {
 	 * @param city
 	 * @param userId
 	 * @param status
+	 * @param priority
 	 */
-	public Request(String title, String description, String county, String city, int userId, EntityStatus status) {
-		this(title, description, county, city, userId);
+	public Request(String title, String description, String county, String city, int userId, EntityStatus status, String priority) {
+		this(title, description, county, city, userId, priority);
 		this.status = status;
 	}
 	
@@ -35,9 +37,11 @@ public class Request extends Listing {
 	 * @param county
 	 * @param city
 	 */
-	public Request(String title, String description, String county, String city, int userId) {
-		super(title, description, county, city, userId);
+	public Request(String title, String description, String county, String city, int userId, String priority) {
+		super(title, description, county, city, userId, priority);
 		this.listingType = ListingType.REQUEST;
+		this.priority = priority;
+		
 	}
 	
 	/**
@@ -47,5 +51,7 @@ public class Request extends Listing {
 	public Request() {
 		super();
 	}
+	
+
 
 }
