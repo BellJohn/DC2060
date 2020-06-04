@@ -165,4 +165,31 @@ public class HibernateUserDAOImpl {
 		return intFound;
 	}
 
+	/**
+	 * Get a user by their email address
+	 */
+	public User getUserByEmail(String email) {
+		User userFound = null;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			Query query = session.createQuery("SELECT user FROM User user WHERE USERS_EMAIL = :email");
+			query.setParameter("email", email);
+			userFound = (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug("Searched for user with email [" + email + "]. Found none");
+		}
+		return userFound;
+	}
+
+	/**
+	 * Return whether the getUserByEmail found a result or not
+	 */
+	public Boolean getUserExistsByEmail(String email) {
+		User user = getUserByEmail(email);
+		if (user != null) {
+			return true;
+		}
+		return false;
+	}
+
 }
