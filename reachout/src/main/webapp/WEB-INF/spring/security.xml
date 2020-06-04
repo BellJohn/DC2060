@@ -26,6 +26,8 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/accessDenied"
 			access="permitAll" />
+		<security:intercept-url pattern="/resetPassword"
+			access="permitAll" />
 		<security:intercept-url pattern="/*"
 			access="isAuthenticated()" />
 
