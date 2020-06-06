@@ -167,6 +167,9 @@ public class HibernateUserDAOImpl {
 
 	/**
 	 * Get a user by their email address
+	 * 
+	 * @param email address to search for
+	 * @return the User found or null if nothing matches
 	 */
 	public User getUserByEmail(String email) {
 		User userFound = null;
@@ -179,17 +182,6 @@ public class HibernateUserDAOImpl {
 			logger.debug("Searched for user with email [" + email + "]. Found none");
 		}
 		return userFound;
-	}
-
-	/**
-	 * Return whether the getUserByEmail found a result or not
-	 */
-	public Boolean getUserExistsByEmail(String email) {
-		User user = getUserByEmail(email);
-		if (user != null) {
-			return true;
-		}
-		return false;
 	}
 
 }

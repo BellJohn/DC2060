@@ -81,7 +81,7 @@ public class ResetPasswordController {
 		if(request.getParameterMap().containsKey("email")) {
 			// Check if the user exists
 			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-			if (userDAO.getUserExistsByEmail(request.getParameter("email"))){
+			if (userDAO.getUserByEmail(request.getParameter("email")) != null){
 				mv.addObject("reset", false);
 
 				// Get the users email and ID, and generate them a new reset code
