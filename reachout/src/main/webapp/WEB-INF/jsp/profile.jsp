@@ -29,7 +29,7 @@
 									class="rounded-circle">
 							</c:when>
 							<c:otherwise>
-								<img src="${profilePic}" alt="profilePic" class="rounded-circle">
+								<img src="${profilePic}" alt="profilePic" class="rounded-circle" style="max-width:40%;">
 							</c:otherwise>
 						</c:choose>
 					</figure>

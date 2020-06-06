@@ -1,5 +1,7 @@
 package com.reachout.gui.controllers;
 
+import java.io.File;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +17,7 @@ import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
 import com.reachout.models.*;
-
+import com.reachout.processors.SystemPropertiesService;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 
@@ -70,7 +72,9 @@ public class ProfilePageController {
 		catch (Exception e) {
 			System.out.println("No result found");
 		}
-		
+		SystemPropertiesService sps = SystemPropertiesService.getInstance();
+		String uploadDirectory = sps.getProperty("IMAGE_DIR");
+		profilePic = File.separator + uploadDirectory + File.separator + profilePic;
 		mv.addObject("firstName", firstName);
 		mv.addObject("lastName", lastName);
 		mv.addObject("bio", bio);

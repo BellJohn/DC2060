@@ -66,10 +66,15 @@
 		<constructor-arg name="defaultFailureUrl"
 			value="/login" />
 	</bean>
-	
+
 	<bean id="filterMultipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="100000000" />
+	</bean>
+
+	<bean id="systemPropertiesService"
+		class="com.reachout.processors.SystemPropertiesService"
+		init-method="init">
 	</bean>
 </beans>
 

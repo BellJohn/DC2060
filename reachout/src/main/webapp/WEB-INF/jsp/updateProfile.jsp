@@ -39,7 +39,7 @@
 										</c:when>
 										<c:otherwise>
 											<img src="${profilePic}" alt="profilePic"
-												class="rounded-circle">
+												class="rounded-circle" style="max-width:30%;">
 										</c:otherwise>
 									</c:choose>
 								</figure>
@@ -88,7 +88,7 @@
 				</div>
 
 				<c:choose>
-					<c:when test="${not empty errors}" > Errors : ${errors} </c:when>
+					<c:when test="${not empty error}" > Errors : ${error} </c:when>
 				</c:choose>
 
 			</div>

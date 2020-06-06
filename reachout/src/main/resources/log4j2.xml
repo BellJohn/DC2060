@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-<Configuration status="WARN">
+<Configuration status="DEBUG">
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout
@@ -21,7 +21,7 @@
 		<Logger name="org.hibernate" level="off">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Root level="TRACE">
+		<Root level="DEBUG">
 			<AppenderRef ref="Console" />
 		</Root>
 	</Loggers>

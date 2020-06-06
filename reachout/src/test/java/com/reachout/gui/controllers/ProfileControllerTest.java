@@ -39,7 +39,7 @@ import com.reachout.models.UserProfile;
 class ProfileControllerTest {
 
 	private static User user = new User("first", "last", "User2", "test2@test.com", "20/10/2000");
-	public final static Logger logger = LogManager.getLogger(ProfileController.class);
+	public final static Logger logger = LogManager.getLogger(UpdateProfileController.class);
 
 	@BeforeAll
 	public static void setup() throws MessagingException {
@@ -108,7 +108,7 @@ class ProfileControllerTest {
 		Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
 		SecurityContextHolder.setContext(securityContext);
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
-		ProfileController pc = new ProfileController();
+		UpdateProfileController pc = new UpdateProfileController();
 		ModelAndView result = pc.initPage(mockedRequest);
 		assertNotNull(result);
 		assertEquals("updateProfile", result.getViewName());
@@ -124,7 +124,7 @@ class ProfileControllerTest {
 		Mockito.when(mockedRequest.getParameter("userBio")).thenReturn("Hi I am user 1, I want to help");
 		Mockito.when(mockedRequest.getParameter("healthStatus")).thenReturn("In quarantine");
 
-		ProfileController pc = new ProfileController();
+		UpdateProfileController pc = new UpdateProfileController();
 		pc.initPage(mockedRequest);
 		//MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
 		ModelAndView result = pc.saveOrUpdate(mockedRequest, null);
