@@ -50,7 +50,7 @@ class TestHibernateListingDAOImpl {
 	 */
 	@Test
 	void testAssignListingToUser() {
-		Request request = new Request("title", "description", "county", "city", 2);
+		Request request = new Request("title", "description", "county", "city", 2, "low");
 		User user = new User();
 		user.setId(3);
 

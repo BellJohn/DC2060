@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>ReachOut | Update Profile</title>
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<%@ include file="/components/stylesheets.jsp"%>
+<meta charset="UTF-8"></meta>
+<title>ReachOut | Update Profile</title>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/components/stylesheets.jsp"%>
 </head>
 
 <body>
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
-		
+
 		<div class="row profile-row">
 			<div class="col-sm-4"></div>
 			<div class="col-md-4">
@@ -28,23 +29,38 @@
 				<div class="card card-bkg">
 
 					<!-- Display Users Name -->
-					<h2><strong>${firstName} ${lastName}</strong></h2>
+					<h2>
+						<strong>${firstName} ${lastName}</strong>
+					</h2>
 
 					<!-- Edit Profile Form -->
 					<div class="profile-form">
-						<form action="" method="POST" id="updateProfile">
+						<!--  Another attempt, sending it as -->
+						<form action="" method="POST" enctype="multipart/form-data">
 							<sec:csrfInput />
-							<fieldset>
 
+							<fieldset>
 								<!-- Profile Picture -->
 								<figure>
-									<img src="images/no-profile-pic.png" alt="" class="rounded-circle">
+									<c:choose>
+										<c:when test="${empty profilePic}">
+											<img src="images/no-profile-pic.png" alt="NoProfilePic"
+												class="rounded-circle">
+										</c:when>
+										<c:otherwise>
+											<img src="${profilePic}" alt="profilePic"
+												class="rounded-circle" style="max-width:30%;">
+										</c:otherwise>
+									</c:choose>
 								</figure>
+
+								File to upload: <input type="file" name="file">
 
 								<!-- Edit Bio -->
 								<div class="form-group remainingCounterText">
 									<label for="userBio">Bio</label>
-									<textarea class="form-control" name="userBio" path="bio" id="userBio" 
+									<textarea class="form-control" name="userBio" path="bio"
+										id="userBio"
 										placeholder="Please enter a short sentence or two about yourself."
 										maxLength="160" rows="4" cols="40">${bio}</textarea>
 								</div>
@@ -52,29 +68,39 @@
 								<!-- Remaining Characters -->
 								<div class="row remainingCounter">
 									<div class="col-sm-3"></div>
-									<div class="col-sm-6"><br></div>
+									<div class="col-sm-6">
+										<br>
+									</div>
 									<div class="col-sm-3">
 										<span id='remainingC'></span>
 									</div>
 								</div>
-								
+
 								<!-- Edit Health Status -->
 								<div class="form-group">
-									<label for="healthStatus">Status</label>
-									<select id="healthStatus" name="healthStatus" class="form-control">
+									<label for="healthStatus">Status</label> <select
+										id="healthStatus" name="healthStatus" class="form-control">
 										<c:forEach var="hs" items="${healthList}">
-											<option ${hs == healthStatus ? 'selected' : ''}><c:set var="h" value="${hs}" />
+											<option ${hs == healthStatus ? 'selected' : ''}><c:set
+													var="h" value="${hs}" />
 												<c:out value="${h}" /></option>
 										</c:forEach>
 									</select>
 								</div>
 
 								<!-- Save Button -->
-								<button class="btn btn-primary btn-large btn-block save-profile-btn" href="updateProfile">Save</button>
+								<button
+									class="btn btn-primary btn-large btn-block save-profile-btn"
+									href="updateProfile">Save</button>
 							</fieldset>
 						</form>
 					</div>
 				</div>
+
+				<c:choose>
+					<c:when test="${not empty error}" > Errors : ${error} </c:when>
+				</c:choose>
+
 			</div>
 		</div>
 	</div>

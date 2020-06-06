@@ -3,21 +3,19 @@ package com.reachout.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.exception.ConstraintViolationException;
 
 import com.reachout.models.User;
 import com.reachout.models.UserProfile;
 
 /**
  * Database accesser for a User Profile object. Stored in table USER_PROFILE.
- * 
+ *
  * @author Jessica
  *
  */
@@ -27,27 +25,27 @@ public class HibernateUserProfileDAOImpl {
 
 	/**
 	 * Attempts to persist a new user profile in the database.
-	 * 
+	 *
 	 * @param user
 	 * @return true if successful, false otherwise
 	 */
 
-	public boolean saveOrUpdate(UserProfile userProfile) {
+	public boolean saveOrUpdateProfile(UserProfile userProfile) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.saveOrUpdate(userProfile);
-			session.flush();
 			session.getTransaction().commit();
-		} catch (IllegalStateException | RollbackException | ConstraintViolationException e) {
+		} catch (IllegalStateException | RollbackException e) {
 			return false;
 		}
 		return true;
 	}
-	
-	
+
+
+
 	/**
 	 * Fetches a profile from a user ID in the database
-	 * 
+	 *
 	 * @return
 	 */
 	public UserProfile getProfileById(int userID) {
@@ -61,7 +59,7 @@ public class HibernateUserProfileDAOImpl {
 
 	/**
 	 * Deletes from the database where the user has a given ID
-	 * 
+	 *
 	 * @param userID
 	 * @return
 	 */
@@ -78,7 +76,7 @@ public class HibernateUserProfileDAOImpl {
 			return false;
 		}
 	}
-	
+
 	public List<UserProfile> getAllProfiles(){
 		List<UserProfile> profiles = new ArrayList<>();
 		try( Session session = HibernateUtil.getInstance().getSession()){
@@ -90,7 +88,7 @@ public class HibernateUserProfileDAOImpl {
 
 	/**
 	 * Fetches a profile picture from a user ID in the database
-	 * 
+	 *
 	 * @return
 	 */
 	public String getProfilePicById(int userID) {
@@ -103,7 +101,7 @@ public class HibernateUserProfileDAOImpl {
 
 	/**
 	 * Attempts to update the user profile. Returns true if successful
-	 * 
+	 *
 	 * @param userProfile
 	 * @return
 	 */

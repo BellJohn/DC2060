@@ -56,6 +56,7 @@ public class RequestCreateController {
 	public ModelAndView submitForm(@RequestParam(name = "reqTitle") String title,
 			@RequestParam(name = "reqDesc", required = false) String description,
 			@RequestParam(name = "reqCounty") String county,
+			@RequestParam(name = "reqPriority") String priority,
 			@RequestParam(name = "reqCity", required = false) String city, HttpServletRequest request) {
 
 		// TODO Check to see if the content is valid
@@ -71,7 +72,7 @@ public class RequestCreateController {
 			}
 		}
 		// Build a new request which will be given the status of "new"
-		Request newRequest = new Request(title, description, county, city, userId);
+		Request newRequest = new Request(title, description, county, city, userId, priority);
 		boolean createSuccess = false;
 		HibernateRequestDAOImpl requestDAO = new HibernateRequestDAOImpl();
 		createSuccess = requestDAO.save(newRequest);

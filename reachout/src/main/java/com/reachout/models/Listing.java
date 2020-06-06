@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.models;
 
@@ -22,6 +22,7 @@ public abstract class Listing implements Serializable {
 	protected ListingStatus status;
 	protected long createdDate;
 	protected ListingType listingType;
+	protected String priority;
 
 	/*
 	 * Empty request constructor for hibernate to use
@@ -31,39 +32,41 @@ public abstract class Listing implements Serializable {
 
 	/**
 	 * Full constructor with all fields represented
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param county
 	 * @param city
 	 * @param userId
 	 * @param status
+	 * @param priority
 	 */
-	public Listing(String title, String description, String county, String city, int userId, ListingStatus status) {
-		this(title, description, county, city, userId);
+	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority) {
+		this(title, description, county, city, userId, priority);
 		this.status = status;
 	}
-	
+
 	/**
 	 * Fully formed constructor minus request status.
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param county
 	 * @param city
 	 */
-	public Listing(String title, String description, String county, String city, int userId) {
+	public Listing(String title, String description, String county, String city, int userId, String priority) {
 		this.title = title;
 		this.description = description;
 		this.county = county;
 		this.city = city;
 		this.userId = userId;
+		this.priority = priority;
 		status = ListingStatus.OPEN;
 		this.createdDate = (System.currentTimeMillis());
 	}
 
 
-	
+
 	/**
 	 * @return the title
 	 */
@@ -129,13 +132,13 @@ public abstract class Listing implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the listingType
 	 */
 	public ListingType getListingType() {
 		return listingType;
 	}
-	
+
 	/**
 	 * @return the createdDate as a long
 	 */
@@ -194,7 +197,7 @@ public abstract class Listing implements Serializable {
 
 	/**
 	 * Sets the status by the ListingStatus passed
-	 * 
+	 *
 	 * @param status the status to set
 	 */
 	public void setStatus(ListingStatus status) {
@@ -204,7 +207,7 @@ public abstract class Listing implements Serializable {
 	/**
 	 * Sets the status via ordinal value passed. </br>
 	 * Value passed must be valid within {@link com.reachout.models.ListingStatus}
-	 * 
+	 *
 	 * @param statusValue
 	 */
 	public void setListingType(int listingType) {
@@ -214,7 +217,7 @@ public abstract class Listing implements Serializable {
 
 	/**
 	 * Sets the status by the ListingStatus passed
-	 * 
+	 *
 	 * @param status the status to set
 	 */
 	public void setListingType(ListingType listingType) {
@@ -224,18 +227,27 @@ public abstract class Listing implements Serializable {
 	/**
 	 * Sets the status via ordinal value passed. </br>
 	 * Value passed must be valid within {@link com.reachout.models.ListingStatus}
-	 * 
+	 *
 	 * @param statusValue
 	 */
 	public void setStatus(int statusValue) {
 		status = ListingStatus.getByOrdinal(statusValue);
 	}
-	
+
 	/**
 	 * @param createdDate the createdDate to set
 	 */
 	public void setCreatedDate(long createdDate) {
 		this.createdDate = createdDate;
+	}
+
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
 	}
 
 	/*
@@ -249,5 +261,5 @@ public abstract class Listing implements Serializable {
 				"This is a {%s} called {%s}, in status {%s} with the description {%s}. It is for user ID {%s} in county {%s}, city {%s}",
 				listingType.getName(), title, status, description, userId, county, city);
 	}
-	
+
 }

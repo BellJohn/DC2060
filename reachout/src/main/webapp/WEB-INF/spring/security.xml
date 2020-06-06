@@ -53,7 +53,7 @@
 	<bean id="securityContextRepository"
 		class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" />
 
-	<!-- if user authentication is successful then AppSuccessHandler will redirect 
+	<!-- if user authentication is successful then AppSuccessHandler will redirect
 		to page based on role -->
 	<bean id="successHandler"
 		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
@@ -61,7 +61,7 @@
 			value="/profile" />
 	</bean>
 
-	<!-- if user authentication is unsuccessful then failureHandler will redirect 
+	<!-- if user authentication is unsuccessful then failureHandler will redirect
 		to access denied page -->
 	<bean id="failureHandler"
 		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
@@ -69,5 +69,13 @@
 			value="/login" />
 	</bean>
 
-</beans>
+	<bean id="filterMultipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="100000000" />
+	</bean>
 
+	<bean id="systemPropertiesService"
+		class="com.reachout.processors.SystemPropertiesService"
+		init-method="init">
+	</bean>
+</beans>

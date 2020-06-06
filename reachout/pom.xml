@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.aston.dc2060</groupId>
@@ -35,6 +36,13 @@
 		<!-- Testing End -->
 
 		<!-- Spring Web Application Start -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>5.2.6.RELEASE</version>
+		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -150,11 +158,11 @@
 			<version>1.6.2</version>
 		</dependency>
 		<dependency>
-        	<groupId>com.sun.mail</groupId>
-        	<artifactId>javax.mail</artifactId>
-        	<version>1.5.3</version>
-        	<scope>runtime</scope>
-    	</dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.3</version>
+			<scope>runtime</scope>
+		</dependency>
 		<!-- Misc Start -->
 
 		<!-- Apache Commons Codec for Base64 functionality -->
@@ -162,6 +170,12 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.14</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
 		</dependency>
 
 		<!-- JSON Library -->

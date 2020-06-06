@@ -21,8 +21,8 @@ public class SystemUser implements UserDetails {
 	public SystemUser(String username, String password) {
 		this.username = username;
 		this.password = password;
-		SimpleGrantedAuthority SGA = new SimpleGrantedAuthority("USER");
-		roles.add(SGA);
+		SimpleGrantedAuthority sga = new SimpleGrantedAuthority("USER");
+		roles.add(sga);
 	}
 
 	public SystemUser(User foundUser, Password password) {
