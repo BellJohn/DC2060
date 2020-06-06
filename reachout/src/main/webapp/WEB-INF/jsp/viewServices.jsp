@@ -10,40 +10,62 @@
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
-		<div class="jumbotron">
-			<div class="row">All Active Services</div>
-		</div>
-		<div class="row" style="width: 70%; margin: 0 auto;">
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">Service</th>
-						<th scope="col">Description</th>
-						<th scope="col">County</th>
-						<th scope="col">City</th>
-						<th scope="col">View</th>
-					</tr>
-				</thead>
+		
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8">
+				<div class="row listing-page">
+					<div class="col-lg-9">
+						<h1>All Services</h1>
+					</div>
+					<div class="col-lg-3">
+						<form action="createService">
+							<button class="btn btn-info text-right ">
+								<span class="fa fa-plus-circle"></span> Offer New Service
+							</button>
+						</form>
+					</div>
+					<div class="col-lg-12 text-justify">
+						<p>Here you can view all open service offers that have been created by other users. 
+							In order to see your own offered services, please visit your profile. 
+							For more information on Services, please see the help page.</p>
+					</div>
+				</div>
 				<c:forEach items="${liveServices}" var="service">
-					<tr>
-						<th scope="row">${service.getTitle()}</th>
-						<td>${service.getDescription()}</td>
-						<td>${service.getCounty()}</td>
-						<td>${service.getCity()}</td>
-						<td><form action="viewListing" method="POST">
-								<sec:csrfInput />
-								<input type="hidden" id="listingType" name="listingType"
-									value="${service.getListingType().getName()}" /> <input
-									type="hidden" id="listingID" name="listingID"
-									value="${service.getId()}" />
-								<button class="btn btn-success btn-block">
-									<span class="fa fa-info"></span> View Details
-								</button>
-							</form></td>
-					</tr>
+
+					<div class="card card-request">
+						<h4 class="card-title">${service.getTitle()}</h4>
+						<h6 class="card-subtitle mb-2 text-muted">${service.getCity()}, ${service.getCounty()}</h6>
+						<p class="card-text">${service.getFormattedDescription()}</p>
+						
+						<hr>
+
+						<div class="row">
+							<div class="col-lg-9">
+								<p class="text-muted">Created by ${service.getUsername()} on ${service.getCreatedDate()} at ${service.getCreatedTime()}.</p>
+							</div>
+
+							<div class="col-lg-3">
+								<form action="viewListing" method="POST">
+									<sec:csrfInput />
+									<input type="hidden" id="listingType" name="listingType"
+										value="${service.getListingType()}" /> <input
+										type="hidden" id="listingID" name="listingID"
+										value="${service.getListingID()}" />
+									<button class="btn btn-info btn-block">
+										<span class="fa fa-info"></span> View Details
+									</button>
+								</form>
+							</div>
+
+						</div>
+					</div>
+						
 				</c:forEach>
-			</table>
+			</div>
+			<div class="col-lg-2"></div>
 		</div>
+
 	</div>
 </body>
 </html>

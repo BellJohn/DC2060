@@ -24,7 +24,7 @@ import com.reachout.models.InternalMessage;
  * @author John
  *
  */
-public class HibernateInternalMessageDAOImpl extends HibernateDAO {
+public class HibernateInternalMessageDAOImpl{
 
 	Logger logger = LogManager.getLogger(HibernateInternalMessageDAOImpl.class);
 
@@ -36,7 +36,7 @@ public class HibernateInternalMessageDAOImpl extends HibernateDAO {
 	 */
 	public synchronized boolean save(InternalMessage im) {
 		boolean result = false;
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			result = ((Integer) session.save(im) > 0);
 			session.flush();
@@ -51,7 +51,7 @@ public class HibernateInternalMessageDAOImpl extends HibernateDAO {
 	 * @return all InternalMessages
 	 */
 	public List<InternalMessage> getAllMessages() {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			return session
 					.createQuery("SELECT internalMessage FROM InternalMessage internalMessage", InternalMessage.class)
@@ -66,7 +66,7 @@ public class HibernateInternalMessageDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public boolean delete(InternalMessage im) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(im);
 			session.flush();
@@ -84,7 +84,7 @@ public class HibernateInternalMessageDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public InternalMessage selectById(int imID) {
-		try (Session session = this.getSessionFactory().getCurrentSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query query = session.createQuery(
 					"SELECT internalMessage FROM InternalMessage internalMessage where id = :imID",
@@ -106,7 +106,7 @@ public class HibernateInternalMessageDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public List<InternalMessage> getAllMessagesBetween(int userBrowsing, int userOther) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT internalMessage FROM InternalMessage internalMessage WHERE (IM_ORIG_ID = :id_browse AND IM_TARGET_ID = :id_other ) OR (IM_ORIG_ID = :id_other AND IM_TARGET_ID = :id_browse) ORDER BY IM_CREATE_DATE ASC",
 					InternalMessage.class);
@@ -126,7 +126,7 @@ public class HibernateInternalMessageDAOImpl extends HibernateDAO {
 
 	public Set<Integer> getAllUsersConversingWith(int userBrowsing) {
 		Set<Integer> usersFound = new HashSet<>();
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			String queryStringMessagesReceived = "SELECT DISTINCT IM_ORIG_ID FROM INTERNAL_MESSAGES WHERE IM_TARGET_ID = :userID";
 			String queryStringMessagesSent = "SELECT DISTINCT IM_TARGET_ID FROM INTERNAL_MESSAGES WHERE IM_ORIG_ID = :userID";
 			

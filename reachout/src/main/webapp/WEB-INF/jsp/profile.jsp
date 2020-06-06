@@ -98,68 +98,186 @@
 
 			<!-- Users Help Requests -->
 			<div class="col-md-9">
-				<h3>Requests Made</h3>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col">Request</th>
-							<th scope="col">Description</th>
-							<th scope="col">County</th>
-							<th scope="col">City</th>
-							<th scope="col">View</th>
-						</tr>
-					</thead>
-					<c:forEach items="${liveRequests}" var="request">
-						<tr>
-							<th scope="row">${request.getTitle()}</th>
-							<td>${request.getDescription()}</td>
-							<td>${request.getCounty()}</td>
-							<td>${request.getCity()}</td>
-							<td><form action="viewListing" method="POST">
-									<sec:csrfInput />
-									<input type="hidden" id="listingType" name="listingType"
-										value="${request.getListingType().getName()}" /> <input
-										type="hidden" id="listingID" name="listingID"
-										value="${request.getId()}" />
-									<button class="btn btn-success btn-block">
-										<span class="fa fa-info"></span> View Details
-									</button>
-								</form></td>
-						</tr>
-					</c:forEach>
-				</table>
+				<div class="request-row">
+					<h3>Your Requests</h3>
 
-				<!-- Users Offered Services -->
-				<h3>Services Offered</h3>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col">Service</th>
-							<th scope="col">Description</th>
-							<th scope="col">County</th>
-							<th scope="col">City</th>
-							<th scope="col">View</th>
-						</tr>
-					</thead>
-					<c:forEach items="${liveServices}" var="service">
-						<tr>
-							<th scope="row">${service.getTitle()}</th>
-							<td>${service.getDescription()}</td>
-							<td>${service.getCounty()}</td>
-							<td>${service.getCity()}</td>
-							<td><form action="viewListing" method="POST">
-									<sec:csrfInput />
-									<input type="hidden" id="listingType" name="listingType"
-										value="${service.getListingType().getName()}" /> <input
-										type="hidden" id="listingID" name="listingID"
-										value="${service.getId()}" />
-									<button class="btn btn-success btn-block">
-										<span class="fa fa-info"></span> View Details
-									</button>
-								</form></td>
-						</tr>
+					<c:if test="${empty liveRequests}">
+						<div class="card card-request">
+							<h4 class="card-title">No Requests Created</h4>
+							<p class="card-text">You can create one using the Create new Request button over on the left, or by visiting the Requests page from the navigation bar.</p>
+						</div>
+					</c:if>
+
+					<c:forEach items="${liveRequests}" var="request">
+
+						<div class="card card-request">
+							<h4 class="card-title">${request.getTitle()}</h4>
+							<h6 class="card-subtitle mb-2 text-muted">${request.getCity()}, ${request.getCounty()}</h6>
+							<p class="card-text">${request.getFormattedDescription()}</p>
+
+							<div class="row">
+								<div class="col-lg-2">
+									<c:choose>
+										<c:when test="${request.getStatus().getOrdinal()==0}">
+											<button class="btn btn-success btn-block" disabled>OPEN</button>
+										</c:when>
+										<c:when test="${request.getStatus().getOrdinal()==1}">
+											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+										</c:when>
+										<c:when test="${request.getStatus().getOrdinal()==2}">
+											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+										</c:when>
+									</c:choose>
+								</div>
+
+								<div class="col-lg-6"></div>
+
+								<div class="col-lg-2">
+									<form action="viewListing" method="POST">
+										<sec:csrfInput />
+										<input type="hidden" id="listingType" name="listingType"
+											value="${request.getListingType().getName()}" /> <input
+											type="hidden" id="listingID" name="listingID"
+											value="${request.getId()}" />
+										<button class="btn btn-info btn-block">
+											<span class="fa fa-info"></span> View Details
+										</button>
+									</form>
+								</div>
+								<div class="col-lg-2">
+									<!-- Edit Details Button -->
+									<form action="editListing" method="GET">
+										<input
+											type="hidden" id="listingID" name="listingID"
+											value="${request.getId()}" />
+										<button class="btn btn-success btn-block">
+											<span class="fa fa-info"></span> Edit Details
+										</button>
+									</form>
+								</div>
+
+							</div>
+						</div>
+
 					</c:forEach>
-				</table>
+				</div>
+
+			<!-- Users Offered Services -->
+				<div class="request-row">
+					<h3>Your Offered Services</h3>
+
+					<c:if test="${empty liveServices}">
+						<div class="card card-request">
+							<h4 class="card-title">No Offered Services</h4>
+							<p class="card-text">You can create one using the Offer new Service button over on the left, or by visiting the Services page from the navigation bar.</p>
+						</div>
+					</c:if>
+
+					<c:forEach items="${liveServices}" var="service">
+
+						<div class="card card-request">
+							<h4 class="card-title">${service.getTitle()}</h4>
+							<h6 class="card-subtitle mb-2 text-muted">${service.getCity()}, ${service.getCounty()}</h6>
+							<p class="card-text">${service.getFormattedDescription()}</p>
+
+							<div class="row">
+								<div class="col-lg-2">
+									<c:choose>
+										<c:when test="${service.getStatus().getOrdinal()==0}">
+											<button class="btn btn-success btn-block" disabled>OPEN</button>
+										</c:when>
+										<c:when test="${service.getStatus().getOrdinal()==1}">
+											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+										</c:when>
+										<c:when test="${service.getStatus().getOrdinal()==2}">
+											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+										</c:when>
+									</c:choose>
+								</div>
+
+								<div class="col-lg-6"></div>
+
+								<div class="col-lg-2">
+									<form action="viewListing" method="POST">
+										<sec:csrfInput />
+										<input type="hidden" id="listingType" name="listingType"
+											value="${service.getListingType().getName()}" /> <input
+											type="hidden" id="listingID" name="listingID"
+											value="${service.getId()}" />
+										<button class="btn btn-info btn-block">
+											<span class="fa fa-info"></span> View Details
+										</button>
+									</form>
+								</div>
+								<div class="col-lg-2">
+									<!--  Edit Service Button -->
+									<form action="editListing" method="GET">
+										<input
+											type="hidden" id="listingID" name="listingID"
+											value="${service.getId()}" />
+										<button class="btn btn-success btn-block">
+											<span class="fa fa-info"></span> Edit Details
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+
+					</c:forEach>
+				</div>
+
+				<!-- Users Accepted Requests -->
+				<div class="request-row">
+					<h3>Requests You've Offered To Help With</h3>
+
+					<c:if test="${empty acceptedRequests}">
+						<div class="card card-request">
+							<h4 class="card-title">No Requests Accepted</h4>
+							<p class="card-text">You can accept a request by visiting the Requests page from the navigation bar.</p>
+						</div>
+					</c:if>
+
+					<c:forEach items="${acceptedRequests}" var="acceptedRequest">
+
+						<div class="card card-request">
+							<h4 class="card-title">${acceptedRequest.getTitle()}</h4>
+							<h6 class="card-subtitle mb-2 text-muted">${acceptedRequest.getCity()}, ${acceptedRequest.getCounty()}</h6>
+							<p class="card-text">${acceptedRequest.getFormattedDescription()}</p>
+
+							<div class="row">
+								<div class="col-lg-2">
+									<c:choose>
+										<c:when test="${acceptedRequest.getStatus().getOrdinal()==0}">
+											<button class="btn btn-success btn-block" disabled>OPEN</button>
+										</c:when>
+										<c:when test="${acceptedRequest.getStatus().getOrdinal()==1}">
+											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+										</c:when>
+										<c:when test="${acceptedRequest.getStatus().getOrdinal()==2}">
+											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+										</c:when>
+									</c:choose>
+								</div>
+
+								<div class="col-lg-8"></div>
+
+								<div class="col-lg-2">
+									<form action="viewListing" method="POST">
+										<sec:csrfInput />
+										<input type="hidden" id="listingType" name="listingType"
+											value="${acceptedRequest.getListingType().getName()}" /> <input
+											type="hidden" id="listingID" name="listingID"
+											value="${acceptedRequest.getId()}" />
+										<button class="btn btn-info btn-block">
+											<span class="fa fa-info"></span> View Details
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>

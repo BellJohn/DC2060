@@ -17,8 +17,8 @@ import com.reachout.dao.HibernateInternalMessageDAOImpl;
 import com.reachout.dao.HibernateListingDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateRequestDAOImpl;
-import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.dao.HibernateUtil;
 import com.reachout.models.InternalMessage;
 import com.reachout.models.Listing;
 import com.reachout.models.Password;
@@ -46,12 +46,11 @@ public class TestUtils {
 	 */
 	public static void clearAllUsers() {
 		// Remove all users
-		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
-			ArrayList<User> currentEnrolledUsers = (ArrayList<User>) userDao.getAllUsers();
-			for (User user : currentEnrolledUsers) {
-				logger.info("Deleting user with ID: " + user.getId());
-				assertTrue(userDao.deleteUserById(user.getId()));
-			}
+		HibernateUserDAOImpl userDao = new HibernateUserDAOImpl();
+		ArrayList<User> currentEnrolledUsers = (ArrayList<User>) userDao.getAllUsers();
+		for (User user : currentEnrolledUsers) {
+			logger.info("Deleting user with ID: " + user.getId());
+			assertTrue(userDao.deleteUserById(user.getId()));
 		}
 	}
 
@@ -60,12 +59,11 @@ public class TestUtils {
 	 */
 	public static void clearAllPasswords() {
 		// Remove all passwords
-		try (HibernatePasswordDAOImpl passwordDao = new HibernatePasswordDAOImpl()) {
-			ArrayList<Password> currentStoredPasswords = (ArrayList<Password>) passwordDao.getAllPasswords();
-			for (Password password : currentStoredPasswords) {
-				logger.info("Deleting user with ID: " + password.getPwdId());
-				assertTrue(passwordDao.deletePasswordById(password.getPwdId()));
-			}
+		HibernatePasswordDAOImpl passwordDao = new HibernatePasswordDAOImpl();
+		ArrayList<Password> currentStoredPasswords = (ArrayList<Password>) passwordDao.getAllPasswords();
+		for (Password password : currentStoredPasswords) {
+			logger.info("Deleting user with ID: " + password.getPwdId());
+			assertTrue(passwordDao.deletePasswordById(password.getPwdId()));
 		}
 	}
 
@@ -74,12 +72,11 @@ public class TestUtils {
 	 */
 	public static void clearAllListings() {
 		// Remove all listings
-		try (HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl()) {
-			ArrayList<Listing> currentStoredListings = (ArrayList<Listing>) listingDAO.getAllListings();
-			for (Listing listing : currentStoredListings) {
-				logger.info("Deleting request with ID: " + listing.getId());
-				assertTrue(listingDAO.delete(listing));
-			}
+		HibernateListingDAOImpl listingDAO = new HibernateRequestDAOImpl();
+		ArrayList<Listing> currentStoredListings = (ArrayList<Listing>) listingDAO.getAllListings();
+		for (Listing listing : currentStoredListings) {
+			logger.info("Deleting request with ID: " + listing.getId());
+			assertTrue(listingDAO.delete(listing));
 		}
 	}
 
@@ -87,12 +84,11 @@ public class TestUtils {
 	 * Deletes all InternalMessages from the database
 	 */
 	public static void clearAllInternalMessages() {
-		try (HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()) {
-			ArrayList<InternalMessage> storedIMs = (ArrayList<InternalMessage>) imDAO.getAllMessages();
-			for (InternalMessage im : storedIMs) {
-				logger.info("Deleting InternalMessage with ID: " + im.getId());
-				assertTrue(imDAO.delete(im));
-			}
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		ArrayList<InternalMessage> storedIMs = (ArrayList<InternalMessage>) imDAO.getAllMessages();
+		for (InternalMessage im : storedIMs) {
+			logger.info("Deleting InternalMessage with ID: " + im.getId());
+			assertTrue(imDAO.delete(im));
 		}
 	}
 
@@ -116,8 +112,7 @@ public class TestUtils {
 	 * Blanket deletes every assigned listing in the database
 	 */
 	public static void clearAllAssignedListings() {
-		try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
-				Session session = serDAO.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query delQuery = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_ID like '%'");
 			delQuery.executeUpdate();

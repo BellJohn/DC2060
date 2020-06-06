@@ -45,14 +45,14 @@ public class ProfilePageController {
 		bio = null;
 		profilePic = null;
 		healthStatus = null;
-		
+
 		// Test to see if the user is logged in
 		auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
-			username =  (String) auth.getPrincipal();
+			username = (String) auth.getPrincipal();
 		}
 
 		logger.debug("Reached profilePage Controller");
@@ -68,6 +68,8 @@ public class ProfilePageController {
 			bio = profile.getBio();
 			profilePic = profile.getProfilePic();
 			healthStatus = profile.getHealthStatus();
+		} catch (Exception e) {
+			logger.error("No result found");
 		}
 		catch (Exception e) {
 			System.out.println("No result found");
@@ -81,19 +83,15 @@ public class ProfilePageController {
 		mv.addObject("profilePic", profilePic);
 		mv.addObject("healthStatus", healthStatus);
 
-		try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-			mv.addObject("liveRequests", reqDAO.getAllRequestsForUser(userId));
-			mv.addObject("numRequests", reqDAO.getNumRequestsForUser(userId));
-		}
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		mv.addObject("liveRequests", reqDAO.getAllRequestsForUser(userId));
+		mv.addObject("numRequests", reqDAO.getNumRequestsForUser(userId));
+		mv.addObject("acceptedRequests", reqDAO.getAcceptedRequestsForUser(userId));
 
-		try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
-			mv.addObject("liveServices", serDAO.getAllServicesForUser(userId));
-			mv.addObject("numServices", serDAO.getNumServicesForUser(userId));
-		}
+		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+		mv.addObject("liveServices", serDAO.getAllServicesForUser(userId));
+		mv.addObject("numServices", serDAO.getNumServicesForUser(userId));
 
 		return mv;
-		}
 	}
-
-
-
+}

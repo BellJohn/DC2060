@@ -16,6 +16,16 @@
 		<div class="row profile-row">
 			<div class="col-sm-4"></div>
 			<div class="col-md-4">
+
+				<!-- Display an error if any occurred -->
+				<c:if test="${not empty errors}">
+					<br>
+					<div class="alert alert-danger" role="alert">
+						<c:out value="Error updating profile: ${errors}" />.
+						<p>Please try again shortly.</p>
+					</div>
+				</c:if>
+
 				<div class="card card-bkg">
 
 					<!-- Display Users Name -->
@@ -47,7 +57,7 @@
 								File to upload: <input type="file" name="file">
 
 								<!-- Edit Bio -->
-								<div class="form-group">
+								<div class="form-group remainingCounterText">
 									<label for="userBio">Bio</label>
 									<textarea class="form-control" name="userBio" path="bio"
 										id="userBio"
@@ -56,7 +66,7 @@
 								</div>
 
 								<!-- Remaining Characters -->
-								<div class="row">
+								<div class="row remainingCounter">
 									<div class="col-sm-3"></div>
 									<div class="col-sm-6">
 										<br>
@@ -101,16 +111,26 @@
 		var len = 0;
 		var maxchar = 160;
 
-		$('#userBio').keyup(function() {
+		$( '#userBio' ).keyup(function(){
 			len = this.value.length
-			if (len > maxchar) {
+			if(len > maxchar){
 				return false;
-			} else if (len > 0) {
-				$("#remainingC").html(maxchar - len);
-			} else {
-				$("#remainingC").html(maxchar);
+			}
+			else if (len > 0) {
+				$( "#remainingC" ).html(maxchar - len);
+			}
+			else {
+				$( "#remainingC" ).html(maxchar);
 			}
 		})
+
+		$("#updateProfile").submit(function () {
+            $(this).find(':submit').attr('disabled', 'disabled');
+        });
+
+        $("#updateProfile").bind("invalid-form.validate", function () {
+            $(this).find(':submit').prop('disabled', false);
+        });
 	});
 </script>
 

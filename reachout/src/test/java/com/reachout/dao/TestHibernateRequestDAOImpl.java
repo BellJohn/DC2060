@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.reachout.models.EntityStatus;
+import com.reachout.models.ListingStatus;
 import com.reachout.models.Request;
 import com.reachout.testUtils.TestUtils;
 
@@ -45,9 +45,9 @@ class TestHibernateRequestDAOImpl {
 	void testSave() {
 		Request request = new Request(title, description, county, city, userId, priority);
 		System.out.println(request);
-		try (HibernateRequestDAOImpl listingDAO = new HibernateRequestDAOImpl()) {
-			assertTrue(listingDAO.save(request));
-		}
+		HibernateRequestDAOImpl listingDAO = new HibernateRequestDAOImpl();
+		assertTrue(listingDAO.save(request));
+
 	}
 
 	/**
@@ -57,10 +57,10 @@ class TestHibernateRequestDAOImpl {
 	void testDelete() {
 		Request request = new Request(title, description, county, city, userId, priority);
 		System.out.println(request);
-		try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-			assertTrue(reqDAO.save(request));
-			assertTrue(reqDAO.delete(request));
-		}
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		assertTrue(reqDAO.save(request));
+		assertTrue(reqDAO.delete(request));
+
 	}
 
 	/**
@@ -71,31 +71,29 @@ class TestHibernateRequestDAOImpl {
 		Request request = new Request(title, description, county, city, userId, priority);
 		String newCityData = "NOT THE TEST DATA";
 		System.out.println(request);
-		try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-			assertTrue(reqDAO.save(request));
-			// Capture the ID of the saved request so we can pull the entity from the
-			// database before updating it
-			int reqId = request.getId();
-			// Clear out knowledge of the request
-			request = null;
-			// Re populate ready for updates
-			request = (Request) reqDAO.selectById(reqId);
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		assertTrue(reqDAO.save(request));
+		// Capture the ID of the saved request so we can pull the entity from the
+		// database before updating it
+		int reqId = request.getId();
+		// Clear out knowledge of the request
+		request = null;
+		// Re populate ready for updates
+		request = (Request) reqDAO.selectById(reqId);
 
-			request.setCity(newCityData);
-			request.setStatus(EntityStatus.ACCEPTED);
-			// TEST the method returns what we expect
-			assertTrue(reqDAO.update(request));
+		request.setCity(newCityData);
+		request.setStatus(ListingStatus.PENDING);
+		// TEST the method returns what we expect
+		assertTrue(reqDAO.update(request));
 
-			// Clear out the knowledge of the request again
-			request = null;
+		// Clear out the knowledge of the request again
+		request = null;
 
-			// Get it from the database so we can compare the change
-			request = (Request) reqDAO.selectById(reqId);
+		// Get it from the database so we can compare the change
+		request = (Request) reqDAO.selectById(reqId);
 
-			// TEST that the returned entity actually has the updated fields
-			assertEquals(newCityData, request.getCity());
-			assertEquals(EntityStatus.ACCEPTED, request.getStatus());
-
-		}
+		// TEST that the returned entity actually has the updated fields
+		assertEquals(newCityData, request.getCity());
+		assertEquals(ListingStatus.PENDING, request.getStatus());
 	}
 }

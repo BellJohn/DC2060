@@ -1,5 +1,6 @@
 package com.reachout.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -19,7 +20,7 @@ import com.reachout.models.User;
  * @author John
  *
  */
-public class HibernateUserDAOImpl extends HibernateDAO {
+public class HibernateUserDAOImpl {
 
 	Logger logger = LogManager.getLogger(HibernateUserDAOImpl.class);
 
@@ -33,15 +34,17 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 */
 
 	public boolean save(User user) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		boolean success = false;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.save(user);
 			session.flush();
 			session.getTransaction().commit();
+			success = true;
 		} catch (IllegalStateException | RollbackException | ConstraintViolationException e) {
-			return false;
+			success = false;
 		}
-		return true;
+		return success;
 	}
 
 	/**
@@ -51,14 +54,16 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * @return true if deletion succeeded. False otherwise
 	 */
 	public boolean delete(User user) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		boolean success = false;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(user);
 			session.getTransaction().commit();
+			success = true;
 		} catch (IllegalStateException | RollbackException e) {
-			return false;
+			success = false;
 		}
-		return true;
+		return success;
 	}
 
 	/**
@@ -68,18 +73,21 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public boolean deleteUserById(int userID) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		boolean success = false;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			User userToDelete = session.get(User.class, userID);
 			session.delete(userToDelete);
 			if (session.get(User.class, userID) == null) {
 				session.getTransaction().commit();
-				return true;
+				success = true;
+			} else {
+				session.getTransaction().rollback();
+				success = false;
 			}
-			session.getTransaction().rollback();
-			return false;
 		}
 
+		return success;
 	}
 
 	/**
@@ -88,9 +96,11 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public List<User> getAllUsers() {
-		try (Session session = this.getSessionFactory().openSession()) {
-			return session.createQuery("SELECT user FROM User user", User.class).getResultList();
+		List<User> usersFound = new ArrayList<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			usersFound = session.createQuery("SELECT user FROM User user", User.class).getResultList();
 		}
+		return usersFound;
 	}
 
 	/**
@@ -100,7 +110,7 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * @return
 	 */
 	public boolean updateUser(User user) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.update(user);
 			session.getTransaction().commit();
@@ -117,43 +127,42 @@ public class HibernateUserDAOImpl extends HibernateDAO {
 	 * @return the User found or null if nothing matches
 	 */
 	public User selectUser(String username) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		User userFound = null;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT user FROM User user WHERE USERS_USERNAME = :username",
 					User.class);
 			query.setParameter("username", username);
-			return (User) query.getSingleResult();
+			userFound = (User) query.getSingleResult();
 		} catch (NoResultException e) {
 			logger.debug("Searched for user with username [" + username + "]. Found none");
 		}
-		return null;
+		return userFound;
 	}
-	
+
 	public User selectByID(int userId) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		User userFound = null;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query query = session.createQuery("SELECT user FROM User user WHERE USERS_ID = :userId");
 			query.setParameter("userId", userId);
-			return (User) query.getSingleResult();
+			userFound = (User) query.getSingleResult();
 		} catch (NoResultException e) {
 			logger.debug("Searched for user with userId [" + userId + "]. Found none");
 		}
-		return null;
+		return userFound;
 	}
-	
+
 	public int getUserIdByUsername(String username) {
-		
-		try (Session session = this.getSessionFactory().openSession()) {
+		Integer intFound = -1;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query query = session.createQuery("SELECT user.id FROM User user WHERE USERS_USERNAME = :username");
 			query.setParameter("username", username);
-			return (Integer)(query.getSingleResult());
+			intFound = (Integer) (query.getSingleResult());
 		} catch (NoResultException e) {
-			return -1;
+			logger.debug(String.format("No user found for username %s", username));
 		}
-		
+		return intFound;
 	}
-	
-	
-	
-	
+
 }

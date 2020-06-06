@@ -23,16 +23,16 @@ class TestHibernateInternalMessageDAOImpl {
 	public void tearDown() {
 		TestUtils.clearAllInternalMessages();
 	}
-	
+
 	/**
-	 * Test method for {@link com.reachout.dao.HibernateInternalMessageDAOImpl#save(com.reachout.models.InternalMessage)}.
+	 * Test method for
+	 * {@link com.reachout.dao.HibernateInternalMessageDAOImpl#save(com.reachout.models.InternalMessage)}.
 	 */
 	@Test
 	void testSave() {
-		InternalMessage message = new InternalMessage(1,2,"TEST");
-		try(HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl()){
-			assertTrue(imDAO.save(message));
-		}
+		InternalMessage message = new InternalMessage(1, 2, "TEST");
+		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
+		assertTrue(imDAO.save(message));
 	}
-	
+
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.models;
 
@@ -12,7 +12,7 @@ public class Request extends Listing {
 
 	private static final long serialVersionUID = -7360265992017228189L;
 	private String priority;
-	
+
 	/**
 	 * Fully formed constructor including request status.
 	 * Calls other partially formed constructor which handles setting this Listing child type as a Request Type for the database
@@ -28,7 +28,7 @@ public class Request extends Listing {
 		this(title, description, county, city, userId, priority);
 		this.status = status;
 	}
-	
+
 	/**
 	 * Fully formed constructor minus request status.
 	 * Handles the setting of this Listing child type to that of a Request Type
@@ -41,17 +41,17 @@ public class Request extends Listing {
 		super(title, description, county, city, userId, priority);
 		this.listingType = ListingType.REQUEST;
 		this.priority = priority;
-		
+
 	}
-	
+
 	/**
-	 * Empty constructor for Hibernate. 
+	 * Empty constructor for Hibernate.
 	 * Do not use
 	 */
 	public Request() {
 		super();
 	}
-	
+
 
 
 }

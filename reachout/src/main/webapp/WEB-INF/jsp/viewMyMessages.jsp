@@ -17,31 +17,46 @@
 <body>
 	<div class="container-fluid">
 		<%@ include file="/components/navbar.jsp"%>
-		<div class="jumbotron">
-			<div class="col-lg-9">
+
+		<!-- Title Header -->
+		<div class="row listing-page">
+			<div class="col-lg-1"></div>
+			<div class="col-lg-10">
 				<h1>My Messages</h1>
 			</div>
+			<div class="col-lg-1"></div>
 		</div>
+
+		<div class="row">
+		<div class="col-lg-1"></div>
+			<div class="col-lg-10">
+
 		<div id="messageDisplay" onload="getFreshData()"></div>
 		<c:choose>
 			<c:when test="${conversations.size() > 0}">
-				<div class="card"
-					style="display: inline-flex; float: inline-end; margin-right: 10%; min-width: 65%; visibility: hidden;">
-					<div id="sendMSGBox" class="input-group mb-3"
-						style="visibility: hidden">
-						<input type="text" class="form-control" placeholder="Send Message"
-							aria-label="Send Message" aria-describedby="button-sendMSG"
-							id="inputMessage" />
-						<div class="input-group-append">
-							<button class="btn btn-outline-secondary" type="button"
-								id="button-sendMSG" onclick="sendMessage()">Send</button>
+				<div class="row">
+					<div class="col-lg-3"></div>
+					<div class="col-lg-9">
+						<div class="card" style="display: inline-flex; float: inline-end; visibility: hidden; width: 100%;">
+							<div id="sendMSGBox" class="input-group" style="visibility: hidden">
+								<input type="text" class="form-control" placeholder="Send Message"
+									aria-label="Send Message" aria-describedby="button-sendMSG"
+									id="inputMessage" />
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="button" id="button-sendMSG" onclick="sendMessage()">Send</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</c:when>
 		</c:choose>
 
+		</div>
+	<div class="col-lg-1"></div>
+
 	</div>
+
 	<script>
 		var activeUID;
 		getFreshData(); // This will run on page load
@@ -61,7 +76,6 @@
 							// Test to see how many conversations we have to build.
 							// If there are none, display a relevant message instead.
 							if (obj.length == 0) {
-
 								content = "<div class=\"alert alert-primary\" role=\"alert\" style=\"text-align: center;\">";
 								content += "<p>Page looking a bit empty? Try striking up a conversation with another user first!</p>";
 								content += "<p>Why not start by seeing if there is a Request out there which you can help with?</p>";
@@ -75,7 +89,7 @@
 
 							// get last selected user and do the magic
 							// For each Conversation
-							var tabStyle = "style=\"overflow-y: scroll; max-width: 30%; border-radius: 10%; float: left; min-height: 500px; margin-left: 2.5%;\"";
+							var tabStyle = "style=\"overflow-y: scroll; max-width: 30%; float: left; min-height: 500px;\"";
 							var content = "<div class=\"tab\" " + tabStyle + ">";
 							for (var i = 0; i < obj.length; i++) {
 
@@ -96,9 +110,9 @@
 							}
 							content += "</div>";
 
-							var tabContentStyleVisible = "style=\"display: flex; flex-direction: column; block; max-width: 70%; min-height: 500px; max-height: 500px;\"";
+							var tabContentStyleVisible = "style=\"display: flex; flex-direction: column; block; max-width: 80%; min-height: 500px; max-height: 500px;\"";
 
-							var tabContentStyleHidden = "style=\"; flex-direction: column; display: none; max-width: 70%; min-height: 500px; max-height: 500px;\"";
+							var tabContentStyleHidden = "style=\"; flex-direction: column; display: none; max-width: 80%; min-height: 500px; max-height: 500px;\"";
 							var activeElement = "";
 							// iterate again for each of the tab contents
 							for (var i = 0; i < obj.length; i++) {
@@ -116,30 +130,33 @@
 									if(obj[i].userBrowsing == obj[i].allIMsAsList[j].origin){
 										// Create a message element sent by the user browsing
 										// Add the messages to the tab window
-										content += "<div class=\"card\">";
-										content += "<div class=\"card-header\" style=\"background-color: #AAFFDF;\">";
-										content += "<img src=\"images/no-profile-pic.png\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
-										content += "<h5>" + obj[i].browsingUserName +"</h5>";
-										content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
-												+ obj[i].allIMsAsList[j].prettyPrintDate
-												+ "</p>";
-										//close card header
-										content += "</div>";
+										content += "<div class=\"card message-card\" style=\"background-color: #AAFFDF;\">";
+										content += "<div class=\"row\">";
 										//open card body
-										content += "<div class=\"card-body\" style=\"background-color: #AAFFDF;\">";
+										content += "<div class=\"col-lg-9\">";
 										content += "<p style=\"margin-bottom: 0px;\">"
 												+ obj[i].allIMsAsList[j].message
 												+ "</p>";
 										//close card body
 										content += "</div>";
+										content += "<div class=\"col-lg-3\" style=\"border-left: 2px solid grey;\">";
+										content += "<img src=\"images/no-profile-pic.png\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
+										content += "<h5>You</h5>";
+										content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
+												+ obj[i].allIMsAsList[j].prettyPrintDate
+												+ "</p>";
+										//close card header
+										content += "</div>";
 										//close card
+										content += "</div>";
 										content += "</div>";
 									}
 									else{
 									// Create a message element sent by the other party in the conversation
 										// Add the messages to the tab window
-										content += "<div class=\"card\">";
-										content += "<div class=\"card-header\" style=\"background-color: #c3edea;\">";
+										content += "<div class=\"card message-card\" style=\"background-color: #c3edea;\">";
+										content += "<div class=\"row\">";
+										content += "<div class=\"col-lg-3\" style=\"border-right: 2px solid grey;\">";
 										content += "<img src=\"images/no-profile-pic.png\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
 										content += "<h5>" + obj[i].otherUserName +"</h5>";
 										content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
@@ -148,13 +165,14 @@
 										//close card header
 										content += "</div>";
 										//open card body
-										content += "<div class=\"card-body\" style=\"background-color: #c3edea;\">";
+										content += "<div class=\"col-lg-9\">";
 										content += "<p style=\"margin-bottom: 0px;\">"
 												+ obj[i].allIMsAsList[j].message
 												+ "</p>";
 										//close card body
 										content += "</div>";
 										//close card
+										content += "</div>";
 										content += "</div>";
 									}
 									
@@ -164,7 +182,6 @@
 								content += "</div>";
 
 								// Add the message box & content
-
 								content += "</div>";
 							}
 
@@ -249,6 +266,13 @@
 				});
 			}
 		}
+
+		$(document).ready(function(){
+			$('#inputMessage').keypress(function(e){
+			if(e.keyCode==13)
+				$('#button-sendMSG').click();
+			});
+		});
 	</script>
 </body>
 

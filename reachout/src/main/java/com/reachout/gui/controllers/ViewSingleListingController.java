@@ -15,7 +15,7 @@ import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.models.EntityStatus;
+import com.reachout.models.ListingStatus;
 import com.reachout.models.Listing;
 import com.reachout.models.ListingType;
 import com.reachout.models.User;
@@ -68,18 +68,33 @@ public class ViewSingleListingController {
 
 		// If this user is the user who owns the listing, we should disable the "Offer
 		// to help" button
+		boolean isOwner = userBrowsingOwnsPost(result.getUserId());
 		boolean enableOfferButton = true;
+
 		// If it is not currently open or the user browsing owns this post, hide the
-		// button
-		if (result.getListingType().equals(ListingType.SERVICE) || result.getStatus() != EntityStatus.OPEN || userBrowsingOwnsPost(result.getUserId())) {
+		// button to offer assistance
+		if (result.getListingType().equals(ListingType.SERVICE) || result.getStatus() != ListingStatus.OPEN
+				|| isOwner) {
 			enableOfferButton = false;
+		}
+
+		// set the message button to the same as the offer button as the logic so far is
+		// the same
+		boolean enableMessageButton = enableOfferButton;
+		// If it's actually a service and the user browsing doesn't own it then allow
+		// the message button
+		if (result.getListingType().equals((ListingType.SERVICE)) && !isOwner) {
+			enableMessageButton = true;
 		}
 
 		ModelAndView mv;
 		mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("ListingObj", result);
-		mv.addObject("enableButton", enableOfferButton);
+		mv.addObject("enableOfferButton", enableOfferButton);
+		mv.addObject("enableMessageButton", enableMessageButton);
+
+		mv.addObject("isOwner", isOwner);
 
 		return mv;
 	}
@@ -118,13 +133,12 @@ public class ViewSingleListingController {
 		} else {
 			username = (String) auth.getPrincipal();
 		}
-		User userBrowsing;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			userBrowsing = userDAO.selectUser(username);
-			if (userBrowsing == null) {
-				logger.error(String.format("Unable to find the user offering to help with request ID {%s}", listingID));
-				return getErrorPage();
-			}
+
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		User userBrowsing = userDAO.selectUser(username);
+		if (userBrowsing == null) {
+			logger.error(String.format("Unable to find the user offering to help with request ID {%s}", listingID));
+			return getErrorPage();
 		}
 		boolean offerAccepted = false;
 		try {
@@ -160,13 +174,12 @@ public class ViewSingleListingController {
 		} else {
 			username = (String) auth.getPrincipal();
 		}
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			User userBrowsing = userDAO.selectUser(username);
-			if (userBrowsing != null) {
-				boolean userOwnsPost = userBrowsing.getId() == listingOwnerId;
-				logger.debug(String.format("Listing viewed owned by user browsing:{%s}", userOwnsPost));
-				return userOwnsPost;
-			}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		User userBrowsing = userDAO.selectUser(username);
+		if (userBrowsing != null) {
+			boolean userOwnsPost = userBrowsing.getId() == listingOwnerId;
+			logger.debug(String.format("Listing viewed owned by user browsing:{%s}", userOwnsPost));
+			return userOwnsPost;
 		}
 		// If we get here, something likely went wrong so err on the side of safety and
 		// don't allow the current user to accept this post
@@ -183,13 +196,13 @@ public class ViewSingleListingController {
 	private Listing getListingByIdAndType(int listingId, String listingType) {
 		Listing result;
 		if (ListingType.REQUEST.getName().equalsIgnoreCase(listingType)) {
-			try (HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-				result = reqDAO.selectById(listingId);
-			}
+			HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+			result = reqDAO.selectById(listingId);
+
 		} else if (ListingType.SERVICE.getName().equalsIgnoreCase(listingType)) {
-			try (HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
-				result = serDAO.selectById(listingId);
-			}
+			HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+			result = serDAO.selectById(listingId);
+
 		} else {
 			logger.error("Received neither Request nor Service specifier, returning error page");
 			return null;

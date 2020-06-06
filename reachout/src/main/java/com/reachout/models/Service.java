@@ -24,7 +24,7 @@ public class Service extends Listing {
 	 * @param userId
 	 * @param status
 	 */
-	public Service(String title, String description, String county, String city, int userId, EntityStatus status) {
+	public Service(String title, String description, String county, String city, int userId, ListingStatus status) {
 		this(title, description, county, city, userId);
 		this.status = status;
 	}

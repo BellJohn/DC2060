@@ -10,42 +10,64 @@
 	<div class="container-fluid">
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
-		<div class="jumbotron">
-			<div class="row">All Active Requests</div>
-		</div>
-		<div class="row" style="width: 70%; margin: 0 auto;">
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">Request</th>
-						<th scope="col">Description</th>
-						<th scope="col">County</th>
-						<th scope="col">City</th>
-						<th scope="col">Priority</th>
-						<th scope="col">View</th>
-					</tr>
-				</thead>
+
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8">
+				<div class="row listing-page">
+					<div class="col-lg-9">
+						<h1>All Requests</h1>
+					</div>
+					<div class="col-lg-3">
+						<form action="createRequest">
+							<button class="btn btn-success text-right">
+								<span class="fa fa-plus-circle"></span> Create New Request
+							</button>
+						</form>
+					</div>
+					<div class="col-lg-12">
+						<p>Here you can view all open help requests that have been created by other users.
+							In order to see your own requests, please visit your profile.
+							For more information on Requests, please see the help page.</p>
+					</div>
+				</div>
 				<c:forEach items="${liveRequests}" var="request">
-					<tr>
-						<th scope="row">${request.getTitle()}</th>
-						<td>${request.getDescription()}</td>
-						<td>${request.getCounty()}</td>
-						<td>${request.getCity()}</td>
-						<td>${request.getPriority()} </td>
-						<td><form action="viewListing" method="POST">
-								<sec:csrfInput />
-								<input type="hidden" id="listingType" name="listingType"
-									value="${request.getListingType().getName()}" /> <input
-									type="hidden" id="listingID" name="listingID"
-									value="${request.getId()}" />
-								<button class="btn btn-success btn-block">
-									<span class="fa fa-info"></span> View Details
-								</button>
-							</form></td>
-					</tr>
+
+					<div class="card card-request">
+						<h4 class="card-title">${request.getTitle()}</h4>
+						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},
+							${request.getCounty()}</h6>
+						<p class="card-text">${request.getFormattedDescription()}</p>
+
+						<hr>
+
+						<div class="row">
+							<div class="col-lg-9">
+								<p class="text-muted">Created by ${request.getUsername()} on
+									${request.getCreatedDate()} at ${request.getCreatedTime()}.</p>
+							</div>
+
+							<div class="col-lg-3">
+								<form action="viewListing" method="POST">
+									<sec:csrfInput />
+									<input type="hidden" id="listingType" name="listingType"
+										value="${request.getListingType()}" /> <input type="hidden"
+										id="listingID" name="listingID"
+										value="${request.getListingID()}" />
+									<button class="btn btn-info btn-block">
+										<span class="fa fa-info"></span> View Details
+									</button>
+								</form>
+							</div>
+
+						</div>
+					</div>
+
 				</c:forEach>
-			</table>
+			</div>
+			<div class="col-lg-2"></div>
 		</div>
 	</div>
 </body>
+
 </html>

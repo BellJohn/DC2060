@@ -23,7 +23,7 @@
 		<property name="priority" type="string" column="LST_PRIORITY" />
 		<property name="status" column="LST_STATUS">
 			<type name="org.hibernate.type.EnumType">
-				<param name="enumClass">com.reachout.models.EntityStatus</param>
+				<param name="enumClass">com.reachout.models.ListingStatus</param>
 			</type>
 		</property>
 		<property name="listingType" column="LST_TYPE">

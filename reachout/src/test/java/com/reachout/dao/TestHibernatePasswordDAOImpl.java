@@ -37,31 +37,30 @@ class TestHibernatePasswordDAOImpl {
 
 	/**
 	 * Tests that we can save a password when a relevant User has been added
-	 * @throws GeneralSecurityException 
+	 * 
+	 * @throws GeneralSecurityException
+	 * @throws EntityNotFoundException
 	 */
 	@Test
-	public void saveTest() throws GeneralSecurityException {
+	public void saveTest() throws GeneralSecurityException, EntityNotFoundException {
 		// Setup with a test user to link to
-		User userForTest = new User("first", "last","testUser", "test@test.com", "2000/10/02");
-		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
-			userDao.save(userForTest);
-		}
+		User userForTest = new User("first", "last", "testUser", "test@test.com", "2000/10/02");
+		HibernateUserDAOImpl userDao = new HibernateUserDAOImpl();
+		userDao.save(userForTest);
 
 		Password password = new Password();
 
 		password.setUserId(1);
 		password.setCreatedDate(System.currentTimeMillis());
 		password.setPasswordString("TESTPASSWORDSTRING");
-		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
-			assertTrue(dao.save(password));
-		} catch (EntityNotFoundException e) {
-			fail(e);
-		}
+		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
+		assertTrue(dao.save(password));
 	}
 
 	/**
 	 * Test to verify that we cannot store a password without a user existing first
-	 * @throws GeneralSecurityException 
+	 * 
+	 * @throws GeneralSecurityException
 	 */
 	@Test
 	public void saveWithoutUserTest() throws GeneralSecurityException {
@@ -69,39 +68,37 @@ class TestHibernatePasswordDAOImpl {
 		password.setUserId(1);
 		password.setCreatedDate(System.currentTimeMillis());
 		password.setPasswordString("TESTPASSWORDSTRING");
-		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
-			Assertions.assertThrows(EntityNotFoundException.class, () -> {
-				dao.save(password);
-			});
-		}
+		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
+		Assertions.assertThrows(EntityNotFoundException.class, () -> {
+			dao.save(password);
+		});
 	}
 
 	/**
 	 * Tests that we can delete an existing password
-	 * @throws GeneralSecurityException 
+	 * 
+	 * @throws GeneralSecurityException
+	 * @throws EntityNotFoundException
 	 */
 	@Test
-	public void deleteTest() throws GeneralSecurityException {
+	public void deleteTest() throws GeneralSecurityException, EntityNotFoundException {
 		// Setup with a test user
-		User userForTest = new User("first", "last","testUser", "test@test.com", "2000/10/02");
-		try (HibernateUserDAOImpl userDao = new HibernateUserDAOImpl()) {
-			userDao.save(userForTest);
-		}
+		User userForTest = new User("first", "last", "testUser", "test@test.com", "2000/10/02");
+		HibernateUserDAOImpl userDao = new HibernateUserDAOImpl();
+		userDao.save(userForTest);
+
 		// And store a password so we can try the deletion
 		Password password = new Password();
 		password.setUserId(1);
 		password.setCreatedDate(System.currentTimeMillis());
 		password.setPasswordString("TESTPASSWORDSTRING");
-		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
-			assertTrue(dao.save(password));
-		} catch (EntityNotFoundException e) {
-			fail(e);
-		}
+		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
+		assertTrue(dao.save(password));
+
 		// Actual test case here
-		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
-			password = dao.selectByID(1);
-			assertTrue(dao.delete(password));
-		}
+		password = dao.selectByID(1);
+		assertTrue(dao.delete(password));
+
 	}
 
 	/**
@@ -109,10 +106,10 @@ class TestHibernatePasswordDAOImpl {
 	 */
 	@Test
 	public void testSelectByUserIDNoUser() {
-		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()) {
-			Password passFound = dao.selectInUseByUserId(1);
-			assertNull(passFound);
-		}
+		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
+		Password passFound = dao.selectInUseByUserId(1);
+		assertNull(passFound);
+
 	}
 
 }

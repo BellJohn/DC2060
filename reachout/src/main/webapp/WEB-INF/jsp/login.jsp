@@ -12,8 +12,8 @@
 		<%@ include file="/components/topHeader.jsp"%>
 		<%@ include file="/components/navbar.jsp"%>
 		<div class="row">
-			<div class="col-sm-4"></div>
-			<div class="col-sm-4">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
 
 				<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
 					<br>
@@ -21,8 +21,8 @@
 						<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
 					</div>
 				</c:if>
-				<div class="signup-form">
-					<form action="<c:url value='j_spring_security_check'/>" method="POST">
+				<div class="signup-login-form login-form">
+					<form action="<c:url value='j_spring_security_check'/>" method="POST" id="login">
 						<sec:csrfInput />
 						<fieldset>
 							<div id="legend">
@@ -64,10 +64,22 @@
 				</div>
 
 			</div>
-			<div class="col-sm-4"></div>
+			<div class="col-sm-3"></div>
 		</div>
 	</div>
 
+	<script>
+		//Disable the submit button if there were no validation errors on the form
+		$(document).ready(function () {
+			$("#login").submit(function () {
+				$(this).find(':submit').attr('disabled', 'disabled');
+			});
+	
+			$("#login").bind("invalid-form.validate", function () {
+				$(this).find(':submit').prop('disabled', false);
+			});
+		});
+	</script>
 </body>
 
 </html>

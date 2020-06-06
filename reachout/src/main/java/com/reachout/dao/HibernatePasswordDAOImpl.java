@@ -23,13 +23,13 @@ import com.reachout.models.User;
  * @author John
  *
  */
-public class HibernatePasswordDAOImpl extends HibernateDAO {
+public class HibernatePasswordDAOImpl{
 
 	Logger logger = LogManager.getLogger(HibernatePasswordDAOImpl.class);
 
 	public Password selectByID(int id) {
 		Password password = null;
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			password = session.get(Password.class, id);
 			session.flush();
@@ -48,7 +48,7 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 	 */
 	public List<Password> selectAllByUserID(int userId) {
 		ArrayList<Password> results = new ArrayList<>();
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query query = session.createQuery("SELECT password FROM Password password WHERE PWD_USER_ID = :userId",
 					Password.class);
@@ -66,7 +66,7 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 	}
 
 	public Password selectInUseByUserId(int userId) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Query query = session.createQuery(
 					"SELECT password FROM Password password WHERE PWD_USER_ID = :userId order by PWD_CREATE_DATE DESC",
@@ -82,15 +82,14 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 
 	public boolean save(Password password) throws EntityNotFoundException {
 		// Check that there is actually a user attributed to that userId to start with
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 			User user = userDAO.selectByID(password.getUserId());
 			if (user == null) {
 				throw new EntityNotFoundException("Cannot store password as no User found to map to");
 			}
-		}
 
 		// Now try to store the password. Return true/false after this point
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.save(password);
 			session.flush();
@@ -102,7 +101,7 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 	}
 
 	public boolean delete(Password password) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(password);
 			session.flush();
@@ -114,7 +113,7 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 	}
 
 	public boolean deletePasswordById(int pwdId) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			Password pwdToDelete = session.get(Password.class, pwdId);
 			session.delete(pwdToDelete);
@@ -129,7 +128,7 @@ public class HibernatePasswordDAOImpl extends HibernateDAO {
 	}
 
 	public List<Password> getAllPasswords() {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			return session.createQuery("SELECT password FROM Password password", Password.class).getResultList();
 		}
 	}

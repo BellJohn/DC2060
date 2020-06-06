@@ -17,17 +17,17 @@ import com.reachout.models.UserProfile;
 
 /**
  * Database accesser for a User Profile object. Stored in table USER_PROFILE.
- * 
+ *
  * @author Jessica
  *
  */
-public class HibernateUserProfileDAOImpl extends HibernateDAO {
+public class HibernateUserProfileDAOImpl {
 
 	Logger logger = LogManager.getLogger(HibernateUserProfileDAOImpl.class);
 
 	/**
 	 * Attempts to persist a new user profile in the database.
-	 * 
+	 *
 	 * @param user
 	 * @return true if successful, false otherwise
 	 */
@@ -42,16 +42,16 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 		}
 		return true;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Fetches a profile from a user ID in the database
-	 * 
+	 *
 	 * @return
 	 */
 	public UserProfile getProfileById(int userID) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT profile FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userID", userID);
 			return (UserProfile) query.getSingleResult();
@@ -61,12 +61,12 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 
 	/**
 	 * Deletes from the database where the user has a given ID
-	 * 
+	 *
 	 * @param userID
 	 * @return
 	 */
 	public boolean deleteUserById(int userID) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			User userToDelete = session.get(User.class, userID);
 			session.delete(userToDelete);
@@ -78,10 +78,10 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 			return false;
 		}
 	}
-	
+
 	public List<UserProfile> getAllProfiles(){
-		List<UserProfile> profiles = new ArrayList<UserProfile>();
-		try( Session session = this.getSessionFactory().openSession()){
+		List<UserProfile> profiles = new ArrayList<>();
+		try( Session session = HibernateUtil.getInstance().getSession()){
 			Query query = session.createQuery("SELECT userprofile from UserProfile userprofile", UserProfile.class);
 			profiles = query.getResultList();
 			return profiles;
@@ -90,15 +90,32 @@ public class HibernateUserProfileDAOImpl extends HibernateDAO {
 
 	/**
 	 * Fetches a profile picture from a user ID in the database
-	 * 
+	 *
 	 * @return
 	 */
 	public String getProfilePicById(int userID) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userId", userID);
 			return (String) query.getSingleResult();
 		}
+	}
+
+	/**
+	 * Attempts to update the user profile. Returns true if successful
+	 *
+	 * @param userProfile
+	 * @return
+	 */
+	public boolean updateUserProfile(UserProfile userProfile) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			session.update(userProfile);
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			return false;
+		}
+		return true;
 	}
 
 }

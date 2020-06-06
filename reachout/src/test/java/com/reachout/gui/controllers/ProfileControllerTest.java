@@ -43,13 +43,13 @@ class ProfileControllerTest {
 
 	@BeforeAll
 	public static void setup() throws MessagingException {
-		try (HibernateHealthStatusDAOImpl dao = new HibernateHealthStatusDAOImpl()) {
-			List<String> list = dao.getAllHealthStatuses();
-			if (list == null) {
-				fail("Retrieve health statuses");
-			}
+		HibernateHealthStatusDAOImpl dao = new HibernateHealthStatusDAOImpl();
+		List<String> list = dao.getAllHealthStatuses();
+		if (list == null) {
+			fail("Retrieve health statuses");
 		}
-		//set up a user account
+
+		// set up a user account
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("firstName")).thenReturn(user.getFirstName());
 		Mockito.when(mockedRequest.getParameter("lastName")).thenReturn(user.getLastName());
@@ -74,28 +74,25 @@ class ProfileControllerTest {
 			assertTrue(errors.isEmpty());
 		}
 		try {
-			mockedRequest.login(user.getUsername(), "password");  
+			mockedRequest.login(user.getUsername(), "password");
 		} catch (ServletException e) {
 			logger.error(e.getStackTrace());
 		}
 	}
 
-
 	@AfterAll
 	public static void tearDown() {
 
-		try (HibernateUserDAOImpl dao = new HibernateUserDAOImpl()){
-			User userFound = dao.selectUser(user.getUsername());
-			if (userFound != null) {
-				dao.delete(userFound);
-			}
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		User userFound = userDAO.selectUser(user.getUsername());
+		if (userFound != null) {
+			userDAO.delete(userFound);
 		}
-		try (HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl()){
-			List<Password> passwords = dao.getAllPasswords();
-			if (passwords != null) {
-				for(Password p : passwords) {
-					dao.delete(p);
-				}
+		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
+		List<Password> passwords = dao.getAllPasswords();
+		if (passwords != null) {
+			for (Password p : passwords) {
+				dao.delete(p);
 			}
 		}
 	}
@@ -115,7 +112,6 @@ class ProfileControllerTest {
 		assertEquals("updateProfile", result.getModel().get("currentPage"));
 	}
 
-
 	@Test
 	void updateProfileTest() throws IOException, ServletException {
 
@@ -131,18 +127,16 @@ class ProfileControllerTest {
 		assertNotNull(result);
 
 		assertEquals("redirect:/profile", result.getViewName());
-		try(HibernateUserProfileDAOImpl dao = new HibernateUserProfileDAOImpl()){
-			assertEquals(1, dao.getAllProfiles().size());	
-		}
+		HibernateUserProfileDAOImpl dao = new HibernateUserProfileDAOImpl();
+		assertEquals(1, dao.getAllProfiles().size());
 
 	}
 	/**
-
-	@Test
-	void invalidImageTypeTest() {
-
-	}
-
+	 *
+	 * @Test void invalidImageTypeTest() {
+	 *
+	 *       }
+	 *
 	 */
 
 }

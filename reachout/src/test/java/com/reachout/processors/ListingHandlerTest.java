@@ -50,19 +50,18 @@ class ListingHandlerTest {
 		userOwner.setUsername("userOwner");
 
 		Request request = null;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-				HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
 
-			userDAO.save(userBrowsing);
-			userDAO.save(userOwner);
+		userDAO.save(userBrowsing);
+		userDAO.save(userOwner);
 
-			userBrowsing = userDAO.selectUser(userBrowsing.getUsername());
-			userOwner = userDAO.selectUser(userOwner.getUsername());
+		userBrowsing = userDAO.selectUser(userBrowsing.getUsername());
+		userOwner = userDAO.selectUser(userOwner.getUsername());
 
-			request = TestUtils.makeTestRequestForUser(userOwner);
-			reqDAO.save(request);
-			request = reqDAO.selectById(1);
-		}
+		request = TestUtils.makeTestRequestForUser(userOwner);
+		reqDAO.save(request);
+		request = reqDAO.selectById(1);
 
 		ListingHandler lh = ListingHandler.getInstance();
 		assertTrue(lh.acceptRequest(userBrowsing, request.getId(), request.getListingType().getName()));
@@ -84,26 +83,25 @@ class ListingHandlerTest {
 		userOwner.setUsername("userOwner");
 
 		Service service = null;
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-				HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl()) {
+		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userDAO.save(userBrowsing);
+		userDAO.save(userOwner);
 
-			userDAO.save(userBrowsing);
-			userDAO.save(userOwner);
+		userBrowsing = userDAO.selectUser(userBrowsing.getUsername());
+		userOwner = userDAO.selectUser(userOwner.getUsername());
 
-			userBrowsing = userDAO.selectUser(userBrowsing.getUsername());
-			userOwner = userDAO.selectUser(userOwner.getUsername());
-
-			service = TestUtils.makeTestServiceForUser(userOwner);
-			serDAO.save(service);
-			service = serDAO.selectById(1);
-		}
+		service = TestUtils.makeTestServiceForUser(userOwner);
+		serDAO.save(service);
+		service = serDAO.selectById(1);
 
 		ListingHandler lh = ListingHandler.getInstance();
 		assertTrue(lh.acceptRequest(userBrowsing, service.getId(), service.getListingType().getName()));
 	}
 
 	/**
-	 * A test to ensure a listing acceptance fails and throws an exception when the listing type is neither <b>service</b> or <b>request</b>
+	 * A test to ensure a listing acceptance fails and throws an exception when the
+	 * listing type is neither <b>service</b> or <b>request</b>
 	 */
 	@Test
 	public void testNoSuchListingType() {
@@ -115,6 +113,7 @@ class ListingHandlerTest {
 
 	/**
 	 * A test to ensure an attempt to accept a listing which doesn't exist fails.
+	 * 
 	 * @throws ListingTypeNotMatchedException
 	 */
 	@Test
@@ -122,23 +121,25 @@ class ListingHandlerTest {
 		ListingHandler lh = ListingHandler.getInstance();
 		assertFalse(lh.acceptRequest(null, 1, "service"));
 	}
-	
+
 	/**
-	 * A test to ensure an attempt to accept a listing fails when the user browsing is the user who owns a request 
+	 * A test to ensure an attempt to accept a listing fails when the user browsing
+	 * is the user who owns a request
+	 * 
 	 * @throws ListingTypeNotMatchedException
 	 */
 	@Test
 	public void userBrowsingOwnsRequest() throws ListingTypeNotMatchedException {
 		User user = TestUtils.makeTestUser();
-		
-		try(HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl(); HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl()) {
-			userDAO.save(user);
-			user = userDAO.selectUser(user.getUsername());
-			Request request = TestUtils.makeTestRequestForUser(user);
 
-			reqDAO.save(request);
-		}
-		
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		userDAO.save(user);
+		user = userDAO.selectUser(user.getUsername());
+		Request request = TestUtils.makeTestRequestForUser(user);
+
+		reqDAO.save(request);
+
 		assertFalse(ListingHandler.getInstance().acceptRequest(user, 1, "request"));
 	}
 }
