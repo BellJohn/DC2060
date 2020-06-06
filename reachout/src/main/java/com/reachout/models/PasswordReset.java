@@ -44,7 +44,7 @@ public class PasswordReset {
         return createDate;
     }
 
-    public void setCreateDate(int createDate) {
+    public void setCreateDate(long createDate) {
         this.createDate = createDate;
     }
     

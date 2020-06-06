@@ -16,58 +16,86 @@
 			<div class="col-sm-6">
 				<c:choose>
 
-					<c:when test="${submit}">
+					<c:when test="${not empty codeValid}">
+						<!-- When the user enters the page with a reset code-->
+						<c:choose>
+							<c:when test="${codeValid}">
+								<!-- Enter new password form -->
+								<div class="signup-login-form login-form">
+									<form action="" method="POST" id="resetPassword">
+										<sec:csrfInput />
+										<fieldset>
+											<!-- Header info -->
+											<div id="legend">
+												<legend class=""><h2>Reset Password</h2></legend>
+											</div>
+											<p>Please enter your new password below.</p>
+											<hr>
+											<!-- Password-->
+											<div class="control-group">
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text" id="basic-addon1"><i
+																class="fa fa-lock fa-fw"></i></span>
+													</div>
+													<input type="password" class="form-control" name="password" id="password" minLength="8"
+														placeholder="Password" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+														onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please match the specified format.' : ''); if(this.checkValidity()) form.password_confirm.pattern = this.value;">
+													<small id="passwordHelp" class="form-text text-muted">Your password must have at least 8 characters, a number, an uppercase letter and a lowercase letter.</small>
+												</div>
+											</div>
+											<!-- Confirm Password -->
+											<div class="control-group">	
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text" id="basic-addon1">
+															<i class="fa fa-lock fa-fw"></i>
+														</span>
+													</div>
+													<input type="password" class="form-control" name="password_confirm" minLength="8"
+														id="password_confirm" placeholder="Confirm Password" required="required"
+														onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Passwords do not match.' : '');">
+												</div>
+											</div>
+											<!-- Users ID -->
+											<div class="control-group">	
+												<div class="input-group">
+													<input type="number" class="form-control" name="userId" id="userId" value="${userId}" hidden="true">
+												</div>
+											</div>
+											<!-- Reset Button -->
+											<div class="control-group">
+												<button class="btn btn-primary btn-lg">Reset</button>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</c:when>
+
+							<c:otherwise>
+								<!-- Code Expired -->
+								<br>
+								<div class="alert alert-danger text-center" role="alert">
+									<h5>The entered code is either invalid or has expired. Please request a new reset code via the login page.</h5>
+								</div>
+							</c:otherwise>
+
+						</c:choose>
+					</c:when>
+
+					<c:when test="${submit && reset}">
+						<!-- Email confirmation -->
+						<br>
+						<div class="alert alert-success text-center" role="alert">
+							<h5>Your password has now been updated.</h5>
+						</div>
+					</c:when>
+
+					<c:when test="${submit && !reset}">
 						<!-- Email confirmation -->
 						<br>
 						<div class="alert alert-success text-center" role="alert">
 							<h5>If the account exists, a password reset email has been sent.</h5>
-						</div>
-					</c:when>
-
-					<c:when test="${not empty uid}">
-						<!-- Enter new password form -->
-						<div class="signup-login-form login-form">
-							<form action="" method="POST" id="resetPassword">
-								<sec:csrfInput />
-								<fieldset>
-									<!-- Header info -->
-									<div id="legend">
-										<legend class=""><h2>Reset Password</h2></legend>
-									</div>
-									<p>Please enter your new password below.</p>
-									<hr>
-									<!-- Password-->
-									<div class="control-group">
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1"><i
-														class="fa fa-lock fa-fw"></i></span>
-											</div>
-											<input type="password" class="form-control" name="password" id="password" minLength="8"
-												placeholder="Password" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-												onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please match the specified format.' : ''); if(this.checkValidity()) form.password_confirm.pattern = this.value;">
-											<small id="passwordHelp" class="form-text text-muted">Your password must have at least 8 characters, a number, an uppercase letter and a lowercase letter.</small>
-										</div>
-									</div>
-									<!-- Confirm Password -->
-									<div class="control-group">	
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">
-													<i class="fa fa-lock fa-fw"></i>
-												</span>
-											</div>
-											<input type="password" class="form-control" name="password_confirm" minLength="8"
-												id="password_confirm" placeholder="Confirm Password" required="required"
-												onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Passwords do not match.' : '');">
-										</div>
-									</div>
-									<!-- Reset Button -->
-									<div class="control-group">
-										<button class="btn btn-primary btn-lg">Reset</button>
-									</div>
-								</fieldset>
-							</form>
 						</div>
 					</c:when>
 					
