@@ -26,15 +26,23 @@
 						</form>
 					</div>
 					<div class="col-lg-12">
-						<p>Here you can view all open help requests that have been created by other users. 
-							In order to see your own requests, please visit your profile.
-							For more information on Requests, please see the help page.</p>
+						<p>Here you can view all open help requests that have been
+							created by other users. In order to see your own requests, please
+							visit your profile. For more information on Requests, please see
+							the help page.</p>
 					</div>
 				</div>
 				<c:forEach items="${liveRequests}" var="request">
 
+
+
 					<div class="card card-request">
-						<h4 class="card-title">${request.getTitle()}</h4>
+						<div class="row">
+							<h4 class="card-title col-md-3">${request.getTitle()}</h4>
+							<div class="col-md-6"></div>
+							<h4 class="card-title col-md-3" style="text-align: right;">${request.getPriority()}</h4>
+						</div>
+						
 						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},
 							${request.getCounty()}</h6>
 						<p class="card-text">${request.getFormattedDescription()}</p>

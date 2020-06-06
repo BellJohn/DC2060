@@ -2,19 +2,8 @@ package com.reachout.gui.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.mail.Authenticator;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,16 +11,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.gui.validators.SignupValidator;
@@ -47,9 +33,6 @@ public class SignupController {
 	public final Logger logger = LogManager.getLogger(SignupController.class);
 
 	private static final String VIEW_NAME = "signup";
-	private static Properties mailServerProperties;
-	private static Session getMailSession;
-	private static MimeMessage generateMailMessage;
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -78,7 +61,7 @@ public class SignupController {
 	 * @throws MessagingException
 	 */
 	@PostMapping
-	public ModelAndView signup(HttpServletRequest request) throws MessagingException {
+	public ModelAndView signup(HttpServletRequest request) {
 
 		boolean saveUserSuccess = false;
 		String username = request.getParameter("username");
@@ -105,8 +88,6 @@ public class SignupController {
 				logger.error(String.format("%s : %s", s, result.getErrors().get(s)));
 			}
 		} else {
-			// TODO Extract the user/password creation out into a support class as it
-			// doesn't belong here
 			// Otherwise, build a new User and populate the db
 			User newUser = new User(firstName, lastName, username, email, dob);
 
@@ -143,7 +124,7 @@ public class SignupController {
 		}
 
 		// send new email to the user to confirm they have signed up
-		EmailHandler.generateAndSendEmail(email, username, "emails/signupEmail.html", "Welcome to ReachOut...");
+		EmailHandler.generateAndSendEmail(email, "emails/signupEmail.html", "Welcome to ReachOut...");
 
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);

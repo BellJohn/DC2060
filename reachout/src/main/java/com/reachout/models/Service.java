@@ -10,6 +10,7 @@ package com.reachout.models;
 public class Service extends Listing {
 
 	private static final long serialVersionUID = -7360265992017228189L;
+	private static final String priority = null;
 
 	/**
 	 * Fully formed constructor including service status. Calls other partially
@@ -38,7 +39,7 @@ public class Service extends Listing {
 	 * @param city
 	 */
 	public Service(String title, String description, String county, String city, int userId) {
-		super(title, description, county, city, userId);
+		super(title, description, county, city, userId, priority);
 		this.listingType = ListingType.SERVICE;
 	}
 

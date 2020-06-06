@@ -3,6 +3,10 @@
  */
 package com.reachout.dao;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +21,7 @@ import org.hibernate.Session;
 
 import com.reachout.models.Listing;
 import com.reachout.models.ListingType;
-import com.reachout.models.ListingStatus;
 import com.reachout.models.Request;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.ParseException;
 
 /**
  * @author John
@@ -188,18 +185,23 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	public List<Request> getAcceptedRequestsForUser(int userId) {
 		ArrayList<Request> returnList = new ArrayList<>();
 
-		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/reach_out", "reach", "reach_pass");
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_USER_ID, LST_STATUS FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = " + ListingType.REQUEST.getOrdindal() + " AND al.AS_USER_ID = " + userId)) {
+		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/reach_out", "reach",
+				"reach_pass");
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(
+						"SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_USER_ID, LST_STATUS, LST_PRIORITY FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = "
+								+ ListingType.REQUEST.getOrdindal() + " AND al.AS_USER_ID = " + userId)) {
 			while (rs.next()) {
-				
-				Request r = new Request(rs.getString("LST_TITLE"), rs.getString("LST_DESCRIPTION"), rs.getString("LST_COUNTY"), rs.getString("LST_CITY"), rs.getInt("LST_USER_ID"));
+
+				Request r = new Request(rs.getString("LST_TITLE"), rs.getString("LST_DESCRIPTION"),
+						rs.getString("LST_COUNTY"), rs.getString("LST_CITY"), rs.getInt("LST_USER_ID"),
+						rs.getString("LST_PRIORITY"));
 				r.setStatus(rs.getInt("LST_STATUS"));
 				r.setId(rs.getInt("LST_ID"));
 				returnList.add(r);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Failed to fetch requests for user",e);
 		}
 
 		return returnList;

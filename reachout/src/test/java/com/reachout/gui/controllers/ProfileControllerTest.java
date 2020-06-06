@@ -1,9 +1,11 @@
 package com.reachout.gui.controllers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import java.text.ParseException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,15 +29,13 @@ import com.reachout.dao.HibernateHealthStatusDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
-import com.reachout.models.HealthStatus;
 import com.reachout.models.Password;
 import com.reachout.models.User;
-import com.reachout.models.UserProfile;
 
 class ProfileControllerTest {
 
 	private static User user = new User("first", "last", "User2", "test2@test.com", "20/10/2000");
-	public final static Logger logger = LogManager.getLogger(ProfileController.class);
+	public final static Logger logger = LogManager.getLogger(UpdateProfileController.class);
 
 	@BeforeAll
 	public static void setup() throws MessagingException {
@@ -96,14 +94,14 @@ class ProfileControllerTest {
 	}
 
 	@Test
-	void initPageTest() {
+	void initPageTest() throws ServletException{
 
 		Authentication auth = new UsernamePasswordAuthenticationToken("User2", "password");
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
 		SecurityContextHolder.setContext(securityContext);
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
-		ProfileController pc = new ProfileController();
+		UpdateProfileController pc = new UpdateProfileController();
 		ModelAndView result = pc.initPage(mockedRequest);
 		assertNotNull(result);
 		assertEquals("updateProfile", result.getViewName());
@@ -111,16 +109,17 @@ class ProfileControllerTest {
 	}
 
 	@Test
-	void updateProfileTest() {
+	void updateProfileTest() throws IOException, ServletException {
 
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("profilePic")).thenReturn("picture.png");
 		Mockito.when(mockedRequest.getParameter("userBio")).thenReturn("Hi I am user 1, I want to help");
 		Mockito.when(mockedRequest.getParameter("healthStatus")).thenReturn("In quarantine");
 
-		ProfileController pc = new ProfileController();
+		UpdateProfileController pc = new UpdateProfileController();
 		pc.initPage(mockedRequest);
-		ModelAndView result = pc.update(mockedRequest);
+		//MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+		ModelAndView result = pc.saveOrUpdate(mockedRequest, null);
 		assertNotNull(result);
 
 		assertEquals("redirect:/profile", result.getViewName());
@@ -129,11 +128,11 @@ class ProfileControllerTest {
 
 	}
 	/**
-	 * 
+	 *
 	 * @Test void invalidImageTypeTest() {
-	 * 
+	 *
 	 *       }
-	 * 
+	 *
 	 */
 
 }
