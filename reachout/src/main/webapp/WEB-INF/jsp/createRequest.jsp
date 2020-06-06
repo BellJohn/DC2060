@@ -17,7 +17,9 @@
 				<c:choose>
 					<c:when test="${empty postSent}">
 						<div class="card card-bkg">
-							<h2><strong>Create Request</strong></h2>
+							<h2>
+								<strong>Create Request</strong>
+							</h2>
 
 							<!-- New Request Form -->
 							<form action="createRequest" method="POST" id="createRequest">
@@ -26,10 +28,11 @@
 
 									<!-- Request Title -->
 									<div class="form-group">
-										<label for="userBio">Title</label>
-										<input id="reqTitle" name="reqTitle"
-											placeholder="Please give a quick summary of your request." type="text"
-											required="required" class="form-control" maxlength="128" minlength="10">
+										<label for="userBio">Title</label> <input id="reqTitle"
+											name="reqTitle"
+											placeholder="Please give a quick summary of your request."
+											type="text" required="required" class="form-control"
+											maxlength="128" minlength="10">
 									</div>
 
 									<!-- Request Description -->
@@ -37,13 +40,16 @@
 										<label for="reqDesc">Description</label>
 										<textarea id="reqDesc" name="reqDesc" cols="40" rows="5"
 											placeholder="Tell us a little about your request. Please note, everyone on the site will be able to view this information."
-											class="form-control" maxlength="2000" minlength="50" required="required"></textarea>
+											class="form-control" maxlength="2000" minlength="50"
+											required="required"></textarea>
 									</div>
 
 									<!-- Remaining Characters -->
 									<div class="row remainingCounter">
 										<div class="col-sm-3"></div>
-										<div class="col-sm-6"><br></div>
+										<div class="col-sm-6">
+											<br>
+										</div>
 										<div class="col-sm-3">
 											<span id='remainingC'></span>
 										</div>
@@ -51,22 +57,24 @@
 
 									<!-- Request County -->
 									<div class="form-group">
-										<label for="reqCounty" >County of Request (e.g. Cambridgeshire)</label>
-										<input id="reqCounty" name="reqCounty"
-											placeholder="Countyshire" type="text"
-											class="form-control" required="required" maxlength="26">
+										<label for="reqCounty">County of Request (e.g.
+											Cambridgeshire)</label> <input id="reqCounty" name="reqCounty"
+											placeholder="Countyshire" type="text" class="form-control"
+											required="required" maxlength="26">
 									</div>
 
 									<!-- Request Town -->
 									<div class="form-group">
-										<label for="reqCity">City/Town of Request (e.g. Chelsea)</label>
-										<input id="reqCity" name="reqCity" required="required"
-											placeholder="Town city" type="text"
+										<label for="reqCity">City/Town of Request (e.g.
+											Chelsea)</label> <input id="reqCity" name="reqCity"
+											required="required" placeholder="Town city" type="text"
 											class="form-control" maxlength="60">
 									</div>
 
 									<!-- Create Button -->
-									<button name="submit" type="submit" class="btn btn-primary btn-large btn-block" id="submit">Create Request</button>
+									<button name="submit" type="submit"
+										class="btn btn-primary btn-large btn-block" id="submit">Create
+										Request</button>
 
 								</fieldset>
 							</form>
@@ -75,93 +83,42 @@
 					<c:otherwise>
 						<c:choose>
 							<c:when test="${createSuccess}">
-
 								<!-- Display success message -->
 								<div class="alert alert-success alert-spacing" role="alert">
-									<p>Success! Your request is now live. Please visit your <a href="profile">Profile</a> to see your open requests.</p>
+									<p>
+										Success! Your request is now live. Please visit your <a
+											href="profile">Profile</a> to see your open requests.
+									</p>
 								</div>
-							</div>
-							<div class="form-group row">
-								<label for="reqDesc" class="col-4 col-form-label">Description</label>
-								<div class="col-8">
-									<textarea id="reqDesc" name="reqDesc" cols="40" rows="5"
-										placeholder="Tell us a little about your request. How can people help you?"
-										class="form-control"></textarea>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="reqCounty" class="col-4 col-form-label">Location
-									(County)</label>
-								<div class="col-8">
-									<input id="reqCounty" name="reqCounty"
-										placeholder="What county is this request for?" type="text"
-										class="form-control" required="required">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="reqCity" class="col-4 col-form-label">Location
-									(City/Town)</label>
-								<div class="col-8">
-									<input id="reqCity" name="reqCity"
-										placeholder="What City/Town is this request for?" type="text"
-										class="form-control">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="reqPriority" class="col-4 col-form-label">Priority
-								</label>
-								<div class="col-8">
-									<select id="reqPrioirty" name="reqPriority">
-										<option>Urgent</option>
-										<option>Medium</option>
-										<option>Low</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row">
-								<div class="offset-4 col-8">
-									<button name="submit" type="submit" class="btn btn-primary">Create
-										Request</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</c:when>
-				<c:otherwise>
-					<c:choose>
-						<c:when test="${createSuccess}">
-							<div class="col-sm-4">Hooray! Your post is now live</div>
-						</c:when>
-					</c:choose>
-				</c:otherwise>
-			</c:choose>
+							</c:when>
+						</c:choose>
+					</c:otherwise>
+				</c:choose>
+			</div>
 		</div>
 	</div>
-
 	<script>
 		//Disable the submit button if there were no validation errors on the form
-		$(document).ready(function () {
+		$(document).ready(function() {
 			var len = 0;
 			var maxchar = 2000;
 
-			$( '#reqDesc' ).keyup(function(){
+			$('#reqDesc').keyup(function() {
 				len = this.value.length
-				if(len > maxchar){
+				if (len > maxchar) {
 					return false;
-				}
-				else if (len > 0) {
-					$( "#remainingC" ).html(maxchar - len);
-				}
-				else {
-					$( "#remainingC" ).html(maxchar);
+				} else if (len > 0) {
+					$("#remainingC").html(maxchar - len);
+				} else {
+					$("#remainingC").html(maxchar);
 				}
 			})
 
-			$("#createRequest").submit(function () {
+			$("#createRequest").submit(function() {
 				$(this).find(':submit').attr('disabled', 'disabled');
 			});
 
-			$("#createRequest").bind("invalid-form.validate", function () {
+			$("#createRequest").bind("invalid-form.validate", function() {
 				$(this).find(':submit').prop('disabled', false);
 			});
 		});

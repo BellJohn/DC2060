@@ -9,13 +9,13 @@ package com.reachout.models;
  */
 public class Request extends Listing {
 
-
 	private static final long serialVersionUID = -7360265992017228189L;
-	private String priority;
 
 	/**
-	 * Fully formed constructor including request status.
-	 * Calls other partially formed constructor which handles setting this Listing child type as a Request Type for the database
+	 * Fully formed constructor including request status. Calls other partially
+	 * formed constructor which handles setting this Listing child type as a Request
+	 * Type for the database
+	 * 
 	 * @param title
 	 * @param description
 	 * @param county
@@ -24,14 +24,16 @@ public class Request extends Listing {
 	 * @param status
 	 * @param priority
 	 */
-	public Request(String title, String description, String county, String city, int userId, EntityStatus status, String priority) {
+	public Request(String title, String description, String county, String city, int userId, ListingStatus status,
+			String priority) {
 		this(title, description, county, city, userId, priority);
 		this.status = status;
 	}
 
 	/**
-	 * Fully formed constructor minus request status.
-	 * Handles the setting of this Listing child type to that of a Request Type
+	 * Fully formed constructor minus request status. Handles the setting of this
+	 * Listing child type to that of a Request Type
+	 * 
 	 * @param title
 	 * @param description
 	 * @param county
@@ -45,13 +47,10 @@ public class Request extends Listing {
 	}
 
 	/**
-	 * Empty constructor for Hibernate.
-	 * Do not use
+	 * Empty constructor for Hibernate. Do not use
 	 */
 	public Request() {
 		super();
 	}
-
-
 
 }

@@ -78,4 +78,8 @@ public class ListingGUIWrapper {
 	public int getUserID() {
 		return user.getId();
 	}
+	
+	public String getPriority() {
+		return listing.getPriority();
+	}
 }

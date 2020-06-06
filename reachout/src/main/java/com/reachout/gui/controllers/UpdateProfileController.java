@@ -62,9 +62,9 @@ public class UpdateProfileController {
 
 		// Get all possible health status' to the dropdown list
 		List<String> healthList;
-		try (HibernateHealthStatusDAOImpl healthDAO = new HibernateHealthStatusDAOImpl();) {
-			healthList = healthDAO.getAllHealthStatuses();
-		}
+		HibernateHealthStatusDAOImpl healthDAO = new HibernateHealthStatusDAOImpl();
+		healthList = healthDAO.getAllHealthStatuses();
+
 		mv.addObject("healthList", healthList);
 		String firstName = "";
 		String lastName = "";
@@ -74,23 +74,23 @@ public class UpdateProfileController {
 		String profilePic = "";
 
 		// Get all relevant information to display on the page for the user to edit
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-				HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
 
-			firstName = userDAO.selectUser(username).getFirstName();
-			lastName = userDAO.selectUser(username).getLastName();
-			int userId = userDAO.getUserIdByUsername(username);
+		firstName = userDAO.selectUser(username).getFirstName();
+		lastName = userDAO.selectUser(username).getLastName();
+		int userId = userDAO.getUserIdByUsername(username);
 
-			profile = new UserProfile();
-			try {
-				profile = userProfileDAO.getProfileById(userId);
-				bio = profile.getBio();
-				healthStatus = profile.getHealthStatus();
-				profilePic = profile.getProfilePic();
-			} catch (Exception e) {
-				logger.error(String.format("No profile found for userID {%s}", userId));
-			}
+		profile = new UserProfile();
+		try {
+			profile = userProfileDAO.getProfileById(userId);
+			bio = profile.getBio();
+			healthStatus = profile.getHealthStatus();
+			profilePic = profile.getProfilePic();
+		} catch (Exception e) {
+			logger.error(String.format("No profile found for userID {%s}", userId));
 		}
+
 		SystemPropertiesService sps = SystemPropertiesService.getInstance();
 		String uploadDirectory = sps.getProperty("IMAGE_DIR");
 		profilePic = File.separator + uploadDirectory + File.separator + profilePic;
@@ -112,8 +112,7 @@ public class UpdateProfileController {
 	 * @throws ServletException
 	 */
 	@PostMapping()
-	public ModelAndView saveOrUpdate(HttpServletRequest request, @RequestParam("file") MultipartFile profilePic)
-			throws IOException {
+	public ModelAndView saveOrUpdate(HttpServletRequest request, @RequestParam("file") MultipartFile profilePic) {
 		logger.debug("Attempting profile update");
 
 		boolean saveUserDetailsSuccess = false;
@@ -121,7 +120,8 @@ public class UpdateProfileController {
 		// determine picture file extension
 		boolean validPic = true;
 		if (profilePic.getSize() > TEN_MB_AS_BYTES) {
-			logger.info(String.format("Attempted image upload with file size in excess of 10MB: {%s}", profilePic.getSize()));
+			logger.info(String.format("Attempted image upload with file size in excess of 10MB: {%s}",
+					profilePic.getSize()));
 			validPic = false;
 		}
 
@@ -157,26 +157,24 @@ public class UpdateProfileController {
 		String bio = request.getParameter("userBio");
 		String healthStatus = request.getParameter("healthStatus");
 
-		try (HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl()) {
-			int userId = userDAO.getUserIdByUsername(username);
-			String profilePicName = username + "_" + userId + extension;
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		int userId = userDAO.getUserIdByUsername(username);
+		String profilePicName = username + "_" + userId + extension;
 
-			UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
+		UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
 
-			// Populate the user profile db
-			try (HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl()) {
+		// Populate the user profile db
+		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
 
-				// save picture to directory
-				if (saveImageToDisk(profilePic, profilePicName)) {
-					saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);
-					if (!saveUserDetailsSuccess) {
-						// Something went wrong updating the profile
-						logger.error("Unable to update profile at this time");
-					}
-				}
+		// save picture to directory
+		if (saveImageToDisk(profilePic, profilePicName)) {
+			saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);
+			if (!saveUserDetailsSuccess) {
+				// Something went wrong updating the profile
+				logger.error("Unable to update profile at this time");
 			}
-
 		}
+
 		if (saveUserDetailsSuccess) {
 			return new ModelAndView("redirect:/profile");
 		} else {

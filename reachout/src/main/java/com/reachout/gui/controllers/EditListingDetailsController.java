@@ -21,12 +21,10 @@ import com.reachout.dao.HibernateListingDAOImpl;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.dao.HibernateUserProfileDAOImpl;
 import com.reachout.models.Listing;
 import com.reachout.models.ListingStatus;
 import com.reachout.models.Request;
 import com.reachout.models.Service;
-import com.reachout.models.UserProfile;
 import com.reachout.utils.ROUtils;
 
 @Controller
@@ -89,7 +87,7 @@ public class EditListingDetailsController {
 	public ModelAndView postRequest(HttpServletRequest request) {
 		String intent = request.getParameter("submit");
 		if (StringUtils.isEmpty(intent)) {
-			return new ProfileController().initPage(request);
+			return new ProfilePageController().initPage(request);
 		}
 
 		if ("update".equals(intent)) {
@@ -97,7 +95,7 @@ public class EditListingDetailsController {
 		} else if ("delete".equals(intent)) {
 			return handleDelete(request);
 		} else {
-			return new ProfileController().initPage(request);
+			return new ProfilePageController().initPage(request);
 		}
 	}
 

@@ -41,7 +41,7 @@ public abstract class Listing implements Serializable {
 	 * @param status
 	 * @param priority
 	 */
-	public Listing(String title, String description, String county, String city, int userId, EntityStatus status, String priority) {
+	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority) {
 		this(title, description, county, city, userId, priority);
 		this.status = status;
 	}
@@ -61,7 +61,7 @@ public abstract class Listing implements Serializable {
 		this.city = city;
 		this.userId = userId;
 		this.priority = priority;
-		status = EntityStatus.OPEN;
+		status = ListingStatus.OPEN;
 		this.createdDate = (System.currentTimeMillis());
 	}
 

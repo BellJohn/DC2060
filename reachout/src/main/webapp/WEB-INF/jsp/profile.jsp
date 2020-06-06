@@ -29,7 +29,8 @@
 									class="rounded-circle">
 							</c:when>
 							<c:otherwise>
-								<img src="${profilePic}" alt="profilePic" class="rounded-circle" style="max-width:40%;">
+								<img src="${profilePic}" alt="profilePic" class="rounded-circle"
+									style="max-width: 40%;">
 							</c:otherwise>
 						</c:choose>
 					</figure>
@@ -104,7 +105,9 @@
 					<c:if test="${empty liveRequests}">
 						<div class="card card-request">
 							<h4 class="card-title">No Requests Created</h4>
-							<p class="card-text">You can create one using the Create new Request button over on the left, or by visiting the Requests page from the navigation bar.</p>
+							<p class="card-text">You can create one using the Create new
+								Request button over on the left, or by visiting the Requests
+								page from the navigation bar.</p>
 						</div>
 					</c:if>
 
@@ -112,7 +115,8 @@
 
 						<div class="card card-request">
 							<h4 class="card-title">${request.getTitle()}</h4>
-							<h6 class="card-subtitle mb-2 text-muted">${request.getCity()}, ${request.getCounty()}</h6>
+							<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},
+								${request.getCounty()}</h6>
 							<p class="card-text">${request.getFormattedDescription()}</p>
 
 							<div class="row">
@@ -147,8 +151,7 @@
 								<div class="col-lg-2">
 									<!-- Edit Details Button -->
 									<form action="editListing" method="GET">
-										<input
-											type="hidden" id="listingID" name="listingID"
+										<input type="hidden" id="listingID" name="listingID"
 											value="${request.getId()}" />
 										<button class="btn btn-success btn-block">
 											<span class="fa fa-info"></span> Edit Details
@@ -162,14 +165,16 @@
 					</c:forEach>
 				</div>
 
-			<!-- Users Offered Services -->
+				<!-- Users Offered Services -->
 				<div class="request-row">
 					<h3>Your Offered Services</h3>
 
 					<c:if test="${empty liveServices}">
 						<div class="card card-request">
 							<h4 class="card-title">No Offered Services</h4>
-							<p class="card-text">You can create one using the Offer new Service button over on the left, or by visiting the Services page from the navigation bar.</p>
+							<p class="card-text">You can create one using the Offer new
+								Service button over on the left, or by visiting the Services
+								page from the navigation bar.</p>
 						</div>
 					</c:if>
 
@@ -177,7 +182,8 @@
 
 						<div class="card card-request">
 							<h4 class="card-title">${service.getTitle()}</h4>
-							<h6 class="card-subtitle mb-2 text-muted">${service.getCity()}, ${service.getCounty()}</h6>
+							<h6 class="card-subtitle mb-2 text-muted">${service.getCity()},
+								${service.getCounty()}</h6>
 							<p class="card-text">${service.getFormattedDescription()}</p>
 
 							<div class="row">
@@ -212,8 +218,7 @@
 								<div class="col-lg-2">
 									<!--  Edit Service Button -->
 									<form action="editListing" method="GET">
-										<input
-											type="hidden" id="listingID" name="listingID"
+										<input type="hidden" id="listingID" name="listingID"
 											value="${service.getId()}" />
 										<button class="btn btn-success btn-block">
 											<span class="fa fa-info"></span> Edit Details
@@ -233,7 +238,8 @@
 					<c:if test="${empty acceptedRequests}">
 						<div class="card card-request">
 							<h4 class="card-title">No Requests Accepted</h4>
-							<p class="card-text">You can accept a request by visiting the Requests page from the navigation bar.</p>
+							<p class="card-text">You can accept a request by visiting the
+								Requests page from the navigation bar.</p>
 						</div>
 					</c:if>
 
@@ -241,7 +247,8 @@
 
 						<div class="card card-request">
 							<h4 class="card-title">${acceptedRequest.getTitle()}</h4>
-							<h6 class="card-subtitle mb-2 text-muted">${acceptedRequest.getCity()}, ${acceptedRequest.getCounty()}</h6>
+							<h6 class="card-subtitle mb-2 text-muted">${acceptedRequest.getCity()},
+								${acceptedRequest.getCounty()}</h6>
 							<p class="card-text">${acceptedRequest.getFormattedDescription()}</p>
 
 							<div class="row">

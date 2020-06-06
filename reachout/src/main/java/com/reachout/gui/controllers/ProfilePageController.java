@@ -1,6 +1,7 @@
 package com.reachout.gui.controllers;
 
 import java.io.File;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
-import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.dao.HibernateUserProfileDAOImpl;
-import com.reachout.models.*;
-import com.reachout.processors.SystemPropertiesService;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
+import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.dao.HibernateUserProfileDAOImpl;
+import com.reachout.models.UserProfile;
+import com.reachout.processors.SystemPropertiesService;
 
 @Controller
 @RequestMapping("/profile")
@@ -27,27 +28,19 @@ public class ProfilePageController {
 	public final Logger logger = LogManager.getLogger(ProfilePageController.class);
 
 	private static final String VIEW_NAME = "profile";
-	private HibernateUserDAOImpl userDAO;
-	private HibernateUserProfileDAOImpl userProfileDAO;
-	private String firstName;
-	private String lastName;
-	private String profilePic;
-	private String bio;
-	private String healthStatus;
-	private Authentication auth;
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
-		userDAO = new HibernateUserDAOImpl();
-		userProfileDAO = new HibernateUserProfileDAOImpl();
-		firstName = null;
-		lastName = null;
-		bio = null;
-		profilePic = null;
-		healthStatus = null;
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
+		String firstName = null;
+		String lastName = null;
+		String bio = null;
+		String profilePic = null;
+		String healthStatus = null;
 
 		// Test to see if the user is logged in
-		auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
@@ -71,12 +64,13 @@ public class ProfilePageController {
 		} catch (Exception e) {
 			logger.error("No result found");
 		}
-		catch (Exception e) {
-			System.out.println("No result found");
-		}
 		SystemPropertiesService sps = SystemPropertiesService.getInstance();
 		String uploadDirectory = sps.getProperty("IMAGE_DIR");
-		profilePic = File.separator + uploadDirectory + File.separator + profilePic;
+		// We need an arbitrary random value to assign to the file fetch to ensure the
+		// cache gets reset client side otherwise the picture wont update on their end.
+		// Yes it's stupid but it works :)
+		int arbitraryValue = new Random().nextInt(500);
+		profilePic = File.separator + uploadDirectory + File.separator + profilePic + "?" + arbitraryValue;
 		mv.addObject("firstName", firstName);
 		mv.addObject("lastName", lastName);
 		mv.addObject("bio", bio);

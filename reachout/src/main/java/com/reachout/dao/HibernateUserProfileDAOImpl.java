@@ -3,14 +3,12 @@ package com.reachout.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.exception.ConstraintViolationException;
 
 import com.reachout.models.User;
 import com.reachout.models.UserProfile;
@@ -33,7 +31,7 @@ public class HibernateUserProfileDAOImpl {
 	 */
 
 	public boolean saveOrUpdateProfile(UserProfile userProfile) {
-		try (Session session = this.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.saveOrUpdate(userProfile);
 			session.getTransaction().commit();
