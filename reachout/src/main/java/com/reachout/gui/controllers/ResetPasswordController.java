@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reachout.passwordreset.PasswordResetManager;
+import com.reachout.utils.CodeGenerator;
 import com.reachout.models.PasswordReset;
 import com.reachout.models.Password;
 import com.reachout.dao.HibernateUserDAOImpl;
@@ -86,8 +86,8 @@ public class ResetPasswordController {
 
 				// Get the users email and ID, and generate them a new reset code
 				String email = request.getParameter("email");
-				PasswordResetManager pr = new PasswordResetManager();
-				String code = pr.getUniqueCode();
+				CodeGenerator cg = new CodeGenerator();
+				String code = cg.getUniqueCode();
 				int userId = userDAO.getUserByEmail(email).getId();
 				
 				// Create a new password reset object and save it to the database
@@ -121,10 +121,12 @@ public class ResetPasswordController {
 				newPassword.setUserId(userId);
 				newPassword.setHashedPasswordString(password);
 				newPassword.setCreatedDate(System.currentTimeMillis());
-				passwordDAO.update(newPassword);
+				passwordDAO.save(newPassword);
 			} catch (Exception e) {
 				logger.error("Unable to save the user: This username is already taken");
 			}
+
+			// --TODO DELETE A PASSWORD RESET ENTRY SO PASSWORD CANNOT BE RESET WITH IT MULTIPLE TIMES
 
 		}
 
