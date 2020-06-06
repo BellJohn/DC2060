@@ -189,7 +189,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 				"reach_pass");
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(
-						"SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_USER_ID, LST_STATUS FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = "
+						"SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_USER_ID, LST_STATUS, LST_PRIORITY FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = "
 								+ ListingType.REQUEST.getOrdindal() + " AND al.AS_USER_ID = " + userId)) {
 			while (rs.next()) {
 
