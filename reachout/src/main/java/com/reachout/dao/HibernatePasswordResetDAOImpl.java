@@ -1,7 +1,5 @@
 package com.reachout.dao;
 
-import com.reachout.models.PasswordReset;
-
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
@@ -10,6 +8,8 @@ import javax.persistence.RollbackException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+
+import com.reachout.models.PasswordReset;
 
 public class HibernatePasswordResetDAOImpl {
 
@@ -35,6 +35,9 @@ public class HibernatePasswordResetDAOImpl {
 
 	/**
 	 * Check if a password reset code exists within the database
+	 * 
+	 * @param code to search from
+	 * @return the database entry if one exists or null
 	 */
 	public PasswordReset selectByCode(String code) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
@@ -49,19 +52,37 @@ public class HibernatePasswordResetDAOImpl {
 
 	/** 
 	 * Check if a password reset code is still valid (exists and is not older than 15 mins)
+	 * 
+	 * @param code to check is still valid
+	 * @return whether the code is valid or not
 	 */
     public Boolean checkIfCodeValid(String code) {
 		PasswordReset pr = selectByCode(code);
-		// If the entry exists
 		if (pr != null) {
 			Long expiryTime = pr.getCreateDate() + 900000;
 			Long currentTime = System.currentTimeMillis();
-			// And the expiry time is less than the current time
 			if(expiryTime > currentTime) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Delete a password reset code based on entered code.
+	 * 
+	 * @param code to delete entry for
+	 */
+	public void deletePasswordResetByCode(String code) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			Query query = session.createNativeQuery("DELETE FROM PASSWORD_RESET WHERE PR_CODE = :code");
+			query.setParameter("code", code);
+			query.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+		}
 	}
 
 }

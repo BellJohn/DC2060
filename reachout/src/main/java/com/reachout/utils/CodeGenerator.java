@@ -9,7 +9,7 @@ public class CodeGenerator {
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static SecureRandom rnd = new SecureRandom();
-    static final int len = 75;
+    static final int len = 100;
 
     //Empty generator
     public CodeGenerator(){

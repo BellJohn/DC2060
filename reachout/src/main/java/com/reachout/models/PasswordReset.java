@@ -6,6 +6,9 @@ public class PasswordReset {
     private String code;
     private long createDate;
 
+    /**
+     * Empty constructor for hibernate to use
+     */
     public PasswordReset() {
 
     }

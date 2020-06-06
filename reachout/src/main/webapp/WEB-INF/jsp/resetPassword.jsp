@@ -16,6 +16,14 @@
 			<div class="col-sm-6">
 				<c:choose>
 
+					<c:when test="${not empty errors}">
+						<!-- Error Ocurred -->
+						<br>
+						<div class="alert alert-danger text-center" role="alert">
+							<h5>${errors}</h5>
+						</div>
+					</c:when>
+
 					<c:when test="${not empty codeValid}">
 						<!-- When the user enters the page with a reset code-->
 						<c:choose>
@@ -84,7 +92,7 @@
 					</c:when>
 
 					<c:when test="${submit && reset}">
-						<!-- Email confirmation -->
+						<!-- Password reset confirmation -->
 						<br>
 						<div class="alert alert-success text-center" role="alert">
 							<h5>Your password has now been updated.</h5>

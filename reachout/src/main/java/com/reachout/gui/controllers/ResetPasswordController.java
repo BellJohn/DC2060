@@ -1,25 +1,10 @@
 package com.reachout.gui.controllers;
 
 import javax.servlet.http.HttpServletRequest;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +18,6 @@ import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernatePasswordResetDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.processors.EmailHandler;
-
 
 @Controller
 @RequestMapping("/resetPassword")
@@ -100,36 +84,57 @@ public class ResetPasswordController {
 				}
 
 				// Build the users password reset URL and email it to them
-				String url = "http://localhost:8080/ReachOut/resetPassword?uid=" + code; // THIS NEEDS TO BE CHANGED TO BE THE LIVE URL RATHER THAN THE LOCAL ONE!!!!!!<><><><><><><>
+				String url = "http://reachout.space/resetPassword?uid=" + code;
 				EmailHandler.generateAndSendPasswordResetEmail(email, "emails/passwordResetEmail.html", "ReachOut | Password Reset", url);
 			}
 		}
 		else {
 			// The user has just submitted their new password
 			mv.addObject("reset", true);
+			String errors = null;
 
-			HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl();
+			HibernatePasswordResetDAOImpl prDAO = new HibernatePasswordResetDAOImpl();
+			String code = request.getParameter("uid");
+			int correctUserId = prDAO.selectByCode(code).getUserId();
+			String actualUserIdString = request.getParameter("userId");
+			int actualUserId = Integer.parseInt(actualUserIdString);
 
-			// ---TODO ENSURE THIS IS CHECKED AGAINST THE DATABASE FOR THE ID THE CODE MATCHES AGAINST
-			String userIdString = request.getParameter("userId");
-			int userId = Integer.parseInt(userIdString);
-			// ---TODO MAKE SURE THAT THE INPUTTED PASSWORDS MATCH
-			String password = request.getParameter("password");
-			
-			try {
-				Password newPassword = new Password();
-				newPassword.setUserId(userId);
-				newPassword.setHashedPasswordString(password);
-				newPassword.setCreatedDate(System.currentTimeMillis());
-				passwordDAO.save(newPassword);
-			} catch (Exception e) {
-				logger.error("Unable to save the user: This username is already taken");
+			// Verify that the password is being changed for the correct user
+			if(actualUserId == correctUserId) {
+				String password = request.getParameter("password");
+				String passwordConfirm = request.getParameter("password_confirm");
+
+				// Make sure that the passwords match
+				if(password.equals(passwordConfirm)) {
+					HibernatePasswordDAOImpl passwordDAO = new HibernatePasswordDAOImpl();
+					
+					// Save the new password
+					try {
+						Password newPassword = new Password();
+						newPassword.setUserId(correctUserId);
+						newPassword.setHashedPasswordString(password);
+						newPassword.setCreatedDate(System.currentTimeMillis());
+						passwordDAO.save(newPassword);
+					} catch (Exception e) {
+						errors = "An error occured. Please try again.";
+						logger.error("Unable to update password. Please retry reset.");
+					}
+					
+					// If all went well, delete the password reset code so it cannot be used again
+					if(errors == null) {
+						prDAO.deletePasswordResetByCode(code);
+					}
+				}
+				else {
+					errors = "Entered passwords didn't match. Please try again.";
+				}
+			} 
+			else {
+				// User is trying to change someone elses password
+				errors = "An error occured. Please try again.";
 			}
-
-			// --TODO DELETE A PASSWORD RESET ENTRY SO PASSWORD CANNOT BE RESET WITH IT MULTIPLE TIMES
-
+			mv.addObject("errors", errors);
 		}
-
 		return mv;
 	}
 
