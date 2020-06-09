@@ -50,6 +50,7 @@
 									<h4 class="card-title col-md-3" style="text-align: right;">${request.getDescription()}</h4>
 								</div>
 
+								Location
 								<h6 class="card-subtitle mb-2 text-muted">${request.getLocationId()}</h6>
 								<hr>
 
@@ -82,6 +83,59 @@
 
 
 			<h3>Other groups</h3>
+			
+			
+			<c:forEach items="${otherGroups}" var="otherGroups">
+
+
+							<div class="card card-request">
+								<div class="row">
+									<h4 class="card-title col-md-3">${otherGroups.getName()}</h4>
+									<div class="col-md-6"></div>
+									<h4 class="card-title col-md-3" style="text-align: right;">${otherGroups.getDescription()}</h4>
+								</div>
+
+								Location
+								<h6 class="card-subtitle mb-2 text-muted">${otherGroups.getLocationId()}</h6>
+								<hr>
+
+								<div class="row">
+									
+
+									<div class="col-lg-3">
+										<form action="viewOneGroup" method="POST">
+											<sec:csrfInput />
+											<input type="hidden"
+												id="groupID" name="groupID"
+												value="${request.getId()}" />
+												<input type="hidden"
+												id="username" name="username"
+												value="${username}" />
+											<button class="btn btn-info btn-block">
+												<span class="fa fa-info"></span> View Group
+											</button>
+										</form>
+									</div>
+									
+									<div class="col-lg-3">
+										<form action="" method="POST">
+											<sec:csrfInput />
+											<input type="hidden"
+												id="groupID" name="groupID"
+												value="${request.getId()}" />
+												<input type="hidden"
+												id="username" name="username"
+												value="${username}" />
+											<button class="btn btn-info btn-block">
+												<span class="fa fa-info"></span> Request to join
+											</button>
+										</form>
+									</div>
+
+								</div>
+							</div>
+
+						</c:forEach>
 
 
 			</div>

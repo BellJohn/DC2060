@@ -1,6 +1,5 @@
 package com.reachout.gui.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,15 +12,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateGroupDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
-import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
-import com.reachout.models.ListingGUIWrapper;
-import com.reachout.models.Request;
+
+/**
+ *  * Controller to display a list of all the created groups
+ * 
+ * @author Jessica
+ *
+ */
 
 @Controller
 @RequestMapping("/viewGroups")

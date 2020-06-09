@@ -133,15 +133,15 @@ public class HibernateGroupMemberDAOImpl{
 		return true;
 	}
 	
-	public int checkIfAdmin(int userId, int groupId) {
+	public GroupMember checkIfAdmin(int userId, int groupId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
-			Query query = session.createQuery("SELECT userStatus FROM GroupMember groupMember where userId = :userId AND groupId = :groupId", GroupMember.class);
+			Query query = session.createQuery("SELECT groupMember FROM GroupMember groupMember where userId = :userId AND groupId = :groupId", GroupMember.class);
 			query.setParameter("userId", userId);
 			query.setParameter("groupId", groupId);
-			return (int) query.getSingleResult();
+			return (GroupMember) query.getSingleResult();
 		} catch (NoResultException | NonUniqueResultException e) {
 			logger.error(String.format("Unable to find Group member with ID: {%s}", userId), e);
-			return 0;
+			return null;
 		}
 	}
 	

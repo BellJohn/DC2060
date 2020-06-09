@@ -4,26 +4,24 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateGroupDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
-import com.reachout.dao.HibernateRequestDAOImpl;
-import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.models.ListingStatus;
 import com.reachout.models.Group;
-import com.reachout.models.Listing;
-import com.reachout.models.ListingType;
-import com.reachout.models.User;
-import com.reachout.models.exceptions.ListingTypeNotMatchedException;
-import com.reachout.processors.ListingHandler;
+
+
+/**
+ *  * Controller to display information about a certain group and requests that are made by users of the group.
+ * 
+ * @author Jessica
+ *
+ */
+
+
 
 @Controller
 @RequestMapping("/viewOneGroup")
@@ -69,11 +67,8 @@ public class ViewOneGroupController {
 		//To find out whether user is admin and if they should be able to delete/authorise requests
 
 		boolean isAdmin = checkIfAdmin(userID, groupID);
-		boolean enableDeleteButton = isAdmin;
-		boolean enableAuthoriseRequests = isAdmin;
 
 		//TO DO - display requests for this group
-		
 		
 		
 		
@@ -86,9 +81,8 @@ public class ViewOneGroupController {
 		mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("ListingObj", group);
-		mv.addObject("enableDeleteButton", enableDeleteButton);
-		mv.addObject("enableAuthoriseRequests", enableAuthoriseRequests);
-
+		mv.addObject("isAdmin", isAdmin);
+		mv.addObject("group", group);
 
 		return mv;
 	}
@@ -124,7 +118,7 @@ public class ViewOneGroupController {
 	 */
 	private boolean checkIfAdmin(int userId, int groupId) {
 		HibernateGroupMemberDAOImpl groupMemberDAO = new HibernateGroupMemberDAOImpl();
-		if ( groupMemberDAO.checkIfAdmin(userId, groupId) == 1 ){
+		if ( groupMemberDAO.checkIfAdmin(userId, groupId).getUserStatus() == 1 ){
 			return true;
 		}
 		else return false;
