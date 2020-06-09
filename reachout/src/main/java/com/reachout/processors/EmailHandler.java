@@ -33,7 +33,7 @@ public class EmailHandler {
 	private EmailHandler() {
 	}
 
-	public static void generateAndSendEmail(String email, String filename, String emailSubject) {
+	public static void generateAndSendEmail(String email, String filename, String emailSubject, String username) {
 
 		// get actual path of file
 		String emailFile = PostReader.getFilePath(filename);
@@ -45,6 +45,9 @@ public class EmailHandler {
 			// Read all contents of the file.
 			String inputLine = null;
 			while ((inputLine = rd.readLine()) != null)
+				/*if(inputLine.contains("USERNAME")) {
+					inputLine = inputLine.replaceAll("USERNAME", username);
+				} */
 				sb.append((inputLine));
 		} catch (IOException ex) {
 			logger.error(ex);
@@ -67,6 +70,7 @@ public class EmailHandler {
 			generateMailMessage.setSubject(emailSubject);
 
 			generateMailMessage.setContent(sb.toString(), "text/html");
+			
 
 			logger.debug("Mail Session has been created successfully.");
 

@@ -124,7 +124,7 @@ public class SignupController {
 		}
 
 		// send new email to the user to confirm they have signed up
-		EmailHandler.generateAndSendEmail(email, "emails/signupEmail.html", "Welcome to ReachOut...");
+		EmailHandler.generateAndSendEmail(email, "emails/signupEmail.html", "Welcome to ReachOut...", username);
 
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
