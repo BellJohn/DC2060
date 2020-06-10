@@ -69,9 +69,6 @@ public class HibernateGroupDAOImpl{
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(group);
-			Query query = session.createNativeQuery("DELETE FROM GROUPS WHERE G_ID = :g_id");
-			query.setParameter("g_id", group.getId());
-			query.executeUpdate();
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {

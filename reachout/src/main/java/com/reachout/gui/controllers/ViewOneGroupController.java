@@ -22,7 +22,6 @@ import com.reachout.models.Group;
  */
 
 
-
 @Controller
 @RequestMapping("/viewOneGroup")
 public class ViewOneGroupController {
@@ -69,12 +68,12 @@ public class ViewOneGroupController {
 		boolean isAdmin = checkIfAdmin(userID, groupID);
 
 		//TO DO - display requests for this group
+		 
+		ViewServicesController vsc = new ViewServicesController();
+		vsc.initPage(request);
 		
-		
-		
-		
-		
-		
+		ViewRequestsController vrc = new ViewRequestsController();
+		vsc.initPage(request);		
 		
 		
 		ModelAndView mv;
@@ -118,7 +117,8 @@ public class ViewOneGroupController {
 	 */
 	private boolean checkIfAdmin(int userId, int groupId) {
 		HibernateGroupMemberDAOImpl groupMemberDAO = new HibernateGroupMemberDAOImpl();
-		if ( groupMemberDAO.checkIfAdmin(userId, groupId).getUserStatus() == 1 ){
+		//check if user is a member of the group and check the status is 1 or 0
+		if ( groupMemberDAO.checkIfGroupMember(userId, groupId).getUserStatus() == 1 ){
 			return true;
 		}
 		else return false;

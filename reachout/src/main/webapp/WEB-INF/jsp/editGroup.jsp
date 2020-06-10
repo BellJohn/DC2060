@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>ReachOut | Edit Group  ${listing.getListingType().getName()}</title>
+<title>ReachOut | Edit Group  ${group.getName()}</title>
 <%@ include file="/components/stylesheets.jsp"%>
 <meta charset="UTF-8">
 </head>
@@ -18,27 +18,34 @@
 				<c:choose>
 					<c:when test="${empty postSent}">
 						<div class="card card-bkg">
-							<h2><strong>Edit ${listing.getListingType().getName()}</strong></h2>
-
+							
 							<!-- New Edit Form -->
 							<form action="" method="POST" id="editGroup">
 								<sec:csrfInput />
 
 								<!-- Title -->
 								<div class="form-group">
-									<label for="Title">Title</label>
-									<input id="Title" name="Title" placeholder="Title" type="text"
+									<label for="Group">Group Name</label>
+									<input id="Name" name="Name" placeholder="Name" type="text"
 										required="required" class="form-control"
-										value="${listing.title}" maxlength="128" minlength="10">
+										value="${group.name}" maxlength="128" minlength="10">
 								</div>
 
 								<!-- Description -->
 								<div class="form-group remainingCounterText">
-									<label for="Desc">Description</label>
-									<textarea id="Desc" name="Desc" cols="40" rows="5" placeholder="Description" 
+									<label for="Description">Description</label>
+									<textarea id="Description" name="Description" cols="40" rows="5" placeholder="Description" 
 									class="form-control" maxlength="2000" minlength="50" 
-									required="required">${listing.description}</textarea>
+									required="required">${group.description}</textarea>
 								</div>
+								
+								<!-- Group picture -->
+								<!-- Group Picture -->
+									<div class="form-group">
+										<label for="groupPicture">Group Picture (optional)</label><input type="file" name="groupPicture"
+											class="form-control" >
+									</div>
+								
 
 								<!-- Remaining Characters -->
 								<div class="row remainingCounter">
@@ -48,38 +55,10 @@
 										<span id='remainingC'></span>
 									</div>
 								</div>
-
-								<!-- County -->
-								<div class="form-group">
-									<label for="County">County of Request (e.g. Cambridgeshire))</label>
-									<input id="County" name="County" placeholder="County"
-										type="text" class="form-control" required="required"
-										value="${listing.county}" maxlength="26">
-								</div>
-
-								<!-- Town -->
-								<div class="form-group">
-									<label for="City">City/Town of Request (e.g. Chelsea)</label>
-									<input id="City" name="City" placeholder="City/Town" required="required"
-										type="text" class="form-control" value="${listing.city}" maxlength="60">
-								</div>
-
-								<!-- Status -->
-								<div class="form-group">
-									<label for="listingStatus">Status</label> 
-									<select id="listingStatus" name="listingStatus" class="form-control">
-										<c:forEach var="possibleListingStatus" items="${listingStatusList}">
-											<option
-												${possibleListingStatus == listing.status.toString() ? 'selected' : ''}><c:set
-													var="status" value="${possibleListingStatus}" />
-												<c:out value="${status.toString()}" /></option>
-										</c:forEach>
-									</select>
-								</div>
-
+								
 								<!-- ID -->
-								<input type="hidden" id="listingID" name="listingID"
-									value="${listing.getId()}" />
+								<input type="hidden" id="groupID" name="groupID"
+									value="${group.getId()}" />
 
 								<!-- Update/Delete buttons -->
 								<div class="form-group">
@@ -125,11 +104,11 @@
 				}
 			})
 			
-			$("#editListing").submit(function () {
+			$("#editGroup").submit(function () {
 				$(this).find(':submit').attr('hidden', 'hidden');
 			});
 	
-			$("#editListing").bind("invalid-form.validate", function () {
+			$("#editGroup").bind("invalid-form.validate", function () {
 				$(this).find(':submit').prop('disabled', false);
 			});
 		});

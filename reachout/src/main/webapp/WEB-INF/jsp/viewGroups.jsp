@@ -55,10 +55,6 @@
 								<hr>
 
 								<div class="row">
-									<div class="col-lg-9">
-										<p class="text-muted">Created by ${username}.</p>
-									</div>
-
 									<div class="col-lg-3">
 										<form action="viewOneGroup" method="POST">
 											<sec:csrfInput />
@@ -101,28 +97,13 @@
 
 								<div class="row">
 									
-
-									<div class="col-lg-3">
-										<form action="viewOneGroup" method="POST">
-											<sec:csrfInput />
-											<input type="hidden"
-												id="groupID" name="groupID"
-												value="${request.getId()}" />
-												<input type="hidden"
-												id="username" name="username"
-												value="${username}" />
-											<button class="btn btn-info btn-block">
-												<span class="fa fa-info"></span> View Group
-											</button>
-										</form>
-									</div>
-									
+							
 									<div class="col-lg-3">
 										<form action="" method="POST">
 											<sec:csrfInput />
 											<input type="hidden"
 												id="groupID" name="groupID"
-												value="${request.getId()}" />
+												value="${otherGroups.getId()}" />
 												<input type="hidden"
 												id="username" name="username"
 												value="${username}" />

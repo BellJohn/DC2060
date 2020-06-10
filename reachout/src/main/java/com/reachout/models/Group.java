@@ -11,22 +11,6 @@ public class Group {
 
 	private static final long serialVersionUID = -7360265992017228189L;
 	private int id;
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-
 	private String description;
 	private String name;
 	private String picture;
@@ -121,6 +105,21 @@ public class Group {
 		return serialVersionUID;
 	}
 
+	
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	/**
 	 * Empty constructor for Hibernate. Do not use

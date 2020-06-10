@@ -133,16 +133,30 @@ public class HibernateGroupMemberDAOImpl{
 		return true;
 	}
 	
-	public GroupMember checkIfAdmin(int userId, int groupId) {
+	public GroupMember checkIfGroupMember(int userId, int groupId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT groupMember FROM GroupMember groupMember where userId = :userId AND groupId = :groupId", GroupMember.class);
 			query.setParameter("userId", userId);
 			query.setParameter("groupId", groupId);
 			return (GroupMember) query.getSingleResult();
 		} catch (NoResultException | NonUniqueResultException e) {
-			logger.error(String.format("Unable to find Group member with ID: {%s}", userId), e);
+			logger.error(String.format("Unable to find Group member with ID: {%s}, please check if they are a member of this group", userId), e);
 			return null;
 		}
+	}
+	
+	public boolean groupDelete(int groupID) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			Query query = session.createNativeQuery("DELETE FROM GROUP_MEMBER WHERE GM_G_ID = :group_id");
+			query.setParameter("group_id", groupID);
+			query.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			return false;
+		}
+		return true;
 	}
 	
 	

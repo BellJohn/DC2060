@@ -39,6 +39,7 @@ public class ViewGroupsController {
 		logger.debug("Reached viewGroups Controller");
 		ModelAndView mv = new ModelAndView("viewGroups");
 		mv.addObject("currentPage", "viewGroups");
+		List<Group> userGroups = null;
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
@@ -49,7 +50,7 @@ public class ViewGroupsController {
 		}
 		int userId = userDAO.getUserIdByUsername(username);
 
-		List<Group> userGroups = groupMemberDAO.getUserGroups(userId);
+		userGroups = groupMemberDAO.getUserGroups(userId);
 		List<Group> otherGroups = groupMemberDAO.getNonUserGroups(userId);
 
 		// Build up data for presenting on the GUI
