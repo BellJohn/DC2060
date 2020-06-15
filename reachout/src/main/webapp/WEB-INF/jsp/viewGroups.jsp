@@ -36,7 +36,7 @@
 
 				<c:choose>
 					<c:when test="${empty userGroups}">
-							You are not in any groups, why not join one of the options below?
+							You are not in any groups, why not join one of the groups below?
 						</c:when>
 					<c:otherwise>
 
