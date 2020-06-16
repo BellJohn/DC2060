@@ -104,7 +104,7 @@ public class SystemPropertiesService {
 				systemProperties.put(key, value);
 			}
 		} catch (SQLException e) {
-			logger.error("Failed to populate the SystemProperties map fully", (e));
+			logger.error("Failed to populate the SystemProperties map fully", e);
 			throw new SystemPropertiesFunctionException(e);
 		}
 

@@ -10,6 +10,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -90,7 +91,7 @@ public class EmailHandler {
 		}
 	}
 
-	public static void generateAndSendPasswordResetEmail(String email, String filename, String emailSubject, String url) {
+	public static void generateAndSendPasswordResetEmail(String email, String filename, String emailSubject, String url) throws AddressException, MessagingException {
 
 		//get actual path of file
 		String emailFile = PostReader.getFilePath(filename);

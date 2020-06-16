@@ -82,7 +82,7 @@ public abstract class Listing implements Serializable {
 	}
 
 	/**
-	 * @return the description ready to be dislpayed on a page
+	 * @return the description ready to be displayed on a page
 	 */
 	public String getFormattedDescription() {
 		int strLen = description.length();
@@ -211,7 +211,7 @@ public abstract class Listing implements Serializable {
 	 * @param statusValue
 	 */
 	public void setListingType(int listingType) {
-		status = ListingType.getByOrdinal(listingType);
+		this.listingType = ListingType.getByOrdinal(listingType);
 	}
 
 
