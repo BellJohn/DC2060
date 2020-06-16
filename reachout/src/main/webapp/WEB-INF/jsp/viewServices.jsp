@@ -17,7 +17,7 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqGm-FRkfTI9m3yOJFP11GHcDuTI7lV5k&libraries=places"
+	src="https://maps.googleapis.com/maps/api/js?key=<API_KEY>&libraries=places"
 	async defer></script>
 <script>
 	// This example requires the Places library. Include the libraries=places
@@ -109,7 +109,7 @@
 			    break;
 		  default:
 		    text = "I have never heard of that fruit...";
-		} 
+		}
 		var loc = reqLoc.value + ",UK";
 		console.log(loc);
 		var address = loc;
