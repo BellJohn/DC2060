@@ -20,9 +20,11 @@
 							<h2>
 								<strong>Create New Group</strong>
 							</h2>
-							
-							<h4> Groups are a way for you to add users into a private space where requests and services can be private within the group. 
-							You may use this for a neighbourhood, family, community group or however you please.</h4>
+
+							<h4>Groups are a way for you to add users into a private
+								space where requests and services can be private within the
+								group. You may use this for a neighbourhood, family, community
+								group or however you please.</h4>
 
 							<!-- New Request Form -->
 							<form action="createGroup" method="POST" id="createGroup">
@@ -31,11 +33,11 @@
 
 									<!-- Group Name -->
 									<div class="form-group">
-										<label for="groupName">Group Name</label> <input id="groupName"
-											name="groupName"
-											placeholder="Please give your group a name"
-											type="text" required="required" class="form-control"
-											maxlength="128" minlength="10">
+										<label for="groupName">Group Name</label> <input
+											id="groupName" name="groupName"
+											placeholder="Please give your group a name" type="text"
+											required="required" class="form-control" maxlength="128"
+											minlength="10">
 									</div>
 
 									<!-- Group Description -->
@@ -60,14 +62,27 @@
 
 									<!-- Group Picture -->
 									<div class="form-group">
-										<label for="groupPicture">Group Picture (optional)</label><input type="file" name="groupPicture"
-											class="form-control" >
+										<label for="groupPicture">Group Picture (optional)</label><input
+											type="file" name="groupPicture" class="form-control">
+									</div>
+
+									<!-- Remaining Characters -->
+									<div class="row remainingCounter">
+										<div class="col-sm-3"></div>
+										<div class="col-sm-6">
+											<br>
+										</div>
+										<div class="col-sm-3">
+											<span id='remainingC'></span>
+										</div>
 									</div>
 
 									<!-- Create Button -->
 									<button name="submit" type="submit"
 										class="btn btn-primary btn-large btn-block" id="submit">Create
 										Group</button>
+
+
 
 								</fieldset>
 							</form>

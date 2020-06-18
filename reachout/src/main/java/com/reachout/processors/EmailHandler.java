@@ -80,8 +80,9 @@ public class EmailHandler {
 
 			// Enter your correct gmail UserID and Password
 
-			transport.connect("smtp.gmail.com", "reachoutapplication20@gmail.com", "Reachout2020");
+			transport.connect("smtp.gmail.com", "reachoutapplication20@gmail.com", "LetterBox232");
 			transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+			logger.debug("Sign up email sent to user");
 		} catch (MessagingException e) {
 			logger.error(e);
 		} finally {

@@ -48,6 +48,15 @@
 											<span class="fa fa-info"></span> Edit/Delete Group
 										</button>
 									</form>
+									
+									
+									<form action="pendingGroupRequests" method="GET">
+										<input type="hidden" id="groupID" name="groupID"
+											value="${group.getId()}" />
+										<button class="btn btn-success btn-block">
+											<span class="fa fa-info"></span> View Pending Group Requests
+										</button>
+									</form>
 								</div>
 							</c:when>
 						</c:choose>

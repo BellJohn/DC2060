@@ -57,7 +57,7 @@ public class HibernateGroupMemberDAOImpl{
 			Query query = session.createQuery("SELECT groupId FROM GroupMember groupMember WHERE GM_G_UID = :userId");
 			query.setParameter("userId", userId);
 			List<Integer> groupIds = (List<Integer>) query.getResultList();
-			
+
 			List<Group> results = new ArrayList<Group>();
 			HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
 			for (int id : groupIds) {
@@ -67,7 +67,7 @@ public class HibernateGroupMemberDAOImpl{
 		}
 	}
 
-	
+
 	/**
 	 * Returns a collection of all known groups  the user is not a member of
 	 * 
@@ -78,7 +78,7 @@ public class HibernateGroupMemberDAOImpl{
 			Query query = session.createQuery("SELECT groupId FROM GroupMember groupMember WHERE NOT GM_G_UID = :userId");
 			query.setParameter("userId", userId);
 			List<Integer> groupIds = (List<Integer>) query.getResultList();
-			
+
 			List<Group> results = new ArrayList<Group>();
 			HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
 			for (int id : groupIds) {
@@ -87,8 +87,8 @@ public class HibernateGroupMemberDAOImpl{
 			return results;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Deletes a group member object from the database that has been passed.
 	 * 
@@ -132,19 +132,19 @@ public class HibernateGroupMemberDAOImpl{
 		}
 		return true;
 	}
-	
+
 	public GroupMember checkIfGroupMember(int userId, int groupId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT groupMember FROM GroupMember groupMember where userId = :userId AND groupId = :groupId", GroupMember.class);
 			query.setParameter("userId", userId);
 			query.setParameter("groupId", groupId);
-			return (GroupMember) query.getSingleResult();
-		} catch (NoResultException | NonUniqueResultException e) {
-			logger.error(String.format("Unable to find Group member with ID: {%s}, please check if they are a member of this group", userId), e);
-			return null;
+			if ((query.getSingleResult() != null)) {
+				return (GroupMember) query.getSingleResult();
+			}
 		}
+		return null;
 	}
-	
+
 	public boolean groupDelete(int groupID) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
@@ -158,8 +158,22 @@ public class HibernateGroupMemberDAOImpl{
 		}
 		return true;
 	}
-	
-	
+
+	//Get all requests with a value of 0 (pending) for a specific group
+	public ArrayList<GroupMember> getPendingMembers(int groupID){
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery("SELECT groupMember FROM GroupMember groupMember WHERE GM_G_ID = :group_id AND GM_U_STATUS_ID = 0");
+			query.setParameter("group_id", groupID);
+			ArrayList<GroupMember> pendingUsers = (ArrayList<GroupMember>) query.getResultList();	
+			return pendingUsers;
+
+		} catch (NoResultException e) {
+			logger.error(String.format("No pending requests for this group: " + groupID), e);
+			return null;
+		}
+	}
+
+
 
 
 }

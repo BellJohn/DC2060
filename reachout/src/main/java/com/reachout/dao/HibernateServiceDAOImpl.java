@@ -149,7 +149,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	/**
-	 * Returns all open services made by anyone other than the current user
+	 * Returns all public open services made by anyone other than the current user
 	 * 
 	 * @param userId the users ID
 	 * @return List of services made by all other users
@@ -158,7 +158,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		ArrayList<Service> returnList = new ArrayList<>();
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
-					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status",
+					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status AND LST_VISIBILITY = 1",
 					Service.class);
 			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
 			query.setParameter("userId", userId);

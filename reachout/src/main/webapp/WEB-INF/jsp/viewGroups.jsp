@@ -58,12 +58,9 @@
 									<div class="col-lg-3">
 										<form action="viewOneGroup" method="POST">
 											<sec:csrfInput />
-											<input type="hidden"
-												id="groupID" name="groupID"
-												value="${request.getId()}" />
-												<input type="hidden"
-												id="username" name="username"
-												value="${username}" />
+											<input type="hidden" id="groupID" name="groupID"
+												value="${request.getId()}" /> <input type="hidden"
+												id="username" name="username" value="${username}" />
 											<button class="btn btn-info btn-block">
 												<span class="fa fa-info"></span> View Group
 											</button>
@@ -78,47 +75,46 @@
 				</c:choose>
 
 
-			<h3>Other groups</h3>
-			
-			
-			<c:forEach items="${otherGroups}" var="otherGroups">
+				<h3>Other groups</h3>
 
 
-							<div class="card card-request">
-								<div class="row">
-									<h4 class="card-title col-md-3">${otherGroups.getName()}</h4>
-									<div class="col-md-6"></div>
-									<h4 class="card-title col-md-3" style="text-align: right;">${otherGroups.getDescription()}</h4>
-								</div>
+				<c:forEach items="${otherGroups}" var="otherGroup">
 
-								Location
-								<h6 class="card-subtitle mb-2 text-muted">${otherGroups.getLocationId()}</h6>
-								<hr>
 
-								<div class="row">
-									
-							
-									<div class="col-lg-3">
+					<div class="card card-request">
+						<div class="row">
+							<h4 class="card-title col-md-3">${otherGroup.getName()}</h4>
+							<div class="col-md-6"></div>
+							<h4 class="card-title col-md-3" style="text-align: right;">${otherGroup.getDescription()}</h4>
+						</div>
+
+						Location
+						<h6 class="card-subtitle mb-2 text-muted">${otherGroup.getLocationId()}</h6>
+						<hr>
+
+						<div class="row">
+
+
+							<c:choose>
+								<c:when test="${joinButton}">
+									<div class="col-lg-6">
 										<form action="" method="POST">
 											<sec:csrfInput />
-											<input type="hidden"
-												id="groupID" name="groupID"
-												value="${otherGroups.getId()}" />
-												<input type="hidden"
-												id="username" name="username"
-												value="${username}" />
-											<button class="btn btn-info btn-block">
-												<span class="fa fa-info"></span> Request to join
+											<input type="hidden" id="action" name="action" value="accept" />
+											<input type="hidden" id="groupID" name="groupID"
+												value="${otherGroup.getId()}" /> <input type="hidden"
+												id="username" name="username" value="${username}" />
+											<button class="btn btn-success btn-block">
+												<span class="fa fa-handshake-o"></span> Request to Join
 											</button>
 										</form>
+
 									</div>
-
-								</div>
+								</c:when>
+							</c:choose>
 							</div>
-
-						</c:forEach>
-
-
+				</c:forEach>
+			
 			</div>
 			<div class="col-lg-2"></div>
 		</div>

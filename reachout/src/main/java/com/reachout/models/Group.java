@@ -24,6 +24,7 @@ public class Group {
 	 * @param description
 	 * @param locationId
 	 * @param picture
+	 * @param visibility
 	
 	 */
 	public Group(String name, String description, String picture, int locationId){
@@ -33,7 +34,6 @@ public class Group {
 		this.locationId = locationId;
 	}
 
-	
 	/**
 	 * @return the locationId
 	 */
