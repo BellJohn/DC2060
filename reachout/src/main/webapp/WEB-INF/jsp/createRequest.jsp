@@ -71,6 +71,17 @@
 											class="form-control" maxlength="60">
 									</div>
 
+									<div class="form-group row">
+										<label for="reqPriority" class="col-4 col-form-label">Priority
+										</label>
+										<div class="col-8">
+											<select id="reqPrioirty" name="reqPriority">
+												<option>Urgent</option>
+												<option>Medium</option>
+												<option>Low</option>
+											</select>
+										</div>
+									</div>
 									<!-- Create Button -->
 									<button name="submit" type="submit"
 										class="btn btn-primary btn-large btn-block" id="submit">Create
