@@ -16,8 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.Location;
 import com.reachout.models.Request;
 import com.reachout.models.User;
+import com.reachout.processors.LocationFactory;
 
 @Controller
 @RequestMapping("/createRequest")
@@ -59,6 +61,8 @@ public class RequestCreateController {
 			@RequestParam(name = "reqPriority") String priority,
 			@RequestParam(name = "reqCity", required = false) String city, HttpServletRequest request) {
 
+		//TODO add address to form
+		String address = "";
 		// TODO Check to see if the content is valid
 
 		int userId = 0;
@@ -71,8 +75,11 @@ public class RequestCreateController {
 				userId = user.getId();
 			}
 		}
+		
+		LocationFactory locationFactory = new LocationFactory();
+		Location location = locationFactory.buildLocation(address, city, county);
 		// Build a new request which will be given the status of "new"
-		Request newRequest = new Request(title, description, county, city, userId, priority);
+		Request newRequest = new Request(title, description, county, city, userId, priority, location.getLocId());
 		boolean createSuccess = false;
 		HibernateRequestDAOImpl requestDAO = new HibernateRequestDAOImpl();
 		createSuccess = requestDAO.save(newRequest);

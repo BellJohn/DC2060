@@ -36,7 +36,7 @@
 		<mapping resource="com/reachout/models/HealthStatus.hbm.xml" />
 		<mapping resource="com/reachout/models/InternalMessage.hbm.xml" />
 		<mapping resource="com/reachout/models/PasswordReset.hbm.xml" />
-
+		<mapping resource="com/reachout/models/Location.hbm.xml" />
 	</session-factory>
 
 </hibernate-configuration>

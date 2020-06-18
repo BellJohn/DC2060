@@ -131,7 +131,7 @@ public class TestUtils {
 	 */
 	public static Request makeTestRequestForUser(User user) {
 		return new Request(String.format("testRequestFor%s", user.getUsername()), "Test Request", "count", "city",
-				user.getId(), "Urgent");
+				user.getId(), "Urgent", -1);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class TestUtils {
 	 */
 	public static Service makeTestServiceForUser(User user) {
 		return new Service(String.format("testServiceFor%s", user.getUsername()), "Test Request", "count", "city",
-				user.getId());
+				user.getId(), -1);
 
 	}
 }

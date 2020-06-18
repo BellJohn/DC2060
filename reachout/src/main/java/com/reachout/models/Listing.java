@@ -23,6 +23,7 @@ public abstract class Listing implements Serializable {
 	protected long createdDate;
 	protected ListingType listingType;
 	protected String priority;
+	protected int locationId;
 
 	/*
 	 * Empty request constructor for hibernate to use
@@ -41,8 +42,8 @@ public abstract class Listing implements Serializable {
 	 * @param status
 	 * @param priority
 	 */
-	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority) {
-		this(title, description, county, city, userId, priority);
+	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority, int locationId) {
+		this(title, description, county, city, userId, priority, locationId);
 		this.status = status;
 	}
 
@@ -54,7 +55,7 @@ public abstract class Listing implements Serializable {
 	 * @param county
 	 * @param city
 	 */
-	public Listing(String title, String description, String county, String city, int userId, String priority) {
+	public Listing(String title, String description, String county, String city, int userId, String priority, int locationId) {
 		this.title = title;
 		this.description = description;
 		this.county = county;
@@ -63,9 +64,12 @@ public abstract class Listing implements Serializable {
 		this.priority = priority;
 		status = ListingStatus.OPEN;
 		this.createdDate = (System.currentTimeMillis());
+		this.locationId = locationId;
 	}
 
-
+	public int getLocationId() {
+		return locationId;
+	}
 
 	/**
 	 * @return the title
@@ -248,6 +252,10 @@ public abstract class Listing implements Serializable {
 
 	public void setPriority(String priority) {
 		this.priority = priority;
+	}
+	
+	public void setLocationId(int locationId) {
+		this.locationId = locationId;
 	}
 
 	/*

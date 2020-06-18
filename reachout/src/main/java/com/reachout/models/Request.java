@@ -25,11 +25,11 @@ public class Request extends Listing {
 	 * @param priority
 	 */
 	public Request(String title, String description, String county, String city, int userId, ListingStatus status,
-			String priority) {
-		this(title, description, county, city, userId, priority);
+			String priority, int locationId) {
+		this(title, description, county, city, userId, priority, locationId);
 		this.status = status;
 	}
-
+	
 	/**
 	 * Fully formed constructor minus request status. Handles the setting of this
 	 * Listing child type to that of a Request Type
@@ -39,8 +39,8 @@ public class Request extends Listing {
 	 * @param county
 	 * @param city
 	 */
-	public Request(String title, String description, String county, String city, int userId, String priority) {
-		super(title, description, county, city, userId, priority);
+	public Request(String title, String description, String county, String city, int userId, String priority, int locationId) {
+		super(title, description, county, city, userId, priority, locationId);
 		this.listingType = ListingType.REQUEST;
 		this.priority = priority;
 

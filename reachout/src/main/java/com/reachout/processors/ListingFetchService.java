@@ -12,8 +12,8 @@ import org.apache.logging.log4j.Logger;
 import com.reachout.dao.JDBCLocationDAO;
 import com.reachout.maps.LatLng;
 import com.reachout.maps.LocationUtils;
+import com.reachout.models.ListingGUIWrapper;
 import com.reachout.models.ListingType;
-import com.reachout.models.LocationListingWrapper;
 import com.reachout.processors.exceptions.ListingFetchServiceConstructorException;
 
 /**
@@ -61,7 +61,7 @@ public class ListingFetchService {
 	 * 
 	 * @return
 	 */
-	public Set<LocationListingWrapper> fetchLocationsWithinRadius() {
+	public Set<ListingGUIWrapper> fetchLocationsWithinRadius() {
 
 		// Build a square with a width of 2 * our radius and our starting lat/long at
 		// the centre
@@ -79,7 +79,7 @@ public class ListingFetchService {
 		// Fetch all locations within that square
 
 		JDBCLocationDAO listingDAO = new JDBCLocationDAO();
-		Set<LocationListingWrapper> results = listingDAO.selectLocationsWithinRegion(south.getlatitude(),
+		Set<ListingGUIWrapper> results = listingDAO.selectLocationsWithinRegion(south.getlatitude(),
 				north.getlatitude(), west.getLongitude(), east.getLongitude(), lt);
 		results = removeErroneousResults(results);
 
@@ -93,13 +93,13 @@ public class ListingFetchService {
 	 * @param results
 	 * @return
 	 */
-	private Set<LocationListingWrapper> removeErroneousResults(Set<LocationListingWrapper> results) {
-		Set<LocationListingWrapper> clean = new HashSet<>();
-		for (LocationListingWrapper llw : results) {
-			LatLng pointB = new LatLng(llw.getLocation().getLocLat(), llw.getLocation().getLocLong());
+	private Set<ListingGUIWrapper> removeErroneousResults(Set<ListingGUIWrapper> results) {
+		Set<ListingGUIWrapper> clean = new HashSet<>();
+		for (ListingGUIWrapper lgw : results) {
+			LatLng pointB = new LatLng(lgw.getLocationLat(), lgw.getLocationLong());
 
 			if (LocationUtils.getDistanceInMiles(centre, pointB) <= radius) {
-				clean.add(llw);
+				clean.add(lgw);
 			}
 		}
 

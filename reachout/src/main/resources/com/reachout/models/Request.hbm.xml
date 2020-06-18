@@ -33,7 +33,7 @@
 		</property>
 		<property name="createdDate" type="long"
 			column="LST_CREATE_DATE" />
-
+		<property name="locationId" type="int" column="LST_LOC_ID" />
 	</class>
 
 </hibernate-mapping>
