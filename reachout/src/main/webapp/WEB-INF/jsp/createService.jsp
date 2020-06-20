@@ -79,18 +79,25 @@
 
 											<!-- Public Visibility -->
 											<div class="form-group">
-												<input type="radio" id="publicVisibility"
-													name="publicVisibility" value="visible"> <label
-													for="groupVisibility">Visible to Public</label><br>
+											<label for="publicVsisibility">Visibile to Public</label>
+												<input type="checkbox" name="serVisibility"
+													value="public"> <br>
+											</div>
+											
+											<div class="form-group">
+											<label for="groupVisibility">Only visible in selected group</label>
+												<input type="checkbox" name="serVisibility"
+													value="group"> <br>
 											</div>
 
 											<!-- Group Visibility -->
 											<div class="form-group">
 												<label for="groupVisibility">Visible to Group</label><br>
-												<select id="groupVisibility" name="groupVisibility"
+												<select id="groupVisibility" name="group"
 													class="form-control">
+													<option disabled selected value> -- select a group -- </option>
 													<c:forEach var="hs" items="${userGroups}">
-														<option ${hs == userGroups ? 'selected' : ''}><c:set
+														<option ${hs == userGroup ? 'selected' : ''}><c:set
 																var="g" value="${hs}" />
 															<c:out value="${g}" /></option>
 													</c:forEach>

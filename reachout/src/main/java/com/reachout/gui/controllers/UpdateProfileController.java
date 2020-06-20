@@ -100,7 +100,6 @@ public class UpdateProfileController {
 		mv.addObject("healthStatus", healthStatus);
 		mv.addObject("profilePic", profilePic);
 		return mv;
-
 	}
 
 	/**
@@ -163,7 +162,7 @@ public class UpdateProfileController {
 
 		UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
 
-		// Populate the user profile db
+		// Populate the user profile db 
 		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
 
 		// save picture to directory

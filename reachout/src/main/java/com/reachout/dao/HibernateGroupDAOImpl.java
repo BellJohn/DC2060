@@ -83,7 +83,7 @@ public class HibernateGroupDAOImpl{
 			query.setParameter("groupId", groupId);
 			return (Group) query.getSingleResult();
 		} catch (NoResultException | NonUniqueResultException e) {
-			logger.error(String.format("Unable to find Service with ID: {%s}", groupId), e);
+			logger.error(String.format("Unable to find Group with ID: {%s}", groupId), e);
 			return null;
 		}
 	}
@@ -95,7 +95,7 @@ public class HibernateGroupDAOImpl{
 			query.setParameter("groupName", name);
 			return (Group) query.getSingleResult();
 		} catch (NoResultException | NonUniqueResultException e) {
-			logger.error(String.format("Unable to find Service with ID: {%s}", name), e);
+			logger.error(String.format("Unable to find Group with name: {%s}", name), e);
 			return null;
 		}
 	}

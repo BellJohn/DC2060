@@ -4,7 +4,9 @@
 package com.reachout.dao;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -54,14 +56,14 @@ public class HibernateGroupMemberDAOImpl{
 	 */
 	public List<Group> getUserGroups(int userId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
-			Query query = session.createQuery("SELECT groupId FROM GroupMember groupMember WHERE GM_G_UID = :userId");
+			Query query = session.createQuery("SELECT groupId FROM GroupMember groupMember WHERE GM_G_UID = :userId AND NOT GM_U_STATUS_ID = 0");
 			query.setParameter("userId", userId);
 			List<Integer> groupIds = (List<Integer>) query.getResultList();
 
 			List<Group> results = new ArrayList<Group>();
 			HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
 			for (int id : groupIds) {
-				results.add(groupDAO.selectById(id));
+				results.add(groupDAO.selectById(id)); 
 			}		
 			return results;
 		}
@@ -73,21 +75,36 @@ public class HibernateGroupMemberDAOImpl{
 	 * 
 	 * @return
 	 */
-	public List<Group> getNonUserGroups(int userId) {
+	public Set<Group> getNonUserGroups(int userId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
-			Query query = session.createQuery("SELECT groupId FROM GroupMember groupMember WHERE NOT GM_G_UID = :userId");
+			Query query = session.createQuery("SELECT DISTINCT groupMember FROM GroupMember groupMember WHERE NOT GM_G_UID = :userId");
 			query.setParameter("userId", userId);
-			List<Integer> groupIds = (List<Integer>) query.getResultList();
+			List<GroupMember> groupMembers = (List<GroupMember>) query.getResultList();
 
-			List<Group> results = new ArrayList<Group>();
-			HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
-			for (int id : groupIds) {
-				results.add(groupDAO.selectById(id));
-			}		
-			return results;
+			//remove any groups the user is a member of
+			List<GroupMember> userGroups = new ArrayList<GroupMember>();
+			for (GroupMember gm : groupMembers) {
+				for (Group g : getUserGroups(userId)) {
+					if ( gm.getGroupId() == g.getId()) {
+						userGroups.add(gm);
+					}
+				}
+			}
+				groupMembers.removeAll(userGroups);
+
+
+				//make sure no duplicates
+				Set<Group> results = new HashSet<Group>();
+				HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
+				for (GroupMember grp : groupMembers) {
+					results.add(groupDAO.selectById(grp.getGroupId()));
+				}		
+
+
+				return results;
+			
 		}
 	}
-
 
 	/**
 	 * Deletes a group member object from the database that has been passed.
@@ -138,11 +155,16 @@ public class HibernateGroupMemberDAOImpl{
 			Query query = session.createQuery("SELECT groupMember FROM GroupMember groupMember where userId = :userId AND groupId = :groupId", GroupMember.class);
 			query.setParameter("userId", userId);
 			query.setParameter("groupId", groupId);
-			if ((query.getSingleResult() != null)) {
-				return (GroupMember) query.getSingleResult();
+
+			ArrayList<GroupMember> results = (ArrayList<GroupMember>) query.getResultList();
+			if (results.size() == 0) {
+				return null;
 			}
+			else {
+				return results.get(0);
+			}
+
 		}
-		return null;
 	}
 
 	public boolean groupDelete(int groupID) {

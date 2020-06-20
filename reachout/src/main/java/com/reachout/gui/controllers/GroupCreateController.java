@@ -80,7 +80,7 @@ public class GroupCreateController {
 			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 			User user = userDAO.selectUser(username);
 			if (user != null) {
-				userId = user.getId();
+				userId = user.getId(); 
 			}
 		}
 		// Build a new group and save to database
@@ -90,8 +90,8 @@ public class GroupCreateController {
 			HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
 			createSuccess = groupDAO.save(group);
 			group = groupDAO.selectByName(name);
-			//Create a new entry in the group member table for the admin user (1 is admin)
-			GroupMember groupMember = new GroupMember(group.getId(), userId, 1);
+			//Create a new entry in the group member table for the admin user (2 is admin)
+			GroupMember groupMember = new GroupMember(group.getId(), userId, 2);
 			HibernateGroupMemberDAOImpl groupMemberDAO = new HibernateGroupMemberDAOImpl();
 			createSuccess= groupMemberDAO.save(groupMember);
 		}

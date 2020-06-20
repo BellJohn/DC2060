@@ -29,14 +29,14 @@
 					</h2>
 					<p class="card-text">${group.getDescription()}</p>
 					<hr>
-					<p class="card-text"> Location: ${group.getLocationId()} </p>
+					<p class="card-text">Location: ${group.getLocationId()}</p>
 					<hr>
-					
-					<img alt="group picture" src="${group.getPicture()}"/>
-					
+
+					<img alt="group picture" src="${group.getPicture()}" />
+
 					<div class="row">
-						
-	
+
+
 						<c:choose>
 							<c:when test="${isAdmin == true}">
 								<div class="col-lg-4"></div>
@@ -48,13 +48,13 @@
 											<span class="fa fa-info"></span> Edit/Delete Group
 										</button>
 									</form>
-									
-									
+								</div>
+								<div class="col-lg-4">
 									<form action="pendingGroupRequests" method="GET">
 										<input type="hidden" id="groupID" name="groupID"
 											value="${group.getId()}" />
 										<button class="btn btn-success btn-block">
-											<span class="fa fa-info"></span> View Pending Group Requests
+											<span class="fa fa-info"></span> View Pending Requests
 										</button>
 									</form>
 								</div>
@@ -65,30 +65,32 @@
 					</div>
 
 				</div>
-				
-				<h3> Group Requests</h3>
+
+				<h3>Group Requests</h3>
 				<!-- display all requests in this group -->
-					<c:forEach items="${liveRequests}" var="request">
+				<c:forEach items="${liveRequests}" var="request">
 
 					<div class="card card-request">
 						<h4 class="card-title">${request.getTitle()}</h4>
-						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()}, ${request.getCounty()}</h6>
+						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},
+							${request.getCounty()}</h6>
 						<p class="card-text">${request.getFormattedDescription()}</p>
 						<h4 class="card-title col-md-3" style="text-align: right;">${request.getPriority()}</h4>
-						
+
 						<hr>
 
 						<div class="row">
 							<div class="col-lg-9">
-								<p class="text-muted">Created by ${request.getUsername()} on ${request.getCreatedDate()} at ${request.getCreatedTime()}.</p>
+								<p class="text-muted">Created by ${request.getUsername()} on
+									${request.getCreatedDate()} at ${request.getCreatedTime()}.</p>
 							</div>
 
 							<div class="col-lg-3">
 								<form action="viewListing" method="POST">
 									<sec:csrfInput />
 									<input type="hidden" id="listingType" name="listingType"
-										value="${request.getListingType()}" /> <input
-										type="hidden" id="listingID" name="listingID"
+										value="${request.getListingType()}" /> <input type="hidden"
+										id="listingID" name="listingID"
 										value="${request.getListingID()}" />
 									<button class="btn btn-info btn-block">
 										<span class="fa fa-info"></span> View Details
@@ -98,30 +100,32 @@
 
 						</div>
 					</div>
-						
+
 				</c:forEach>
-				
-				<h3> Group Services</h3>
+
+				<h3>Group Services</h3>
 				<!-- display all requests in this group -->
 				<c:forEach items="${liveServices}" var="service">
 
 					<div class="card card-request">
 						<h4 class="card-title">${service.getTitle()}</h4>
-						<h6 class="card-subtitle mb-2 text-muted">${service.getCity()}, ${service.getCounty()}</h6>
-						<p class="card-text">${service.getFormattedDescription()}</p>						
+						<h6 class="card-subtitle mb-2 text-muted">${service.getCity()},
+							${service.getCounty()}</h6>
+						<p class="card-text">${service.getFormattedDescription()}</p>
 						<hr>
 
 						<div class="row">
 							<div class="col-lg-9">
-								<p class="text-muted">Created by ${service.getUsername()} on ${service.getCreatedDate()} at ${service.getCreatedTime()}.</p>
+								<p class="text-muted">Created by ${service.getUsername()} on
+									${service.getCreatedDate()} at ${service.getCreatedTime()}.</p>
 							</div>
 
 							<div class="col-lg-3">
 								<form action="viewListing" method="POST">
 									<sec:csrfInput />
 									<input type="hidden" id="listingType" name="listingType"
-										value="${service.getListingType()}" /> <input
-										type="hidden" id="listingID" name="listingID"
+										value="${service.getListingType()}" /> <input type="hidden"
+										id="listingID" name="listingID"
 										value="${service.getListingID()}" />
 									<button class="btn btn-info btn-block">
 										<span class="fa fa-info"></span> View Details
@@ -131,9 +135,9 @@
 
 						</div>
 					</div>
-						
+
 				</c:forEach>
-				
+
 			</div>
 		</div>
 	</div>

@@ -1,6 +1,7 @@
 package com.reachout.gui.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,7 +36,7 @@ import com.reachout.processors.ListingHandler;
 public class ViewGroupsController {
 	public final Logger logger = LogManager.getLogger(ViewGroupsController.class);
 	private static final String VIEW_NAME = "viewGroups";
-
+ 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
@@ -57,13 +58,13 @@ public class ViewGroupsController {
 		int userId = userDAO.getUserIdByUsername(username);
 
 		userGroups = groupMemberDAO.getUserGroups(userId);
-		List<Group> otherGroups = groupMemberDAO.getNonUserGroups(userId);
+		Set<Group> otherGroups = groupMemberDAO.getNonUserGroups(userId);
 		boolean joinButton = true;
 		// Build up data for presenting on the GUI
 
 		mv.addObject("userGroups", userGroups);
 		mv.addObject("otherGroups", otherGroups);
-		mv.addObject("username", username);
+		mv.addObject("username", username); 
 		mv.addObject("joinButton",joinButton);
 		return mv;
 	}
@@ -113,7 +114,7 @@ public class ViewGroupsController {
 		successfulRequest = GroupHandler.getInstance().requestToJoin(userID, groupID);
 
 
-		ModelAndView mv = new ModelAndView(VIEW_NAME);
+		ModelAndView mv = initPage(request);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("requested", successfulRequest);
 		boolean joinButton = false;

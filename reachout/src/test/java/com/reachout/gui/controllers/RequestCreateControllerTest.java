@@ -78,7 +78,7 @@ class RequestCreateControllerTest {
 		String city = "worcester";
 		String priority = "Medium";
 		String visibility = "visible";
-		ModelAndView result = rcc.submitForm(title, description, county, city, priority, visibility, visibility, mockedRequest);
+		ModelAndView result = rcc.submitForm(title, description, county, city, priority, visibility, mockedRequest);
 	} 
 
 }

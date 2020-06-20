@@ -89,24 +89,25 @@
 
 											<!-- Public Visibility -->
 											<div class="form-group">
-											<label for="publicVsisibility">Visibile to Public</label>
-												<input type="checkbox" id="publicVisibility" name="publicVisibility"
-													value="visible"> <br>
+												<label for="publicVsisibility">Visibile to Public</label> <input
+													type="checkbox" name="reqVisibility" value="public">
+
 											</div>
-											
+
 											<div class="form-group">
-												<input type="checkbox" id="groupVisibility" name="groupVisibility"
-													value="visible"> <label for="groupVisibility">Only visible in selected group</label><br>
+												<label for="groupVisibility">Only visible in
+													selected group</label> <input type="checkbox" name="reqVisibility"
+													value="group"> <br>
 											</div>
 
 											<!-- Group Visibility -->
 											<div class="form-group">
-												<label for="group">Visible to Group</label><br>
-												<select id="group" name="group"
-													class="form-control">
-														<option disabled selected value> -- select a group -- </option>
+												<label for="group">Visible to Group</label><br> <select
+													id="group" name="group" class="form-control">
+													<option disabled selected value>-- select a group
+														--</option>
 													<c:forEach var="hs" items="${userGroups}">
-														<option ${hs == userGroups ? 'selected' : ''}><c:set
+														<option ${hs == userGroup ? 'selected' : ''}><c:set
 																var="g" value="${hs}" />
 															<c:out value="${g}" /></option>
 													</c:forEach>
@@ -115,12 +116,12 @@
 
 										</c:when>
 									</c:choose>
-
+									<div class="form-group">
 									<!-- Create Button -->
 									<button name="submit" type="submit"
 										class="btn btn-primary btn-large btn-block" id="submit">Create
 										Request</button>
-
+										</div>
 								</fieldset>
 							</form:form>
 						</div>

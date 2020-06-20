@@ -1,6 +1,7 @@
 package com.reachout.gui.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateGroupDAOImpl;
+import com.reachout.dao.HibernateGroupListingDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
+import com.reachout.models.GroupListing;
 import com.reachout.models.Service;
 import com.reachout.models.User;
 
@@ -31,14 +34,14 @@ import com.reachout.models.User;
 public class ServiceCreateController {
 
 	public final Logger logger = LogManager.getLogger(ServiceCreateController.class);
-
+	private int userId;
 	private static final String VIEW_NAME = "createService";
 
 	/**
 	 * Arrival on page will trigger this
 	 * 
 	 * @param request
-	 * @return The create request view
+	 * @return The create request view 
 	 */
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -55,7 +58,7 @@ public class ServiceCreateController {
 		} else {
 			username = (String) auth.getPrincipal();
 		}
-		int userId = userDAO.getUserIdByUsername(username);
+		userId = userDAO.getUserIdByUsername(username);
 
 		userGroups = groupMemberDAO.getUserGroups(userId);
 
@@ -63,7 +66,7 @@ public class ServiceCreateController {
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 
-		if ( (userGroups = groupMemberDAO.getUserGroups(userId)) != null) {
+		if ( (userGroups = groupMemberDAO.getUserGroups(userId)) != null) { 
 			ArrayList<String> groupNames = new ArrayList<String>();
 
 			for (Group g : userGroups) {
@@ -90,36 +93,56 @@ public class ServiceCreateController {
 	public ModelAndView submitForm(@RequestParam(name = "serTitle") String title,
 			@RequestParam(name = "serDesc", required = false) String description,
 			@RequestParam(name = "serCounty") String county,
-			@RequestParam(name = "publicVisibility", required = false) String publicVisibility,
-			@RequestParam(name = "groupVisibility", required = false) String groupVisibility,
+			@RequestParam(name = "group", required = false) String groupVisibility,
 			@RequestParam(name = "serCity", required = false) String city, HttpServletRequest request) {
+	
 
-		// TODO Check to see if the content is valid
-
-
-		int userId = 0;
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth instanceof UsernamePasswordAuthenticationToken) {
-			String username = ((UsernamePasswordAuthenticationToken) auth).getName();
-			HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-			User user = userDAO.selectUser(username);
-			if (user != null) {
-				userId = user.getId();
-			}
-		}
-
-		int visibility = 0;
-		if (publicVisibility == "visible") {
-			visibility = 1;
-			logger.info("Public request created");
-		}
-
-
-		// Build a new request which will be given the status of "new"
-		Service newService = new Service(title, description, county, city, userId, visibility);
-		boolean createSuccess = false;
 		HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl();
-		createSuccess = serviceDAO.save(newService);
+		int publicVisibility = 0;
+		boolean createSuccess = false;
+		Service newService = new Service();
+		//check if the user is a member of any groups, if not automatically set request as public		
+		
+		HibernateGroupMemberDAOImpl groupMemDAO = new HibernateGroupMemberDAOImpl();
+		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
+			publicVisibility = 1;
+			// Build a new request which will be given the status of "new"
+			newService = new Service(title, description, county, city, userId, publicVisibility);
+			createSuccess = serviceDAO.save(newService);
+			logger.info("Public service created");
+		}
+		else {
+			List<String> visibility= Arrays.asList(request.getParameterValues("serVisibility")) ;
+			if (visibility.contains("public")){
+				publicVisibility = 1;
+				// Build a new request which will be given the status of "new"
+				newService = new Service(title, description, county, city, userId, publicVisibility);
+				createSuccess = serviceDAO.save(newService);
+				logger.info("Public service created");
+			}
+			//check if a group request has been made
+
+			if(visibility.contains("group")) {
+				logger.info("Group service created");
+				newService = new Service(title, description, county, city, userId, publicVisibility);
+				createSuccess = serviceDAO.save(newService);
+				HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
+				HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
+				try {
+					logger.debug("Group selected from dropdown list: " + groupVisibility);
+					Group group = groupDAO.selectByName(groupVisibility);
+					GroupListing gl = new GroupListing(group.getId(), newService.getId());
+					createSuccess = glDAO.save(gl);
+				}
+				catch (Exception e) {
+					logger.error("Could not find group") ;
+				}
+				if(createSuccess = false) {
+					logger.error("Group listing was not added");
+				}
+			}
+		}		
+			
 
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		if (createSuccess) {

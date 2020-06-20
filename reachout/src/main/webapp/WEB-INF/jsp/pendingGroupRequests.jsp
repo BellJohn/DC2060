@@ -16,54 +16,49 @@
 			<div class="col-lg-8">
 				<div class="row listing-page">
 					<div class="col-lg-9">
-						<h1> Group Pending Requests</h1>
+						<h1>Group Pending Requests</h1>
 					</div>
-					
-					<div class="col-lg-12">
-					</div>
+
+					<div class="col-lg-12"></div>
 				</div>
-				
+
 				<c:choose>
-							<c:when test="${empty pendingRequests}">
-								<!-- Display success message -->
-								<div class="alert alert-success alert-spacing" role="alert">
-									<p>
-										There are no pending requests at the moment, please check back later.
-									</p>
-								</div>
-							</c:when>
-						</c:choose>
-				
-				
+					<c:when test="${empty pendingRequests}">
+						<!-- Display success message -->
+						<div class="alert alert-success alert-spacing" role="alert">
+							<p>There are no pending requests at the moment, please check
+								back later.</p>
+						</div>
+					</c:when>
+				</c:choose>
+
+
 				<c:forEach items="${pendingRequests}" var="request">
 
 					<div class="card card-request">
 						<div class="row">
 							<div class="col-md-6"></div>
 							<h4 class="card-title col-md-3" style="text-align: right;">${request.getName()}</h4>
-							
+
 							<h4 class="card-title col-md-3" style="text-align: left;">${request.getUsername()}</h4>
 						</div>
 						<hr>
-										
 
-							<div class="col-lg-3">
+
+						<div class="col-lg-3">
+							<div class="form-group">
 								<form action="" method="POST">
 									<sec:csrfInput />
 									<input type="hidden" id="groupMemberID" name="groupMemberID"
-										value="${request.getID()}" /> 
-									<button class="btn btn-info btn-block"> 
-										<span class="fa fa-info"></span> Accept Request </button>
-								</form>
-							</div>
-							
-							<div class="col-lg-3">
-								<form action="" method="POST">
-									<sec:csrfInput />
-									<input type="hidden" id="groupMemberID" name="groupMemberID"
-										value="${request.getID()}" /> 
-									<button class="btn btn-info btn-block"> 
-										<span class="fa fa-info"></span> Reject Request </button>
+										value="${request.getID()}" />
+									<button name="submit" type=submit " value="accept"
+										class="btn btn-info btn-block">
+										<span class="fa fa-info"></span> Accept Request
+									</button>
+									<button class="btn btn-info btn-block" name="submit"
+										type="submit" value="reject">
+										<span class="fa fa-info"></span> Reject Request
+									</button>
 								</form>
 							</div>
 

@@ -92,11 +92,9 @@
 						<h6 class="card-subtitle mb-2 text-muted">${otherGroup.getLocationId()}</h6>
 						<hr>
 
-						<div class="row">
-
-
-							<c:choose>
-								<c:when test="${joinButton}">
+						<c:choose>
+							<c:when test="${joinButton}">
+								<div class="row">
 									<div class="col-lg-6">
 										<form action="" method="POST">
 											<sec:csrfInput />
@@ -110,11 +108,12 @@
 										</form>
 
 									</div>
-								</c:when>
-							</c:choose>
-							</div>
+									</div>
+							</c:when>
+						</c:choose>
+					</div>
 				</c:forEach>
-			
+
 			</div>
 			<div class="col-lg-2"></div>
 		</div>
