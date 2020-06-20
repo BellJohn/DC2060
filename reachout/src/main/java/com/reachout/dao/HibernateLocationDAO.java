@@ -30,6 +30,7 @@ public class HibernateLocationDAO {
 			id = (Integer) session.save(location);
 			session.flush();
 			session.getTransaction().commit();
+			System.out.println("Stored with id: " +id);
 		} catch (IllegalStateException | RollbackException e) {
 			return null;
 		}

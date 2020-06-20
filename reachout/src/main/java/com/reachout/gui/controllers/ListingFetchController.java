@@ -1,6 +1,7 @@
 package com.reachout.gui.controllers;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,7 +82,8 @@ public class ListingFetchController {
 
 	private Set<ListingGUIWrapper> removeOwnData(Set<ListingGUIWrapper> results) {
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
-		Set<ListingGUIWrapper> clean = results;
+		Set<ListingGUIWrapper> clean = new HashSet<>();
+		clean.addAll(results);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username;
 		if (auth.getPrincipal() instanceof SystemUser) {

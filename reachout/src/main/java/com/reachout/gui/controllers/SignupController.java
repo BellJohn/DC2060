@@ -119,7 +119,7 @@ public class SignupController {
 				request.login(username, password);
 
 			} catch (ServletException e) {
-				logger.error(e.getStackTrace());
+				logger.error("Unable to log in user after account creation", e);
 			}
 		}
 

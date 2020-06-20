@@ -15,6 +15,13 @@
 			<div class="col-sm-4"></div>
 			<div class="col-md-4">
 				<c:choose>
+					<c:when test="${not empty error}">
+						<div class="alert alert-warning alert-spacing" role="alert">
+							<p>${error}</p>
+						</div>
+					</c:when>
+				</c:choose>
+				<c:choose>
 					<c:when test="${empty postSent}">
 						<div class="card card-bkg">
 							<h2>
@@ -55,20 +62,29 @@
 										</div>
 									</div>
 
-									<!-- Request County -->
+
+									<!-- Request Street -->
 									<div class="form-group">
-										<label for="reqCounty">County of Request (e.g.
-											Cambridgeshire)</label> <input id="reqCounty" name="reqCounty"
-											placeholder="Countyshire" type="text" class="form-control"
-											required="required" maxlength="26">
+										<label for="reqStreet">Street of Request (e.g. Downing
+											Street)</label> <input id="reqStreet" name="reqStreet"
+											required="required" placeholder="Your street or one nearby"
+											type="text" class="form-control" maxlength="60">
 									</div>
 
 									<!-- Request Town -->
 									<div class="form-group">
 										<label for="reqCity">City/Town of Request (e.g.
 											Chelsea)</label> <input id="reqCity" name="reqCity"
-											required="required" placeholder="Town city" type="text"
+											required="required" placeholder="Town/City" type="text"
 											class="form-control" maxlength="60">
+									</div>
+
+									<!-- Request County -->
+									<div class="form-group">
+										<label for="reqCounty">County of Request (e.g.
+											Cambridgeshire)</label> <input id="reqCounty" name="reqCounty"
+											placeholder="County" type="text" class="form-control"
+											required="required" maxlength="26">
 									</div>
 
 									<div class="form-group row">

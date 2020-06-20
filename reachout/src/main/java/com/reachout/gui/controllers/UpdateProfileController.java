@@ -124,20 +124,23 @@ public class UpdateProfileController {
 					profilePic.getSize()));
 			validPic = false;
 		}
-
-		String extension = profilePic.getOriginalFilename()
-				.substring(profilePic.getOriginalFilename().lastIndexOf('.'));
-		if (extension.equalsIgnoreCase(".png")) {
-			extension = ".png";
-		} else if (extension.equalsIgnoreCase(".jpg")) {
-			extension = ".jpg";
-		} else if (extension.equalsIgnoreCase(".jfif")) {
-			extension = ".jfif";
-		} else {
-			logger.info(String.format("Attempted image upload with unuseable file extension: {%s}", extension));
-			validPic = false;
+		String extension = "";
+		boolean changedImage = false;
+		if (!profilePic.isEmpty()) {
+			changedImage = true;
+			extension = profilePic.getOriginalFilename().substring(profilePic.getOriginalFilename().lastIndexOf('.'));
+			if (extension.equalsIgnoreCase(".png")) {
+				extension = ".png";
+			} else if (extension.equalsIgnoreCase(".jpg")) {
+				extension = ".jpg";
+			} else if (extension.equalsIgnoreCase(".jfif")) {
+				extension = ".jfif";
+			} else {
+				logger.info(String.format("Attempted image upload with unuseable file extension: {%s}", extension));
+				validPic = false;
+				changedImage = false;
+			}
 		}
-
 		if (!validPic) {
 			ModelAndView mv = initPage(request);
 			mv.addObject("postSent", saveUserDetailsSuccess);
@@ -161,11 +164,19 @@ public class UpdateProfileController {
 		int userId = userDAO.getUserIdByUsername(username);
 		String profilePicName = username + "_" + userId + extension;
 
-		UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
-
 		// Populate the user profile db
 		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
-
+		UserProfile profile = userProfileDAO.getProfileById(userId);
+		if(profile == null) {
+			profile = new UserProfile();
+			profile.setUserId(userId);
+		}
+		
+		profile.setBio(bio);
+		profile.setHealthStatus(healthStatus);
+		if (changedImage) {
+			profile.setProfilePic(profilePicName);
+		}
 		// save picture to directory
 		if (saveImageToDisk(profilePic, profilePicName)) {
 			saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);

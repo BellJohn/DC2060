@@ -22,6 +22,7 @@ import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.ListingGUIWrapper;
 import com.reachout.models.Service;
+import com.reachout.processors.SystemPropertiesService;
 
 @Controller
 @RequestMapping("/viewServices")
@@ -64,7 +65,8 @@ public class ViewServicesController {
 		} catch (JsonProcessingException e) {
 			logger.error("Unable to convert to JSON", e);
 		}
-
+		
+		mv.addObject("API_KEY", SystemPropertiesService.getInstance().getProperty("API_KEY"));
 		mv.addObject("liveServices", guiData);
 		mv.addObject("liveServicesJSON", json);
 

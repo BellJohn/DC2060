@@ -114,6 +114,12 @@ package com.reachout.models;
 			this.healthStatus = healthStatus;
 		}
 
+		public void generateStartingData() {
+			this.healthStatus = "Healthy";
+			this.bio = "Welcome to ReachOut. My bio is looking a little empty right now.";
+			this.profilePic = "no-profile-pic.png";			
+		}
+
 
 }
 

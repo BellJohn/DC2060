@@ -3,6 +3,7 @@ package com.reachout.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
@@ -53,6 +54,9 @@ public class HibernateUserProfileDAOImpl {
 			Query query = session.createQuery("SELECT profile FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userID", userID);
 			return (UserProfile) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug("No user profile found for user id: " + userID);
+			return null;
 		}
 	}
 
@@ -94,7 +98,7 @@ public class HibernateUserProfileDAOImpl {
 	public String getProfilePicById(int userID) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
-			query.setParameter("userId", userID);
+			query.setParameter("userID", userID);
 			return (String) query.getSingleResult();
 		}
 	}

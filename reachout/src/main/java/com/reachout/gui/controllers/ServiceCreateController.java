@@ -20,6 +20,7 @@ import com.reachout.models.Location;
 import com.reachout.models.Service;
 import com.reachout.models.User;
 import com.reachout.processors.LocationFactory;
+import com.reachout.processors.exceptions.MappingAPICallException;
 
 @Controller
 @RequestMapping("/createService")
@@ -58,10 +59,9 @@ public class ServiceCreateController {
 	public ModelAndView submitForm(@RequestParam(name = "serTitle") String title,
 			@RequestParam(name = "serDesc", required = false) String description,
 			@RequestParam(name = "serCounty") String county,
-			@RequestParam(name = "serCity", required = false) String city, HttpServletRequest request) {
-		//TODO add address to form
-			String address = "";
-			
+			@RequestParam(name = "serCity", required = false) String city,
+			@RequestParam(name = "serStreet", required = true) String address, HttpServletRequest request) {
+
 		// TODO Check to see if the content is valid
 
 		int userId = 0;
@@ -74,9 +74,19 @@ public class ServiceCreateController {
 				userId = user.getId();
 			}
 		}
-		
+
 		LocationFactory locationFactory = new LocationFactory();
-		Location location = locationFactory.buildLocation(address, city, county);
+		Location location = null;
+		try {
+			location = locationFactory.buildAndSaveLocation(address, city, county);
+		} catch (MappingAPICallException e) {
+			return returnErrorResult("Unable to determine the location of the address provided");
+
+		}
+		if (location == null) {
+			return returnErrorResult("Something went wrong creating your Service, please try again");
+		}
+
 		// Build a new request which will be given the status of "new"
 		Service newService = new Service(title, description, county, city, userId, location.getLocId());
 		boolean createSuccess = false;
@@ -90,6 +100,15 @@ public class ServiceCreateController {
 		mv.addObject("postSent", true);
 		mv.addObject("createSuccess", createSuccess);
 		mv.addObject("currentPage", VIEW_NAME);
+		return mv;
+	}
+
+	private ModelAndView returnErrorResult(String error) {
+		ModelAndView mv = new ModelAndView(VIEW_NAME);
+		mv.addObject("postSent", false);
+		mv.addObject("createSuccess", false);
+		mv.addObject("currentPage", VIEW_NAME);
+		mv.addObject("error", error);
 		return mv;
 	}
 }

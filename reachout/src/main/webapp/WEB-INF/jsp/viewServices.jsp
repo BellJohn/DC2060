@@ -20,7 +20,7 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAacgfRpZuxnVNV4x7DoZ01yrY_jcSmJLc&libraries=places"
+	src="https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places"
 	async defer></script>
 <script>						
 	var map = null;
@@ -90,7 +90,7 @@
 
 		map = new google.maps.Map(document.getElementById('map'), {
 			center : userLocation,
-			zoom : 10
+			zoom : 7
 		});
 
 		var request = {
@@ -217,14 +217,22 @@
 			type : 'GET',
 			url : 'ListingFetchController?type=service&lat=' + latlng.lat()
 			+ '&lng=' + latlng.lng() + '&radius=' + reqRad,
-			complete : function(resp) {
-				// Clear out the existing visible listings
+			complete : function(resp) {	
 				var listingDetailsElement = document.getElementById('fullListingDetails');
+				if(resp.status != 200){
+					listingDetailsElement.innerHTML("Something went wrong with the data recovery, refresh the page and try again");
+				}
+				// Clear out the existing visible listings
+				
 				if (resp.responseText == "[]"){   
 					listingDetailsElement.innerHTML += "<p>No data was found for that search. Maybe try a wider search distance or a different area? </p>"
 				}
 				else{   
+					console.log(resp);
+					console.log(resp.responseText);
 					listingDetailsElement.innerHTML = '';
+					console.log(resp);
+					console.log(resp.responseText);
 					 var responseData = JSON.parse(resp.responseText);
 					 for (var i = 0; i < responseData.length; i++){
 						    var singleListing = responseData[i];

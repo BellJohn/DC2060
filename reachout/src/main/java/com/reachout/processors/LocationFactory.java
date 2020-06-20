@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import com.reachout.dao.HibernateLocationDAO;
 import com.reachout.models.Location;
+import com.reachout.processors.exceptions.MappingAPICallException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,41 +26,50 @@ import okhttp3.ResponseBody;
 public class LocationFactory {
 	public final Logger logger = LogManager.getLogger(LocationFactory.class);
 	private static final String GOOGLE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
-	private static final String KEY = "&key=AIzaSyAacgfRpZuxnVNV4x7DoZ01yrY_jcSmJLc";
+	private static final String KEY = "&key=" + SystemPropertiesService.getInstance().getProperty("API_KEY");
 
 	public LocationFactory() {
 		// Needs no constructor body
 	}
 
 	/**
-	 * Builds a new location object with the correct lat/long found by google api with the data provided.
-	 * Does NOT save the location to the database on creation so the location object will be missing an ID.
+	 * Builds a new location object with the correct lat/long found by google api
+	 * with the data provided. Does NOT save the location to the database on
+	 * creation so the location object will be missing an ID.
+	 * 
 	 * @param address
 	 * @param city
 	 * @param county
 	 * @return
+	 * @throws MappingAPICallException 
 	 */
-	public Location buildLocation(String address, String city, String county) {
+	public Location buildLocation(String address, String city, String county) throws MappingAPICallException {
 		Location location = null;
+		System.out.println(String.format("Seaching for: %s, %s, %s", address, city, county));
 
 		try {
 			String locationData = fetchData(address, city, county);
-
 			JSONObject jObj = new JSONObject(locationData);
-
-			JSONArray jarray = jObj.getJSONArray("results");
-			JSONObject locationObject = null;
-			if(jarray.get(0) instanceof JSONObject) {
-				locationObject = ((JSONObject) jarray.get(0)).getJSONObject("geometry").getJSONObject("location");
+			System.out.println("Fetched: " + locationData);
+			String status = jObj.getString("status");
+			if ("OK".equalsIgnoreCase(status)) {
+				JSONArray jarray = jObj.getJSONArray("results");
+				JSONObject locationObject = null;
+				if (jarray.get(0) instanceof JSONObject) {
+					locationObject = ((JSONObject) jarray.get(0)).getJSONObject("geometry").getJSONObject("location");
+				}
+				if (locationObject == null) {
+					throw new JSONException("Unable to find location object within returned data");
+				}
+				double lat = locationObject.getDouble("lat");
+				double lng = locationObject.getDouble("lng");
+				location = new Location();
+				location.setLocLat(lat);
+				location.setLocLong(lng);
 			}
-			if(locationObject == null) {
-				throw new JSONException("Unable to find location object within returned data");
+			else {
+				throw new MappingAPICallException(String.format("Unable to fetch data requested. Response was [%s]. Full content retrieved was [%s]", status, locationData));
 			}
-			double lat = locationObject.getDouble("lat");
-			double lng = locationObject.getDouble("lng");
-			location = new Location();
-			location.setLocLat(lat);
-			location.setLocLong(lng);
 		} catch (IOException | JSONException e) {
 			logger.error("Unable to fetch location data", e);
 			location = null;
@@ -68,24 +78,22 @@ public class LocationFactory {
 		return location;
 	}
 
-	
-	public Location buildAndSaveLocation(String address, String city, String county) {
+	public Location buildAndSaveLocation(String address, String city, String county) throws MappingAPICallException {
 		Location location = buildLocation(address, city, county);
-		
-		if(location == null) {
+
+		if (location == null) {
 			return location;
 		}
-		
+
 		HibernateLocationDAO locationDAO = new HibernateLocationDAO();
 		Integer result = locationDAO.save(location);
-		if(result != null) {
+		if (result != null) {
 			location.setLocId(result);
 		}
-		
+
 		return location;
 	}
-	
-	
+
 	private String fetchData(String address, String city, String county) throws IOException {
 		OkHttpClient client = new OkHttpClient();
 		String locationRequest = String.format("?address=%s,%s,%s,UK", address, city, county);

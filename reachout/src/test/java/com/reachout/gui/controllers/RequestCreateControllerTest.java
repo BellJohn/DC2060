@@ -68,8 +68,9 @@ class RequestCreateControllerTest {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(mockedRequest.getParameter("title")).thenReturn(user.getUsername());
 		Mockito.when(mockedRequest.getParameter("description")).thenReturn(user.getEmail());
-		Mockito.when(mockedRequest.getParameter("county")).thenReturn("password");
+		Mockito.when(mockedRequest.getParameter("county")).thenReturn("worcestershire");
 		Mockito.when(mockedRequest.getParameter("request")).thenReturn("password");
+		Mockito.when(mockedRequest.getParameter("city")).thenReturn("worcester");
 
 		RequestCreateController rcc = new RequestCreateController();
 		String title = "testTitle";
@@ -77,7 +78,8 @@ class RequestCreateControllerTest {
 		String county = "worcestershire";
 		String city = "worcester";
 		String priority = "Medium";
-		ModelAndView result = rcc.submitForm(title, description, county, city, priority, mockedRequest);
+		String address = "High St";
+		ModelAndView result = rcc.submitForm(title, description, county, city, priority, address, mockedRequest);
 	}
 
 }

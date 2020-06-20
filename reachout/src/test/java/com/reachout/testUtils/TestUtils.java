@@ -15,12 +15,14 @@ import org.hibernate.Session;
 
 import com.reachout.dao.HibernateInternalMessageDAOImpl;
 import com.reachout.dao.HibernateListingDAOImpl;
+import com.reachout.dao.HibernateLocationDAO;
 import com.reachout.dao.HibernatePasswordDAOImpl;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUtil;
 import com.reachout.models.InternalMessage;
 import com.reachout.models.Listing;
+import com.reachout.models.Location;
 import com.reachout.models.Password;
 import com.reachout.models.Request;
 import com.reachout.models.Service;
@@ -124,7 +126,8 @@ public class TestUtils {
 	/**
 	 * Returns a populated Request for a given user. <br>
 	 * User must be persisted in the database already as this relies on the user
-	 * having an assigned ID already
+	 * having an assigned ID already. Defaults the location ID to -1 which will not
+	 * link to any genuine locations in the db
 	 * 
 	 * @param user
 	 * @return populated Request
@@ -137,7 +140,8 @@ public class TestUtils {
 	/**
 	 * Returns a populated service for a given user. <br>
 	 * User must be persisted in the database already as this relies on the user
-	 * having an assigned ID already
+	 * having an assigned ID already. Defaults the location ID to -1 which will not
+	 * link to any genuine locations in the db
 	 * 
 	 * @param user
 	 * @return populated Service
@@ -146,5 +150,23 @@ public class TestUtils {
 		return new Service(String.format("testServiceFor%s", user.getUsername()), "Test Request", "count", "city",
 				user.getId(), -1);
 
+	}
+
+	/**
+	 * Stores a new Location in the database at (52.2,-2.14) and creates a new service tied to that location
+	 * Service is not persisted in the database.
+	 * @param user
+	 * @return populated Service
+	 */
+	public static Service makeTestServiceAndLocationForUser(User user) {
+		Service service = makeTestServiceForUser(user);
+
+		Location location = new Location();
+		location.setLocLat(52.2);
+		location.setLocLong(-2.14);
+
+		Integer locationId = new HibernateLocationDAO().save(location);
+		service.setLocationId(locationId);
+		return service;
 	}
 }

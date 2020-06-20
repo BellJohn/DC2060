@@ -23,7 +23,8 @@ import com.reachout.models.User;
 public class JDBCLocationDAO {
 	private Logger logger = LogManager.getLogger(JDBCLocationDAO.class);
 
-	public Set<ListingGUIWrapper> selectLocationsWithinRegion(double latMin, double latMax, double longMin,
+	
+	public synchronized Set<ListingGUIWrapper> selectLocationsWithinRegion(double latMin, double latMax, double longMin,
 			double longMax, ListingType type) {
 
 		Set<ListingGUIWrapper> results = new HashSet<>();
