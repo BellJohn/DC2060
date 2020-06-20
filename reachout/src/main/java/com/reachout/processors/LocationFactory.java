@@ -45,12 +45,10 @@ public class LocationFactory {
 	 */
 	public Location buildLocation(String address, String city, String county) throws MappingAPICallException {
 		Location location = null;
-		System.out.println(String.format("Seaching for: %s, %s, %s", address, city, county));
 
 		try {
 			String locationData = fetchData(address, city, county);
 			JSONObject jObj = new JSONObject(locationData);
-			System.out.println("Fetched: " + locationData);
 			String status = jObj.getString("status");
 			if ("OK".equalsIgnoreCase(status)) {
 				JSONArray jarray = jObj.getJSONArray("results");
@@ -66,6 +64,7 @@ public class LocationFactory {
 				location = new Location();
 				location.setLocLat(lat);
 				location.setLocLong(lng);
+				logger.debug("Constructed new location for [%s,%s,%s] : [%s,%s]", address, city, county, lat, lng);
 			}
 			else {
 				throw new MappingAPICallException(String.format("Unable to fetch data requested. Response was [%s]. Full content retrieved was [%s]", status, locationData));
