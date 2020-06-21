@@ -85,7 +85,7 @@
 											</div>
 											
 											<div class="form-group">
-											<label for="groupVisibility">Only visible in selected group</label>
+											<label for="groupVisibility">Visible in selected group</label>
 												<input type="checkbox" name="serVisibility"
 													value="group"> <br>
 											</div>

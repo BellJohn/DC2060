@@ -103,52 +103,101 @@ public class RequestCreateController {
 		boolean createSuccess = false;
 		int publicVisibility = 0;
 		Request newRequest = new Request();
-		
+		String listingCreateSuccess = "na";
+		int listingId = 0;
+
+		HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
+		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
+		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
+
 		//check if user is in any groups, other wise make request public
 		HibernateGroupMemberDAOImpl groupMemDAO = new HibernateGroupMemberDAOImpl();
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
 			newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
+			createSuccess = reqDAO.save(newRequest);
 			logger.info("Public request created");
 		}
+
 		else {
+			//if a user in a member of a group check if they want the post public, private or both.
+			boolean listingCreateSuccessBool = false;
 			List<String> visibility= Arrays.asList(request.getParameterValues("reqVisibility")) ;
-			if (visibility.contains("public")){
+			if (visibility.contains("public") && !visibility.contains("group")){
 				publicVisibility = 1;
 				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
+				createSuccess = reqDAO.save(newRequest);
 				logger.info("Public request created");
 			}
-			//check if a group request has been made
 
-			if(visibility.contains("group")) {
+			//visible to group and public
+			if (visibility.contains("group") && visibility.contains("public")) {
+				publicVisibility = 1;
 				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
-				logger.info("Group service created");
-				HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
-				HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
+				createSuccess = reqDAO.save(newRequest);
+				logger.info("Public request created");
+				listingId = reqDAO.getNewRequestId(userId);
+				logger.info("Group Request created with ID " + listingId); 
 				try {
 					Group group = groupDAO.selectByName(groupVisibility);
-					GroupListing gl = new GroupListing(group.getId(), newRequest.getId());
-					createSuccess = glDAO.save(gl);
+					GroupListing gl = new GroupListing(group.getId(), listingId);
+					listingCreateSuccessBool = glDAO.save(gl);
 				}
 				catch (Exception e) {
 					logger.error("Could not find group: " + groupVisibility) ;
 				}
-				if(createSuccess = false) {
-					logger.error("Group listing was not added");
+
+			}
+
+			//if they have selected visibile only within a group, get the listingID and save to group listing table
+			if (visibility.contains("group") && !(visibility.contains("public"))) {
+				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
+				createSuccess = reqDAO.save(newRequest);
+				listingId = reqDAO.getNewRequestId(userId);
+				logger.info("Group Request created with ID " + listingId); 
+				try {
+					Group group = groupDAO.selectByName(groupVisibility);
+					GroupListing gl = new GroupListing(group.getId(), listingId);
+					listingCreateSuccessBool = glDAO.save(gl);
+				}
+				catch (Exception e) {
+					logger.error("Could not find group: " + groupVisibility) ;
+				}
+				if(listingCreateSuccessBool == false) {
+					logger.error("Could not add entry to GroupListing table");
+					listingCreateSuccess = "unsuccessful";
+				}
+				else {
+					listingCreateSuccess = "success";
+					logger.info("Success, group listing added");
 				}
 			}
 		}
 
-			HibernateRequestDAOImpl requestDAO = new HibernateRequestDAOImpl();
-			createSuccess = requestDAO.save(newRequest);
-
-			ModelAndView mv = new ModelAndView(VIEW_NAME);
-			if (createSuccess) {
-				logger.debug(String.format("Built new request as %s", newRequest.toString()));
+		if((createSuccess == false) && (listingCreateSuccess == "success")) {
+			logger.error("Error - unable to create service");
+			if(listingCreateSuccess == "success") {
+				glDAO.groupListingDelete(listingId);
 			}
-			mv.addObject("postSent", true);
-			mv.addObject("createSuccess", createSuccess);
-			mv.addObject("currentPage", VIEW_NAME);
-			return mv;
 		}
+
+		if((listingCreateSuccess == "unsuccessful") && (createSuccess == true)) {
+			if (reqDAO.deleteById(listingId)) {
+				createSuccess = false;
+				logger.debug("Listing deleted as group listing was unable to be created");
+			}
+			else {
+				logger.debug("Unable to delete request listing and unable to create the group listing");
+			}
+		}
+
+		ModelAndView mv = new ModelAndView(VIEW_NAME);
+		if (createSuccess) {
+			logger.debug(String.format("Built new request as %s", newRequest.toString()));
+		}
+		mv.addObject("postSent", true);
+		mv.addObject("createSuccess", createSuccess);
+		mv.addObject("currentPage", VIEW_NAME);
+		return mv;
 	}
+}
