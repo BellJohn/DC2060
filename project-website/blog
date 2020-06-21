@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+    <head>
+        <title>About ReachOut | Blog</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+			<div class="col-md-12 col-offset-md-2">
+				<nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<a class="navbar-brand" href="/"><img class="brand-img" img alt="ReachOut logo" src="images/reachout-logo-dark.png" /></a>	
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item" ><a class="nav-link" href="/">Home</a></li>
+							<li class="nav-item" ><a class="nav-link" href="meet-the-team">Meet the Team</a></li>
+							<li class="nav-item" ><a class="nav-link active" href="blog">Blog</a></li>
+						</ul>
+						<ul class="navbar-nav ml-auto">
+							<a type="button" class="btn btn-sm btn-warning btn-outline-dark" href="http://reachout.space" target="_blank"><b>Go To ReachOut</b></a>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+        
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-md-8">
+
+                <!-- Heading Section -->
+                <div class="row heading-spacing">
+                    <div class="col-md-12">
+                        <h1>Development Blog</h1>
+                    </div>
+
+                    <div class="col-md-12">
+                        <p>Below you will find development updates related to our web application, ReachOut. 
+                            Please check back regularly to find the latest news regarding features in development 
+                            and timescales for roll-out.</p>
+                    </div>
+                </div>
+
+                <!-- Blog Section -->
+                <div class="card mb-5">
+                    <div class="card-body">
+                        <h2 class="card-title">Developing a New Application - <i>new</i></h2>
+                        <h6 class="card-subtitle mb-2 text-muted">Posted by Jessica Morgan, Software developer at ReachOut, 05 May 2020</h6>
+                        <p class="card-text">Starting to develop an application from scratch is something that I'm sure most people would agree is quite a challenge. There are a lot of things you need to take into consideration, such as coding language, software, UI design, device compatibility and so much more. Our priority is to provide a secure, reliable, simple application that can provide value to it's users, especially during the ongoing pandemic.</p>
+                        <p class="card-text">In March 2020 coronavirus had spread worldwide and many countries were starting to lockdown. We wanted to create an application to help people in this situation. These people may be vulnerable, sick, carers, key workers that can't risk going out in public and getting infected, or anyone else affected. We decided to create ReachOut.</p>
+                        <p class="card-text">The ReachOut team has worked together to decide which features our application should have. For our first release we were able to implement the signup, login, edit profile and services and requests system. We have all taken part in testing our live application and are happy that there are no bugs in this release.</p>
+                        <p class="card-text">We are currently working on our second release which is going to be our minimum viable product. In this release we are going to include some changes to the web design, improved profile page displaying information of requests you have made. We will also be adding an in-app messaging service. This second release will be on the 14th May, after this we hope to release our app to the public so it can start being used to it's full potential.</p>
+                        <p class="card-text">Don't forget to check back here for any updates</p>
+                        <p class="card-text"> ~ ReachOut Team</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+
+</body>
+</html>
