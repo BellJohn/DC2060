@@ -78,7 +78,7 @@
                         <img src="images/danielle.svg" alt="Danielle" style="width:50%">
                         <h3>Danielle Nelder</h3>
                         <p class="w3-opacity">Business Analyst</p>
-                        <p><i>"I have enjoyed working on this project! I really look forward to seeing people truely benefit from our application"</i></p>
+                        <p><i>"I have enjoyed working on this project! I really look forward to seeing people truely benefit from our application."</i></p>
                     </div>
                     <div class="col-sm">
                         <img src="images/ethan.svg" alt="Ethan" style="width:50%">
