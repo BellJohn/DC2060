@@ -55,8 +55,8 @@
 								</div>
 							</div>
 							<div class="control-group">
-								<!-- Button -->
-								<button class="btn btn-primary btn-lg">Login</button>
+								<!-- Login / Forgotten Password -->
+								<button class="btn btn-primary btn-lg">Login</button> <a href="resetPassword">Forgot Your Password?</a>
 							</div>
 						</fieldset>
 					</form>

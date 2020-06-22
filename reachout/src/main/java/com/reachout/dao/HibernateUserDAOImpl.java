@@ -165,4 +165,23 @@ public class HibernateUserDAOImpl {
 		return intFound;
 	}
 
+	/**
+	 * Get a user by their email address
+	 * 
+	 * @param email address to search for
+	 * @return the User found or null if nothing matches
+	 */
+	public User getUserByEmail(String email) {
+		User userFound = null;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			Query query = session.createQuery("SELECT user FROM User user WHERE USERS_EMAIL = :email");
+			query.setParameter("email", email);
+			userFound = (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug("Searched for user with email [" + email + "]. Found none");
+		}
+		return userFound;
+	}
+
 }
