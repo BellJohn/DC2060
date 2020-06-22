@@ -95,8 +95,7 @@
 											</div>
 
 											<div class="form-group">
-												<label for="groupVisibility">Only visible in
-													selected group</label> <input type="checkbox" name="reqVisibility"
+												<label for="groupVisibility">Visible in selected group</label> <input type="checkbox" name="reqVisibility"
 													value="group"> <br>
 											</div>
 

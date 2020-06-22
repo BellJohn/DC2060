@@ -22,10 +22,12 @@ import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateGroupDAOImpl;
 import com.reachout.dao.HibernateGroupListingDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
+import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
 import com.reachout.models.GroupListing;
+import com.reachout.models.Request;
 import com.reachout.models.Service;
 import com.reachout.models.User;
 
@@ -95,14 +97,18 @@ public class ServiceCreateController {
 			@RequestParam(name = "serCounty") String county,
 			@RequestParam(name = "group", required = false) String groupVisibility,
 			@RequestParam(name = "serCity", required = false) String city, HttpServletRequest request) {
-	
 
-		HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl();
 		int publicVisibility = 0;
 		boolean createSuccess = false;
+		String listingCreateSuccess = "na";
 		Service newService = new Service();
+		int listingId = 0;
+
+		HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
+		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
+		HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl();
+
 		//check if the user is a member of any groups, if not automatically set request as public		
-		
 		HibernateGroupMemberDAOImpl groupMemDAO = new HibernateGroupMemberDAOImpl();
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
@@ -112,38 +118,81 @@ public class ServiceCreateController {
 			logger.info("Public service created");
 		}
 		else {
+			//if a user in a member of a group check if they want the post public, private or both.
+
+			boolean listingCreateSuccessBool = false;
 			List<String> visibility= Arrays.asList(request.getParameterValues("serVisibility")) ;
-			if (visibility.contains("public")){
+			//service to public and group visibility
+			if (visibility.contains("public") && (visibility.contains("group"))){
 				publicVisibility = 1;
 				// Build a new request which will be given the status of "new"
 				newService = new Service(title, description, county, city, userId, publicVisibility);
 				createSuccess = serviceDAO.save(newService);
 				logger.info("Public service created");
-			}
-			//check if a group request has been made
-
-			if(visibility.contains("group")) {
-				logger.info("Group service created");
-				newService = new Service(title, description, county, city, userId, publicVisibility);
-				createSuccess = serviceDAO.save(newService);
-				HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
-				HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
 				try {
 					logger.debug("Group selected from dropdown list: " + groupVisibility);
 					Group group = groupDAO.selectByName(groupVisibility);
-					GroupListing gl = new GroupListing(group.getId(), newService.getId());
-					createSuccess = glDAO.save(gl);
+					GroupListing gl = new GroupListing(group.getId(), serviceDAO.getNewServiceId(userId));
+					listingCreateSuccessBool = glDAO.save(gl);
+					logger.info("Group service created");
+				}
+				catch (Exception e) {
+					logger.error("Could not find group") ;
+				}	
+			}
+
+			//if it is just for public visibility
+			if (visibility.contains("public") && !(visibility.contains("group"))){
+				publicVisibility = 1;
+				// Build a new request which will be given the status of "new"
+				newService = new Service(title, description, county, city, userId, publicVisibility);
+				createSuccess = serviceDAO.save(newService);
+				logger.info("Public service created");				
+			}
+
+			///if they have selected visibile only within a group, get the listingID and save to group listing table
+			if(visibility.contains("group") && !(visibility.contains("public"))) {
+				logger.info("Group service created");
+				newService = new Service(title, description, county, city, userId, 0);
+				createSuccess = serviceDAO.save(newService);
+				try {
+					logger.debug("Group selected from dropdown list: " + groupVisibility);
+					Group group = groupDAO.selectByName(groupVisibility);
+					GroupListing gl = new GroupListing(group.getId(), serviceDAO.getNewServiceId(userId));
+					listingCreateSuccessBool = glDAO.save(gl);
 				}
 				catch (Exception e) {
 					logger.error("Could not find group") ;
 				}
-				if(createSuccess = false) {
-					logger.error("Group listing was not added");
+				if(listingCreateSuccessBool == false) {
+					logger.error("Could not add entry to GroupListing table");
+					listingCreateSuccess = "unsuccessful";
+				}
+				else {
+					listingCreateSuccess = "success";
+					logger.info("Success, group listing added");
 				}
 			}
-		}		
-			
+		}	
 
+		
+		if((createSuccess == false) && (listingCreateSuccess == "success")) {
+			logger.error("Error - unable to create service");
+			if(listingCreateSuccess == "success") {
+				glDAO.groupListingDelete(listingId);
+			}
+		}
+
+		if((listingCreateSuccess == "unsuccessful") && (createSuccess == true)) {
+			if (serviceDAO.deleteById(listingId)) {
+				createSuccess = false;
+				logger.debug("Listing deleted as group listing was unable to be created");
+			}
+			else {
+				logger.debug("Unable to delete service listing and unable to create the group listing");
+			}
+		}
+		
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		if (createSuccess) {
 			logger.debug(String.format("Built new service as %s", newService.toString()));

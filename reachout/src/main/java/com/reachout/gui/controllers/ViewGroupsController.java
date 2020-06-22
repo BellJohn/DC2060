@@ -1,5 +1,7 @@
 package com.reachout.gui.controllers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,20 +55,30 @@ public class ViewGroupsController {
 		if (auth.getPrincipal() instanceof SystemUser) {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
-			username = (String) auth.getPrincipal();
+			username = (String) auth.getPrincipal(); 
 		}
 		int userId = userDAO.getUserIdByUsername(username);
 
 		userGroups = groupMemberDAO.getUserGroups(userId);
-		Set<Group> otherGroups = groupMemberDAO.getNonUserGroups(userId);
-		boolean joinButton = true;
+		Set<Integer> groupIds = groupMemberDAO.getNonUserGroups(userId);
+		Set<Group> otherGroups = new HashSet<Group>();
+		for (int groupId : groupIds) {
+			otherGroups.add(groupDAO.selectById(groupId));
+		}		
+		
+		List<Integer> pendingIds = groupMemberDAO.getPendingGroups(userId);
+		List<Group> pendingGroups = new ArrayList<Group>();
+		for (int pendingId : pendingIds) {
+			pendingGroups.add(groupDAO.selectById(pendingId));
+		}
+		
 		// Build up data for presenting on the GUI
 
 		mv.addObject("userGroups", userGroups);
 		mv.addObject("otherGroups", otherGroups);
+		mv.addObject("pendingGroups", pendingGroups);
 		mv.addObject("username", username); 
-		mv.addObject("joinButton",joinButton);
-		return mv;
+		return mv; 
 	}
 
 	//Error page

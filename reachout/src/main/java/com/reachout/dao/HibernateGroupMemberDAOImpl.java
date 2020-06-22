@@ -75,34 +75,48 @@ public class HibernateGroupMemberDAOImpl{
 	 * 
 	 * @return
 	 */
-	public Set<Group> getNonUserGroups(int userId) {
+	public Set<Integer> getNonUserGroups(int userId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
-			Query query = session.createQuery("SELECT DISTINCT groupMember FROM GroupMember groupMember WHERE NOT GM_G_UID = :userId");
+			Query query = session.createQuery("SELECT groupMember.groupId FROM GroupMember groupMember WHERE NOT GM_G_UID = :userId AND NOT GM_U_STATUS_ID = 0");
 			query.setParameter("userId", userId);
-			List<GroupMember> groupMembers = (List<GroupMember>) query.getResultList();
+			List<Integer> groupIds = (List<Integer>) query.getResultList();
 
 			//remove any groups the user is a member of
-			List<GroupMember> userGroups = new ArrayList<GroupMember>();
-			for (GroupMember gm : groupMembers) {
+			List<Integer> userGroupIds = new ArrayList<Integer>();
+			for (int id : groupIds) {
 				for (Group g : getUserGroups(userId)) {
-					if ( gm.getGroupId() == g.getId()) {
-						userGroups.add(gm);
+					if (id == g.getId()) {
+						userGroupIds.add(id);
+					}
+				}
+			}			
+			//remove any pending groups
+			List<Integer> pendingGroupIds = new ArrayList<Integer>();
+			for (int id : groupIds) {
+				for (int i : getPendingGroups(userId)) {
+					if (i == id) {
+						pendingGroupIds.add(i);
 					}
 				}
 			}
-				groupMembers.removeAll(userGroups);
-
-
-				//make sure no duplicates
-				Set<Group> results = new HashSet<Group>();
-				HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
-				for (GroupMember grp : groupMembers) {
-					results.add(groupDAO.selectById(grp.getGroupId()));
-				}		
-
-
-				return results;
+			groupIds.removeAll(userGroupIds);
+			groupIds.removeAll(pendingGroupIds);
 			
+			//make sure no duplicates
+			Set<Integer> results = new HashSet<Integer>();
+			for (int id : groupIds) {
+				results.add(id);
+			}		
+			return results;
+		}
+	}
+	public List<Integer> getPendingGroups(int userId){
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery("SELECT groupMember.groupId FROM GroupMember groupMember WHERE GM_G_UID = :userId AND GM_U_STATUS_ID = 0");
+			query.setParameter("userId", userId);
+			List<Integer> groupIds = (List<Integer>) query.getResultList();
+
+			return groupIds;
 		}
 	}
 

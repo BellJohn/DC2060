@@ -119,6 +119,21 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		allResults.addAll(serDAO.getAllServices());
 		return allResults;
 	}
+	
+	
+	public boolean deleteById(int reqId) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createNativeQuery("DELETE FROM LISTINGS WHERE LST_ID = :reqID");
+			query.setParameter("reqId", reqId);
+			query.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			return false;
+		}
+		return true;
+
+	}
 
 	/**
 	 * Returns all requests made by a specific user based on their ID
@@ -203,5 +218,20 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		}
 
 		return returnList;
+	}
+	
+	public int getNewRequestId(int userId) {
+		Integer intFound = -1;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			Query query = session.createNativeQuery("SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
+			query.setParameter("userId", userId);
+			intFound = (Integer) (query.getSingleResult());
+			logger.debug("Request listing found with id: " + intFound);
+		} catch (NoResultException e) {
+			logger.debug(String.format("No request found for username %s", userId));
+		}
+		return intFound;
+		
 	}
 }

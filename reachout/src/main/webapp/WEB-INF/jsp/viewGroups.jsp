@@ -47,7 +47,19 @@
 								<div class="row">
 									<h4 class="card-title col-md-3">${request.getName()}</h4>
 									<div class="col-md-6"></div>
-									<h4 class="card-title col-md-3" style="text-align: right;">${request.getDescription()}</h4>
+									<!-- Display Group Image -->
+										<c:choose>
+											<c:when test="${empty request.getPicture()}">
+												<img src="images/groupImage.png" alt="GroupLogo"
+													class="rounded-circle" style="max-width: 20%;">
+											</c:when>
+											<c:otherwise>
+												<img src="${groupPic}" alt="groupPic" class="rounded-circle" style="max-width: 20%;">
+											</c:otherwise>
+										</c:choose>
+								</div>
+								<div class="row">
+									<h5 class="card-title col-md-12" style="text-align: center;">${request.getDescription()}</h5>
 								</div>
 
 								Location
@@ -76,6 +88,36 @@
 
 
 				<h3>Other groups</h3>
+				
+					<c:forEach items="${pendingGroups}" var="pendingGroup">
+
+
+					<div class="card card-request">
+						<div class="row">
+							<h4 class="card-title col-md-3">${pendingGroup.getName()}</h4>
+							<div class="col-md-6"></div>
+							<!-- Display Group Image -->
+								<c:choose>
+									<c:when test="${empty pendingGroup.getPicture()}">
+										<img src="images/groupImage.png" alt="GroupLogo"
+													class="rounded-circle" style="max-width: 20%;">
+									</c:when>
+									<c:otherwise>
+										<img src="${pendingGroup.getPicture()}" alt="groupPic" style="max-width: 20%;">
+									</c:otherwise>
+								</c:choose>
+						</div>
+						
+						<div class="row">
+							<h5 class="card-title col-md-12" style="text-align: center;">${pendingGroup.getDescription()}</h5>
+						</div>
+						<div class="row"> <h4 class="card-title col-md-3" style="color:#D3D3D3;"> Pending approval</h4> </div>
+
+						Location
+						<h6 class="card-subtitle mb-2 text-muted">${pendingGroup.getLocationId()}</h6>
+						<hr>
+					</div>
+				</c:forEach>
 
 
 				<c:forEach items="${otherGroups}" var="otherGroup">
@@ -85,32 +127,39 @@
 						<div class="row">
 							<h4 class="card-title col-md-3">${otherGroup.getName()}</h4>
 							<div class="col-md-6"></div>
-							<h4 class="card-title col-md-3" style="text-align: right;">${otherGroup.getDescription()}</h4>
+							<!-- Display Group Image -->
+							
+								<c:choose>
+									<c:when test="${empty otherGroup.getPicture()}">
+										<img src="images/groupImage.png" alt="GroupLogo"
+													class="rounded-circle" style="max-width: 20%;">
+									</c:when>
+									<c:otherwise>
+										<img src="${otherGroup.getPicture()}" alt="groupPic" style="max-width: 20%;">
+									</c:otherwise>
+								</c:choose>
+							
 						</div>
-
+						<div class="row">
+							<h5 class="card-title col-md-12" style="text-align: center;">${otherGroup.getDescription()}</h5>
+						</div>
 						Location
 						<h6 class="card-subtitle mb-2 text-muted">${otherGroup.getLocationId()}</h6>
 						<hr>
-
-						<c:choose>
-							<c:when test="${joinButton}">
-								<div class="row">
-									<div class="col-lg-6">
-										<form action="" method="POST">
-											<sec:csrfInput />
-											<input type="hidden" id="action" name="action" value="accept" />
-											<input type="hidden" id="groupID" name="groupID"
-												value="${otherGroup.getId()}" /> <input type="hidden"
-												id="username" name="username" value="${username}" />
-											<button class="btn btn-success btn-block">
-												<span class="fa fa-handshake-o"></span> Request to Join
-											</button>
-										</form>
-
-									</div>
-									</div>
-							</c:when>
-						</c:choose>
+						<div class="row">
+							<div class="col-lg-6">
+								<form action="" method="POST">
+									<sec:csrfInput />
+									<input type="hidden" id="action" name="action" value="accept" />
+									<input type="hidden" id="groupID" name="groupID"
+										value="${otherGroup.getId()}" /> <input type="hidden"
+										id="username" name="username" value="${username}" />
+									<button class="btn btn-success btn-block">
+										<span class="fa fa-handshake-o"></span> Request to Join
+									</button>
+								</form>
+							</div>
+						</div>
 					</div>
 				</c:forEach>
 
