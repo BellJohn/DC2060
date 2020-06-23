@@ -222,10 +222,8 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 			query.setParameter("userId", userId);
 			query.setParameter("status", 0);
 			List<?> results = query.getResultList();
-			System.out.println("Found:" +results.size() + " services");
 			for (Object obj : results) {
 				if (obj instanceof Service) {
-					System.out.println((Service) obj);
 					returnList.add(((Service) obj).getId());
 				}
 			}

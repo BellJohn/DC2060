@@ -104,27 +104,23 @@ public class ListingFetchController {
 
 		HibernateGroupMemberDAOImpl gmDAO = new HibernateGroupMemberDAOImpl();
 		List<Integer> usersGroups = gmDAO.getUserGroupIDs(userId);
-		System.out.println("User Groups: " + usersGroups);
 		Set<Integer> allListingIDs = new HashSet<>();
 		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
 		for (Integer groupID : usersGroups) {
 			allListingIDs.addAll(glDAO.getGroupListingsIds(groupID));
 		}
-		System.out.println(allListingIDs);
 		if(ListingType.getByValue(type).equals(ListingType.REQUEST)){
 			allListingIDs.addAll(new HibernateRequestDAOImpl().getAllRequestIDsForDisplay(userId));
 		}
 		else {
 			allListingIDs.addAll(new HibernateServiceDAOImpl().getAllServiceIDsForDisplay(userId));
 		}
-		System.out.println(allListingIDs);
 
 		// Loop through all the possible listings a user is authorised to view based on visibility.
 		// If there is a match within the collection that we found based on location
 		// Add it to the result set
 		Set<ListingGUIWrapper> result = new HashSet<>();
 		for(ListingGUIWrapper wrapper : currentData) {
-			System.out.println(wrapper.getListingID());
 			if(allListingIDs.contains(wrapper.listing.getId())){
 				result.add(wrapper);
 			}
