@@ -25,7 +25,7 @@ public class Service extends Listing {
 	 * @param status
 	 */
 	public Service(String title, String description, String county, String city, int userId, ListingStatus status, int visibility, int locationId) {
-		this(title, description, county, city, userId, visibility);
+		this(title, description, county, city, userId, visibility, locationId);
 		this.status = status;
 	}
 
@@ -39,7 +39,7 @@ public class Service extends Listing {
 	 * @param city
 	 */
 	public Service(String title, String description, String county, String city, int userId, int visibility, int locationId) {
-		super(title, description, county, city, userId, priority, visibility);
+		super(title, description, county, city, userId, priority, visibility, locationId);
 		this.listingType = ListingType.SERVICE;
 	}
 

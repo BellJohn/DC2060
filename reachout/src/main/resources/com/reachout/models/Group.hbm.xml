@@ -9,7 +9,7 @@
 
 <hibernate-mapping package="com.reachout.models">
 
-	<class name="Group" table="GROUPS">
+	<class name="Group" table="ALL_GROUPS">
 		<id name="id" column="G_ID">
 			<generator class="increment" />
 		</id>

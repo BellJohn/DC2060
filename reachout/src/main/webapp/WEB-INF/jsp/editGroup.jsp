@@ -35,7 +35,7 @@
 								<div class="form-group remainingCounterText">
 									<label for="Description">Description</label>
 									<textarea id="Description" name="Description" cols="40" rows="5" placeholder="Description" 
-									class="form-control" maxlength="2000" minlength="50" 
+									class="form-control" maxlength="2000" minlength="10" 
 									required="required">${group.description}</textarea>
 								</div>
 								

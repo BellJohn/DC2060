@@ -225,29 +225,22 @@
 					listingDetailsElement.innerHTML("Something went wrong with the data recovery, refresh the page and try again");
 				}
 				if (resp.responseText == "[]"){   
-					listingDetailsElement.innerHTML += "<p>No data was found for that search. Maybe try a wider search distance or a different area? </p>"
+					listingDetailsElement.innerHTML = "<p>No data was found for that search. Maybe try a wider search distance or a different area? </p>"
 				}
 				else{   
 					console.log(resp);
 					console.log(resp.responseText);
 					listingDetailsElement.innerHTML = '';
 					 var responseData = JSON.parse(resp.responseText);
+					 var replacementText = "";
 					 for (var i = 0; i < responseData.length; i++){
 						    var singleListing = responseData[i];
 						      createMarkerJSON(singleListing);
-						      listingDetailsElement.innerHTML += createCard(singleListing);
+						      replacementText = replacementText + createCard(singleListing);
 						}
-
+					 listingDetailsElement.innerHTML = replacementText;
 				}
 
-
-				// For each listing in collection
-				// Make a new card as is currently displayed
-				// Create a custom object to pass to
-				// "createMarker"
-				// Create a latlng with listing data, store
-				// that in custom object
-				// call createMarker
 			}
 		});
 	}

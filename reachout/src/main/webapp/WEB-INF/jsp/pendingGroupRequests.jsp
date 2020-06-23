@@ -38,9 +38,9 @@
 					<div class="card card-request">
 						<div class="row">
 							<div class="col-md-6"></div>
-							<h4 class="card-title col-md-3" style="text-align: right;">${request.getName()}</h4>
+							<h4 class="card-title col-md-3" style="text-align: right;">GroupName: ${request.getName()}</h4>
 
-							<h4 class="card-title col-md-3" style="text-align: left;">${request.getUsername()}</h4>
+							<h4 class="card-title col-md-3" style="text-align: left;">User: ${request.getUsername()}</h4>
 						</div>
 						<hr>
 

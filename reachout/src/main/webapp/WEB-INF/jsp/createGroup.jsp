@@ -45,7 +45,7 @@
 										<label for="groupDesc">Description</label>
 										<textarea id="groupDesc" name="groupDesc" cols="40" rows="5"
 											placeholder="Please give a small description to let users know why you have created this group. Please note, everyone on the site will be able to view this information."
-											class="form-control" maxlength="2000" minlength="50"
+											class="form-control" maxlength="2000" minlength="10"
 											required="required"></textarea>
 									</div>
 

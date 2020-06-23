@@ -54,7 +54,7 @@
 													class="rounded-circle" style="max-width: 20%;">
 											</c:when>
 											<c:otherwise>
-												<img src="${groupPic}" alt="groupPic" class="rounded-circle" style="max-width: 20%;">
+												<img src="${groupPic}" alt="groupPic" class="rounded-circle" style="max-width: 10%;">
 											</c:otherwise>
 										</c:choose>
 								</div>

@@ -42,7 +42,7 @@ public abstract class Listing implements Serializable {
 	 * @param status
 	 * @param priority
 	 */
-	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority, int visibility) {
+	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority, int visibility, int locationId) {
 		this(title, description, county, city, userId, priority, visibility, locationId);
 		this.status = status;
 	}

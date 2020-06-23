@@ -79,6 +79,8 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 			Query query = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
 			query.setParameter("lst_id", service.getId());
 			query.executeUpdate();
+
+			new HibernateGroupListingDAOImpl().groupListingDelete(service.getId());
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
@@ -191,7 +193,8 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		Integer intFound = -1;
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
-			Query query = session.createNativeQuery("SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
+			Query query = session.createNativeQuery(
+					"SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
 			query.setParameter("userId", userId);
 			intFound = (Integer) (query.getSingleResult());
 		} catch (NoResultException e) {

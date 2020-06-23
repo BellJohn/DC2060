@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -28,8 +27,6 @@ import com.reachout.models.Group;
 import com.reachout.models.GroupListing;
 import com.reachout.models.Location;
 import com.reachout.models.Request;
-import com.reachout.models.Service;
-import com.reachout.models.User;
 import com.reachout.processors.LocationFactory;
 import com.reachout.processors.exceptions.MappingAPICallException;
 
@@ -109,6 +106,17 @@ public class RequestCreateController {
 		Request newRequest = new Request();
 		String listingCreateSuccess = "na";
 		int listingId = 0;
+		
+		LocationFactory locationFactory = new LocationFactory();
+		Location location = null;
+		try {
+			location = locationFactory.buildAndSaveLocation(address, city, county);
+		} catch (MappingAPICallException e) {
+			return returnErrorResult("Unable to determine the location of the address provided");
+		}
+		if (location == null) {
+			return returnErrorResult("Something went wrong creating your Request, please try again");
+		}
 
 		HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
 		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
@@ -118,7 +126,7 @@ public class RequestCreateController {
 		HibernateGroupMemberDAOImpl groupMemDAO = new HibernateGroupMemberDAOImpl();
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
-			newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
+			newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
 			createSuccess = reqDAO.save(newRequest);
 			logger.info("Public request created");
 		}
@@ -129,7 +137,7 @@ public class RequestCreateController {
 			List<String> visibility= Arrays.asList(request.getParameterValues("reqVisibility")) ;
 			if (visibility.contains("public") && !visibility.contains("group")){
 				publicVisibility = 1;
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
+				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				logger.info("Public request created");
 			}
@@ -137,7 +145,7 @@ public class RequestCreateController {
 			//visible to group and public
 			if (visibility.contains("group") && visibility.contains("public")) {
 				publicVisibility = 1;
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
+				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				logger.info("Public request created");
 				listingId = reqDAO.getNewRequestId(userId);
@@ -155,7 +163,7 @@ public class RequestCreateController {
 
 			//if they have selected visibile only within a group, get the listingID and save to group listing table
 			if (visibility.contains("group") && !(visibility.contains("public"))) {
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility);
+				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				listingId = reqDAO.getNewRequestId(userId);
 				logger.info("Group Request created with ID " + listingId);
@@ -194,23 +202,6 @@ public class RequestCreateController {
 				logger.debug("Unable to delete request listing and unable to create the group listing");
 			}
 		}
-
-		LocationFactory locationFactory = new LocationFactory();
-		Location location = null;
-		try {
-			location = locationFactory.buildAndSaveLocation(address, city, county);
-		} catch (MappingAPICallException e) {
-			return returnErrorResult("Unable to determine the location of the address provided");
-		}
-		if (location == null) {
-			return returnErrorResult("Something went wrong creating your Request, please try again");
-		}
-
-		// Build a new request which will be given the status of "new"
-		Request newRequest = new Request(title, description, county, city, userId, priority, location.getLocId());
-		boolean createSuccess = false;
-		HibernateRequestDAOImpl requestDAO = new HibernateRequestDAOImpl();
-		createSuccess = requestDAO.save(newRequest);
 
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		if (createSuccess) {

@@ -1,7 +1,9 @@
 package com.reachout.gui.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,10 +19,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reachout.auth.SystemUser;
+import com.reachout.dao.HibernateGroupListingDAOImpl;
+import com.reachout.dao.HibernateGroupMemberDAOImpl;
 import com.reachout.dao.HibernateLocationDAO;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.Listing;
 import com.reachout.models.ListingGUIWrapper;
+import com.reachout.models.ListingType;
 import com.reachout.models.Service;
 import com.reachout.processors.SystemPropertiesService;
 
@@ -28,7 +34,6 @@ import com.reachout.processors.SystemPropertiesService;
 @RequestMapping("/viewServices")
 public class ViewServicesController {
 	public final Logger logger = LogManager.getLogger(ViewServicesController.class);
-
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -49,15 +54,40 @@ public class ViewServicesController {
 
 		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
 		HibernateLocationDAO locationDAO = new HibernateLocationDAO();
-		List<Service> allServices = serDAO.getAllServicesForDisplay(userId);
-		
+		Set<Service> allServices = new HashSet<>();
+
+		// Get all the public services
+		allServices.addAll(serDAO.getAllServicesForDisplay(userId));
+
+		HibernateGroupMemberDAOImpl groupMemberDAO = new HibernateGroupMemberDAOImpl();
+		HibernateGroupListingDAOImpl groupListingDAO = new HibernateGroupListingDAOImpl();
+
+		// Get all the listings that the user is part of the group they are visible to
+		Set<Listing> allListings = new HashSet<>();
+		for (Integer i : groupMemberDAO.getUserGroupIDs(userId)) {
+			allListings.addAll(groupListingDAO.getGroupListings(i));
+		}
+		// Combine the collections
+		for (Listing listing : allListings) {
+			if (ListingType.SERVICE.equals(listing.getListingType()) && listing.getUserId() != userId) {
+				allServices.add((Service) listing);
+			}
+		}
+
 		List<ListingGUIWrapper> guiData = new ArrayList<>();
 
 		// Build up data for presenting on the GUI
 		for (Service ser : allServices) {
-			guiData.add(new ListingGUIWrapper(ser, userDAO.selectByID(ser.getUserId()), locationDAO.selectLocationById(ser.getLocationId())));
+			guiData.add(new ListingGUIWrapper(ser, userDAO.selectByID(ser.getUserId()),
+					locationDAO.selectLocationById(ser.getLocationId())));
 		}
 
+		// Sanitize the data for personal info
+		for(ListingGUIWrapper wrapper : guiData) {
+			wrapper.user.setDob("");
+			wrapper.user.setEmail("");
+		}
+		
 		ObjectMapper mapper = new ObjectMapper();
 		String json = "";
 		try {
@@ -65,7 +95,7 @@ public class ViewServicesController {
 		} catch (JsonProcessingException e) {
 			logger.error("Unable to convert to JSON", e);
 		}
-		
+
 		mv.addObject("API_KEY", SystemPropertiesService.getInstance().getProperty("API_KEY"));
 		mv.addObject("liveServices", guiData);
 		mv.addObject("liveServicesJSON", json);

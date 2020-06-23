@@ -217,39 +217,28 @@
 			type : 'GET',
 			url : 'ListingFetchController?type=service&lat=' + latlng.lat()
 			+ '&lng=' + latlng.lng() + '&radius=' + reqRad,
-			complete : function(resp) {	
+			complete : function(resp) {
+				// Clear out the existing visible listings
 				var listingDetailsElement = document.getElementById('fullListingDetails');
 				if(resp.status != 200){
 					listingDetailsElement.innerHTML("Something went wrong with the data recovery, refresh the page and try again");
 				}
-				// Clear out the existing visible listings
-				
 				if (resp.responseText == "[]"){   
-					listingDetailsElement.innerHTML += "<p>No data was found for that search. Maybe try a wider search distance or a different area? </p>"
+					listingDetailsElement.innerHTML = "<p>No data was found for that search. Maybe try a wider search distance or a different area? </p>"
 				}
 				else{   
 					console.log(resp);
 					console.log(resp.responseText);
 					listingDetailsElement.innerHTML = '';
-					console.log(resp);
-					console.log(resp.responseText);
 					 var responseData = JSON.parse(resp.responseText);
+					 var replacementText = "";
 					 for (var i = 0; i < responseData.length; i++){
 						    var singleListing = responseData[i];
 						      createMarkerJSON(singleListing);
-						      listingDetailsElement.innerHTML += createCard(singleListing);
+						      replacementText = replacementText + createCard(singleListing);
 						}
-
+					 listingDetailsElement.innerHTML = replacementText;
 				}
-
-
-				// For each listing in collection
-				// Make a new card as is currently displayed
-				// Create a custom object to pass to
-				// "createMarker"
-				// Create a latlng with listing data, store
-				// that in custom object
-				// call createMarker
 			}
 		});
 	}

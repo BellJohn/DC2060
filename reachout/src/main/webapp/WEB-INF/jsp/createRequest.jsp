@@ -49,7 +49,7 @@
 										<label for="reqDesc">Description</label>
 										<textarea id="reqDesc" name="reqDesc" cols="40" rows="5"
 											placeholder="Tell us a little about your request. Please note, everyone on the site will be able to view this information."
-											class="form-control" maxlength="2000" minlength="50"
+											class="form-control" maxlength="2000" minlength="10"
 											required="required"></textarea>
 									</div>
 
@@ -86,7 +86,7 @@
 										<label for="reqCounty">County of Request (e.g.
 											Cambridgeshire)</label> <input id="reqCounty" name="reqCounty"
 											placeholder="County" type="text" class="form-control"
-											required="required" maxlength="26">
+											required="required" maxlength="30">
 									</div>
 
 									<!-- Request Priority -->

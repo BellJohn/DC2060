@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.reachout.dao.HibernateGroupDAOImpl;
 import com.reachout.dao.HibernateGroupListingDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
+import com.reachout.dao.HibernateLocationDAO;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
 import com.reachout.models.Listing;
@@ -79,14 +80,14 @@ public class ViewOneGroupController {
 		List<ListingGUIWrapper> guiReq = new ArrayList<>();
 		List<ListingGUIWrapper> guiSer = new ArrayList<>();
 
-
+		HibernateLocationDAO locationDAO = new HibernateLocationDAO();
 		// Build up data for presenting on the GUI
 		for (Listing l : allListings) {
 			if(l.getListingType().getOrdindal() == 0) {
-				guiReq.add(new ListingGUIWrapper(l, userDAO.selectByID(userID)));
+				guiReq.add(new ListingGUIWrapper(l, userDAO.selectByID(userID), locationDAO.selectLocationById(l.getLocationId())));
 			}
 			if(l.getListingType().getOrdindal() == 1 ) {
-				guiSer.add(new ListingGUIWrapper(l, userDAO.selectByID(userID)));
+				guiSer.add(new ListingGUIWrapper(l, userDAO.selectByID(userID), locationDAO.selectLocationById(l.getLocationId())));
 			}
 		}
 

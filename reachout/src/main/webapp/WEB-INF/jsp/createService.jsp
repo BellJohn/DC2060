@@ -50,7 +50,7 @@
 										<textarea id="serDesc" name="serDesc" cols="40" rows="5"
 											id="serDesc"
 											placeholder="Tell us a little about your service. Please note, everyone on the site will be able to view this information."
-											class="form-control" maxlength="2000" minlength="50"
+											class="form-control" maxlength="2000" minlength="10"
 											required="required"></textarea>
 									</div>
 
@@ -85,7 +85,7 @@
 										<label for="serCounty">County of Service (e.g.
 											Cambridgeshire)</label> <input id="serCounty" name="serCounty"
 											placeholder="Countyshire" type="text" class="form-control"
-											required="required" maxlength="26">
+											required="required" maxlength="30">
 									</div>
 									
 									<c:choose>

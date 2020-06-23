@@ -59,7 +59,7 @@ public class HibernateGroupListingDAOImpl{
 			query.setParameter("groupId", groupId);
 			List<GroupListing> groupListings = (List<GroupListing>) query.getResultList();
 
-			List<Listing> listings = new ArrayList<Listing>();
+			List<Listing> listings = new ArrayList<>();
 			HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl();
 
 			for (GroupListing gl : groupListings) {

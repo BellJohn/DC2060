@@ -59,6 +59,8 @@ public class JDBCLocationDAO {
 		int status = rs.getInt("LST_STATUS");
 		long createdDate = rs.getLong("LST_CREATE_DATE");
 		String priority = rs.getString("LST_PRIORITY");
+		int visibility = rs.getInt("LST_VISIBILITY");
+
 		int locId = rs.getInt("LOC_ID");
 		double locLat = rs.getDouble("LOC_LAT");
 		double locLong = rs.getDouble("LOC_LONG");
@@ -69,20 +71,19 @@ public class JDBCLocationDAO {
 		String dob = rs.getString("USERS_DOB");
 
 		Location location = new Location(locId, locLat, locLong);
-		System.out.println("new location: " + location);
 		Listing listing = null;
 		switch (type) {
 		case REQUEST:
 			// String title, String description, String county, String city, int userId,
 			// ListingStatus status,String priority
 			listing = new Request(title, description, county, city, userId, ListingStatus.getByOrdinal(status),
-					priority, listingId);
+					priority,visibility, locId);
 			break;
 		case SERVICE:
 			// String title, String description, String county, String city, int userId,
 			// ListingStatus status
 			listing = new Service(title, description, county, city, userId, ListingStatus.getByOrdinal(status),
-					listingId);
+					visibility, locId);
 			break;
 		default:
 			throw new SQLException("Unable to parse returned Listing data");

@@ -1,6 +1,5 @@
 package com.reachout.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -42,8 +41,6 @@ public class HibernateUserProfileDAOImpl {
 		return true;
 	}
 
-
-
 	/**
 	 * Fetches a profile from a user ID in the database
 	 *
@@ -59,7 +56,6 @@ public class HibernateUserProfileDAOImpl {
 			return null;
 		}
 	}
-
 
 	/**
 	 * Deletes from the database where the user has a given ID
@@ -81,25 +77,27 @@ public class HibernateUserProfileDAOImpl {
 		}
 	}
 
-	public List<UserProfile> getAllProfiles(){
-		List<UserProfile> profiles = new ArrayList<>();
-		try( Session session = HibernateUtil.getInstance().getSession()){
+	public List<UserProfile> getAllProfiles() {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT userprofile from UserProfile userprofile", UserProfile.class);
-			profiles = query.getResultList();
-			return profiles;
+			return query.getResultList();
 		}
 	}
 
 	/**
 	 * Fetches a profile picture from a user ID in the database
-	 *
+	 * Failure to find a profile pic returns the default "no-profile-pic.png"
 	 * @return
 	 */
 	public String getProfilePicById(int userID) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
-			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
+			Query query = session
+					.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userID", userID);
 			return (String) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug(String.format("No profile pic found for user id {%s}", userID));
+			return "no-profile-pic.png";
 		}
 	}
 

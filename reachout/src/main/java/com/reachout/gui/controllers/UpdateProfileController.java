@@ -163,7 +163,6 @@ public class UpdateProfileController {
 		int userId = userDAO.getUserIdByUsername(username);
 		String profilePicName = username + "_" + userId + extension;
 
-		UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
 
 		// Populate the user profile db
 		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();

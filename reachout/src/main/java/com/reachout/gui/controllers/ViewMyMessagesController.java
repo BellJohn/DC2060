@@ -56,7 +56,7 @@ public class ViewMyMessagesController {
 		List<Conversation> convos = getAllMyConversations(username);
 
 		//Default to the first conversation
-		if (StringUtils.isEmpty(previousUserSelected)) {
+		if (StringUtils.isEmpty(previousUserSelected) && !convos.isEmpty()) {
 			previousUserSelected = "" + convos.get(0).getUserOther();
 		}
 		mv.addObject("conversations", convos);

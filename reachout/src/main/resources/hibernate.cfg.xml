@@ -38,8 +38,8 @@
 		<mapping resource="com/reachout/models/Group.hbm.xml" />
 		<mapping resource="com/reachout/models/GroupMember.hbm.xml" />
 		<mapping resource="com/reachout/models/GroupListing.hbm.xml" />
-    <mapping resource="com/reachout/models/PasswordReset.hbm.xml" />
-    <mapping resource="com/reachout/models/Location.hbm.xml" />
+    	<mapping resource="com/reachout/models/PasswordReset.hbm.xml" />
+    	<mapping resource="com/reachout/models/Location.hbm.xml" />
 
 	</session-factory>
 

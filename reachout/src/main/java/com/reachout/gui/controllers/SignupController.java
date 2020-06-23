@@ -115,7 +115,8 @@ public class SignupController {
 			} catch (Exception e) {
 				result.addError("Duplicate Username", "The username" + username + " is already taken, please try again.");
 				result.setOutcome(false);
-				logger.error("Unable to save the user: This username is already taken");
+				logger.error("Unable to save the user: This username is already taken", e);
+				saveUserSuccess = false;
 			}
 		}
 		// If we saved the new user, we should log them in
@@ -123,13 +124,13 @@ public class SignupController {
 			try {
 				request.login(username, password);
 
+				// send new email to the user to confirm they have signed up
+				EmailHandler.generateAndSendEmail(email, "emails/signupEmail.html", "Welcome to ReachOut...");
 			} catch (ServletException e) {
 				logger.error("Unable to log in user after account creation", e);
 			}
 		}
 
-		// send new email to the user to confirm they have signed up
-		EmailHandler.generateAndSendEmail(email, "emails/signupEmail.html", "Welcome to ReachOut...", username);
 
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);

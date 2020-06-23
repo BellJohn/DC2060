@@ -30,7 +30,6 @@ public class HibernateLocationDAO {
 			id = (Integer) session.save(location);
 			session.flush();
 			session.getTransaction().commit();
-			System.out.println("Stored with id: " +id);
 		} catch (IllegalStateException | RollbackException e) {
 			return null;
 		}
@@ -60,6 +59,19 @@ public class HibernateLocationDAO {
 			logger.debug(String.format("No location found with id [%s]", locationId), e);
 		}
 		return location;
+	}
+
+	public boolean saveOrUpdate(Location location) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			session.saveOrUpdate(location);
+			session.flush();
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			return false;
+		}
+		return true;
+		
 	}
 	
 }
