@@ -43,7 +43,7 @@ class TestHibernateRequestDAOImpl {
 	 */
 	@Test
 	void testSave() {
-		Request request = new Request(title, description, county, city, userId, priority);
+		Request request = new Request(title, description, county, city, userId, priority, 0);
 		System.out.println(request);
 		HibernateRequestDAOImpl listingDAO = new HibernateRequestDAOImpl();
 		assertTrue(listingDAO.save(request));
@@ -55,7 +55,7 @@ class TestHibernateRequestDAOImpl {
 	 */
 	@Test
 	void testDelete() {
-		Request request = new Request(title, description, county, city, userId, priority);
+		Request request = new Request(title, description, county, city, userId, priority, 1);
 		System.out.println(request);
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
 		assertTrue(reqDAO.save(request));
@@ -68,7 +68,7 @@ class TestHibernateRequestDAOImpl {
 	 */
 	@Test
 	void testUpdate() {
-		Request request = new Request(title, description, county, city, userId, priority);
+		Request request = new Request(title, description, county, city, userId, priority, 0);
 		String newCityData = "NOT THE TEST DATA";
 		System.out.println(request);
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();

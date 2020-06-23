@@ -25,8 +25,8 @@ public class Request extends Listing {
 	 * @param priority
 	 */
 	public Request(String title, String description, String county, String city, int userId, ListingStatus status,
-			String priority) {
-		this(title, description, county, city, userId, priority);
+			String priority, int visibility) {
+		this(title, description, county, city, userId, priority, visibility);
 		this.status = status;
 	}
 
@@ -39,8 +39,8 @@ public class Request extends Listing {
 	 * @param county
 	 * @param city
 	 */
-	public Request(String title, String description, String county, String city, int userId, String priority) {
-		super(title, description, county, city, userId, priority);
+	public Request(String title, String description, String county, String city, int userId, String priority, int visibility) {
+		super(title, description, county, city, userId, priority, visibility);
 		this.listingType = ListingType.REQUEST;
 		this.priority = priority;
 

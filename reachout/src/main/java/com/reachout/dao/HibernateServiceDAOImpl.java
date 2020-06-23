@@ -98,6 +98,20 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		}
 	}
 
+	public boolean deleteById(int serId) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createNativeQuery("DELETE FROM LISTINGS WHERE LST_ID = :serID");
+			query.setParameter("serId", serId);
+			query.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			return false;
+		}
+		return true;
+
+	}
+
 	public boolean update(Service service) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
@@ -149,7 +163,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	/**
-	 * Returns all open services made by anyone other than the current user
+	 * Returns all public open services made by anyone other than the current user
 	 * 
 	 * @param userId the users ID
 	 * @return List of services made by all other users
@@ -158,7 +172,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		ArrayList<Service> returnList = new ArrayList<>();
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
-					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status",
+					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status AND LST_VISIBILITY = 1",
 					Service.class);
 			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
 			query.setParameter("userId", userId);
@@ -171,5 +185,18 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 			}
 		}
 		return returnList;
+	}
+
+	public int getNewServiceId(int userId) {
+		Integer intFound = -1;
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			Query query = session.createNativeQuery("SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
+			query.setParameter("userId", userId);
+			intFound = (Integer) (query.getSingleResult());
+		} catch (NoResultException e) {
+			logger.debug(String.format("No service found for user: " + userId));
+		}
+		return intFound;
 	}
 }

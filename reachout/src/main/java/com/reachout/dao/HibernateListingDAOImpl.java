@@ -99,7 +99,7 @@ public abstract class HibernateListingDAOImpl {
 	 */
 	public Listing selectListingByIDofUnknownType(int listingID) {
 		Listing listingToReturn = null;
-		try (Session session = HibernateUtil.getInstance().getSession()) {
+		try (Session session = HibernateUtil.getInstance().getSession()) { 
 			session.beginTransaction();
 			Query query = session.createSQLQuery("SELECT LST_TYPE FROM LISTINGS WHERE LST_ID = :lst_id");
 			query.setParameter("lst_id", listingID);
