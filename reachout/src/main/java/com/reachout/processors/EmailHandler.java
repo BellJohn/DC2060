@@ -34,7 +34,8 @@ public class EmailHandler {
 	private EmailHandler() {
 	}
 
-	public static void generateAndSendEmail(String email, String filename, String emailSubject) {
+	public static void generateAndSendEmail(String email, String filename, String emailSubject, String username) {
+
 		// get actual path of file
 		String emailFile = PostReader.getFilePath(filename);
 		StringBuilder sb = new StringBuilder();
@@ -45,6 +46,9 @@ public class EmailHandler {
 			// Read all contents of the file.
 			String inputLine = null;
 			while ((inputLine = rd.readLine()) != null)
+				/*if(inputLine.contains("USERNAME")) {
+					inputLine = inputLine.replaceAll("USERNAME", username);
+				} */
 				sb.append((inputLine));
 		} catch (IOException ex) {
 			logger.error(ex);
@@ -68,6 +72,7 @@ public class EmailHandler {
 
 			generateMailMessage.setContent(sb.toString(), "text/html");
 
+
 			logger.debug("Mail Session has been created successfully.");
 
 			// Step3
@@ -76,8 +81,9 @@ public class EmailHandler {
 
 			// Enter your correct gmail UserID and Password
 
-			transport.connect("smtp.gmail.com", "reachoutapplication20@gmail.com", "Reachout2020");
+			transport.connect("smtp.gmail.com", "reachoutapplication20@gmail.com", "LetterBox232");
 			transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+			logger.debug("Sign up email sent to user");
 		} catch (MessagingException e) {
 			logger.error(e);
 		} finally {
@@ -96,7 +102,7 @@ public class EmailHandler {
 		//get actual path of file
 		String emailFile = PostReader.getFilePath(filename);
 		StringBuilder sb = new StringBuilder();
-		
+
 		BufferedReader rd = null;
 		try {
 			// Open the file for reading.

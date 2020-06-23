@@ -15,7 +15,7 @@ public class Request extends Listing {
 	 * Fully formed constructor including request status. Calls other partially
 	 * formed constructor which handles setting this Listing child type as a Request
 	 * Type for the database
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param county
@@ -25,22 +25,22 @@ public class Request extends Listing {
 	 * @param priority
 	 */
 	public Request(String title, String description, String county, String city, int userId, ListingStatus status,
-			String priority, int locationId) {
-		this(title, description, county, city, userId, priority, locationId);
+			String priority, int visibility) {
+		this(title, description, county, city, userId, priority, visibility, locationId);
 		this.status = status;
 	}
-	
+
 	/**
 	 * Fully formed constructor minus request status. Handles the setting of this
 	 * Listing child type to that of a Request Type
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param county
 	 * @param city
 	 */
-	public Request(String title, String description, String county, String city, int userId, String priority, int locationId) {
-		super(title, description, county, city, userId, priority, locationId);
+	public Request(String title, String description, String county, String city, int userId, String priority, int visibility, int locationId) {
+		super(title, description, county, city, userId, priority, visibility);
 		this.listingType = ListingType.REQUEST;
 		this.priority = priority;
 

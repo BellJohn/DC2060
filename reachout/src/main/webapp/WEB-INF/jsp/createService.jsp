@@ -5,6 +5,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ include file="/components/stylesheets.jsp"%>
 <title>ReachOut | Create Service</title>
 </head>
@@ -29,7 +30,8 @@
 							</h2>
 
 							<!-- New Service Form -->
-							<form action="createService" method="POST" id="createService">
+							<form:form action="createService" method="POST"
+								id="createService">
 								<sec:csrfInput />
 								<fieldset>
 
@@ -78,7 +80,6 @@
 											required="required" placeholder="Town city" type="text"
 											class="form-control" maxlength="60">
 									</div>
-
 									<!-- Service County -->
 									<div class="form-group">
 										<label for="serCounty">County of Service (e.g.
@@ -86,7 +87,39 @@
 											placeholder="Countyshire" type="text" class="form-control"
 											required="required" maxlength="26">
 									</div>
+									
+									<c:choose>
+										<c:when test="${!empty userGroups}">
 
+											<!-- Public Visibility -->
+											<div class="form-group">
+											<label for="publicVsisibility">Visibile to Public</label>
+												<input type="checkbox" name="serVisibility"
+													value="public"> <br>
+											</div>
+
+											<div class="form-group">
+											<label for="groupVisibility">Visible in selected group</label>
+												<input type="checkbox" name="serVisibility"
+													value="group"> <br>
+											</div>
+
+											<!-- Group Visibility -->
+											<div class="form-group">
+												<label for="groupVisibility">Visible to Group</label><br>
+												<select id="groupVisibility" name="group"
+													class="form-control">
+													<option disabled selected value> -- select a group -- </option>
+													<c:forEach var="hs" items="${userGroups}">
+														<option ${hs == userGroup ? 'selected' : ''}><c:set
+																var="g" value="${hs}" />
+															<c:out value="${g}" /></option>
+													</c:forEach>
+												</select>
+											</div>
+
+										</c:when>
+									</c:choose>
 
 									<!-- Create Button -->
 									<button name="submit" type="submit"
@@ -94,7 +127,7 @@
 										Service</button>
 
 								</fieldset>
-							</form>
+							</form:form>
 						</div>
 					</c:when>
 					<c:otherwise>

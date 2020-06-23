@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.models;
 
@@ -16,7 +16,7 @@ public class Service extends Listing {
 	 * Fully formed constructor including service status. Calls other partially
 	 * formed constructor which handles setting this Listing child type as a Service
 	 * Type for the database
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param county
@@ -24,22 +24,22 @@ public class Service extends Listing {
 	 * @param userId
 	 * @param status
 	 */
-	public Service(String title, String description, String county, String city, int userId, ListingStatus status, int locationId) {
-		this(title, description, county, city, userId, locationId);
+	public Service(String title, String description, String county, String city, int userId, ListingStatus status, int visibility, int locationId) {
+		this(title, description, county, city, userId, visibility);
 		this.status = status;
 	}
 
 	/**
 	 * Fully formed constructor minus request status. Handles the setting of this
 	 * Listing child type to that of a Service Type
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param county
 	 * @param city
 	 */
-	public Service(String title, String description, String county, String city, int userId, int locationId) {
-		super(title, description, county, city, userId, priority, locationId);
+	public Service(String title, String description, String county, String city, int userId, int visibility, int locationId) {
+		super(title, description, county, city, userId, priority, visibility);
 		this.listingType = ListingType.SERVICE;
 	}
 

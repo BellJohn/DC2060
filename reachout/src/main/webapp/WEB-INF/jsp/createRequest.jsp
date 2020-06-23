@@ -5,6 +5,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ include file="/components/stylesheets.jsp"%>
 <title>ReachOut | Create Request</title>
 </head>
@@ -29,7 +30,8 @@
 							</h2>
 
 							<!-- New Request Form -->
-							<form action="createRequest" method="POST" id="createRequest">
+							<form:form action="createRequest" method="POST"
+								id="createRequest">
 								<sec:csrfInput />
 								<fieldset>
 
@@ -87,6 +89,7 @@
 											required="required" maxlength="26">
 									</div>
 
+									<!-- Request Priority -->
 									<div class="form-group row">
 										<label for="reqPriority" class="col-4 col-form-label">Priority
 										</label>
@@ -98,13 +101,46 @@
 											</select>
 										</div>
 									</div>
+
+									<c:choose>
+										<c:when test="${!empty userGroups}">
+
+											<!-- Public Visibility -->
+											<div class="form-group">
+												<label for="publicVsisibility">Visibile to Public</label> <input
+													type="checkbox" name="reqVisibility" value="public">
+
+											</div>
+
+											<div class="form-group">
+												<label for="groupVisibility">Visible in selected group</label> <input type="checkbox" name="reqVisibility"
+													value="group"> <br>
+											</div>
+
+											<!-- Group Visibility -->
+											<div class="form-group">
+												<label for="group">Visible to Group</label><br> <select
+													id="group" name="group" class="form-control">
+													<option disabled selected value>-- select a group
+														--</option>
+													<c:forEach var="hs" items="${userGroups}">
+														<option ${hs == userGroup ? 'selected' : ''}><c:set
+																var="g" value="${hs}" />
+															<c:out value="${g}" /></option>
+													</c:forEach>
+												</select>
+											</div>
+
+										</c:when>
+									</c:choose>
+									<div class="form-group">
 									<!-- Create Button -->
 									<button name="submit" type="submit"
 										class="btn btn-primary btn-large btn-block" id="submit">Create
 										Request</button>
-
+										</div>
 								</fieldset>
-							</form>
+							</form:form>
 						</div>
 					</c:when>
 					<c:otherwise>

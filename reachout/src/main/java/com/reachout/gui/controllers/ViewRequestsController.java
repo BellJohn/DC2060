@@ -43,7 +43,7 @@ public class ViewRequestsController {
 			username = ((SystemUser) auth.getPrincipal()).getUsername();
 		} else {
 			username = (String) auth.getPrincipal();
-		}
+		} 
 		int userId = userDAO.getUserIdByUsername(username);
 
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
@@ -71,4 +71,5 @@ public class ViewRequestsController {
 
 		return mv;
 	}
+	
 }

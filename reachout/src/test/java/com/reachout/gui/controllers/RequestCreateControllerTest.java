@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.gui.controllers;
 
@@ -79,7 +79,10 @@ class RequestCreateControllerTest {
 		String city = "worcester";
 		String priority = "Medium";
 		String address = "High St";
-		ModelAndView result = rcc.submitForm(title, description, county, city, priority, address, mockedRequest);
+		String visibility = "visible";
+		
+		ModelAndView result = rcc.submitForm(title, description, county, city, priority, visibility, address, mockedRequest);
 	}
+
 
 }

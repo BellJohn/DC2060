@@ -29,7 +29,7 @@ import com.reachout.processors.SystemPropertiesService;
 
 /**
  * Used for converting updating a user's profile
- * 
+ *
  * @author Jess
  *
  */
@@ -100,12 +100,11 @@ public class UpdateProfileController {
 		mv.addObject("healthStatus", healthStatus);
 		mv.addObject("profilePic", profilePic);
 		return mv;
-
 	}
 
 	/**
 	 * Update user profile. Parameters are profilePic, bio, healthStatus
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 * @throws IOException
@@ -164,6 +163,8 @@ public class UpdateProfileController {
 		int userId = userDAO.getUserIdByUsername(username);
 		String profilePicName = username + "_" + userId + extension;
 
+		UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
+
 		// Populate the user profile db
 		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
 		UserProfile profile = userProfileDAO.getProfileById(userId);
@@ -171,7 +172,7 @@ public class UpdateProfileController {
 			profile = new UserProfile();
 			profile.setUserId(userId);
 		}
-		
+
 		profile.setBio(bio);
 		profile.setHealthStatus(healthStatus);
 		if (changedImage) {
@@ -200,7 +201,7 @@ public class UpdateProfileController {
 	/**
 	 * Attempts to save the file to disk. On success returns true, failures return
 	 * false
-	 * 
+	 *
 	 * @param profilePic
 	 * @param profilePicName
 	 * @return

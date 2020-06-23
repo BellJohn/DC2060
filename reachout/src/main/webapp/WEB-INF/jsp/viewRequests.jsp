@@ -308,8 +308,6 @@
 				<div id="fullListingDetails">
 				<c:forEach items="${liveRequests}" var="request">
 
-
-
 					<div class="card card-request">
 						<div class="row">
 							<h4 class="card-title col-md-3">${request.getTitle()}</h4>

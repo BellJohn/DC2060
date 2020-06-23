@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.dao;
 
@@ -29,14 +29,14 @@ public abstract class HibernateListingDAOImpl {
 
 	/**
 	 * Returns all the possible listings in the system
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract List<Listing> getAllListings();
 
 	/**
 	 * Deletes a request object from the database that has been passed.
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -57,9 +57,9 @@ public abstract class HibernateListingDAOImpl {
 	 * the relevant listing status simultaneously. </br>
 	 * Errors in this result in rollback </br>
 	 * Returns true/false success indicator
-	 * 
+	 *
 	 * @param dao
-	 * 
+	 *
 	 * @param listing
 	 * @param user
 	 * @return
@@ -109,7 +109,7 @@ public abstract class HibernateListingDAOImpl {
 		}
 		return userID;
 	}
-	
+
 	/**
 	 * Returns either a <b>Service</b> or <b>Request</b> by ID
 	 * @param listingID

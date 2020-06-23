@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.testUtils;
 
@@ -103,7 +103,7 @@ public class TestUtils {
 	 * <li>Email: email@email.com</li>
 	 * <li>DOB: 01/01/1970</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return test User
 	 */
 	public static User makeTestUser() {
@@ -128,13 +128,13 @@ public class TestUtils {
 	 * User must be persisted in the database already as this relies on the user
 	 * having an assigned ID already. Defaults the location ID to -1 which will not
 	 * link to any genuine locations in the db
-	 * 
+	 *
 	 * @param user
 	 * @return populated Request
 	 */
 	public static Request makeTestRequestForUser(User user) {
 		return new Request(String.format("testRequestFor%s", user.getUsername()), "Test Request", "count", "city",
-				user.getId(), "Urgent", -1);
+				user.getId(), "Urgent", 1, -1);
 	}
 
 	/**
@@ -142,13 +142,13 @@ public class TestUtils {
 	 * User must be persisted in the database already as this relies on the user
 	 * having an assigned ID already. Defaults the location ID to -1 which will not
 	 * link to any genuine locations in the db
-	 * 
+	 *
 	 * @param user
 	 * @return populated Service
 	 */
 	public static Service makeTestServiceForUser(User user) {
 		return new Service(String.format("testServiceFor%s", user.getUsername()), "Test Request", "count", "city",
-				user.getId(), -1);
+				user.getId(), 0, -1);
 
 	}
 
