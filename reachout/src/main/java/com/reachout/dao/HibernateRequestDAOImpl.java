@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -77,7 +79,8 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(request);
-			Query assingedListingsQuery = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
+			Query assingedListingsQuery = session
+					.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
 			assingedListingsQuery.setParameter("lst_id", request.getId());
 			assingedListingsQuery.executeUpdate();
 			new HibernateGroupListingDAOImpl().groupListingDelete(request.getId());
@@ -120,7 +123,6 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		allResults.addAll(serDAO.getAllServices());
 		return allResults;
 	}
-
 
 	public boolean deleteById(int reqId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
@@ -215,7 +217,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 				returnList.add(r);
 			}
 		} catch (Exception e) {
-			logger.error("Failed to fetch requests for user",e);
+			logger.error("Failed to fetch requests for user", e);
 		}
 
 		return returnList;
@@ -225,7 +227,8 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		Integer intFound = -1;
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
-			Query query = session.createNativeQuery("SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
+			Query query = session.createNativeQuery(
+					"SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
 			query.setParameter("userId", userId);
 			intFound = (Integer) (query.getSingleResult());
 			logger.debug("Request listing found with id: " + intFound);
@@ -234,5 +237,29 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		}
 		return intFound;
 
+	}
+
+	/**
+	 * Fetches all request IDs which the user can view publicly
+	 * @param userId
+	 * @return
+	 */
+	public Set<Integer> getAllRequestIDsForDisplay(int userId) {
+		Set<Integer> returnList = new HashSet<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT request FROM Request request where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status AND LST_VISIBILITY = 1",
+					Request.class);
+			query.setParameter("lstType", ListingType.REQUEST.getOrdindal());
+			query.setParameter("userId", userId);
+			query.setParameter("status", 0);
+			List<?> results = query.getResultList();
+			for (Object obj : results) {
+				if (obj instanceof Request) {
+					returnList.add(((Request) obj).getId());
+				}
+			}
+		}
+		return returnList;
 	}
 }

@@ -222,7 +222,7 @@
 				// Clear out the existing visible listings
 				var listingDetailsElement = document.getElementById('fullListingDetails');
 				if(resp.status != 200){
-					listingDetailsElement.innerHTML("Something went wrong with the data recovery, refresh the page and try again");
+					listingDetailsElement.innerHTML = "Something went wrong with the data recovery, refresh the page and try again";
 				}
 				if (resp.responseText == "[]"){   
 					listingDetailsElement.innerHTML = "<p>No data was found for that search. Maybe try a wider search distance or a different area? </p>"
@@ -299,44 +299,54 @@
 				</div>
 				<div id="map"></div>
 				<div id="fullListingDetails">
-				<c:forEach items="${liveRequests}" var="request">
-
-					<div class="card card-request">
-						<div class="row">
-							<h4 class="card-title col-md-3">${request.getTitle()}</h4>
-							<div class="col-md-6"></div>
-							<h4 class="card-title col-md-3" style="text-align: right;">${request.getPriority()}</h4>
+					<c:if test="${empty liveRequests}">
+						<div class="card card-request">
+							<h4 class="card-title col-md-3">There are no Requests
+								available for you to view!</h4>
+							<h6 class="card-subtitle mb-2 text-muted">
+								<small>Note, your own Requests and Services are not
+									visible to you on the map</small>
+							</h6>
 						</div>
+					</c:if>
+					<c:forEach items="${liveRequests}" var="request">
 
-						<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},
-							${request.getCounty()}</h6>
-						<p class="card-text">${request.getFormattedDescription()}</p>
-
-						<hr>
-
-						<div class="row">
-							<div class="col-lg-9">
-								<p class="text-muted">Created by ${request.getUsername()} on
-									${request.getCreatedDate()} at ${request.getCreatedTime()}.</p>
+						<div class="card card-request">
+							<div class="row">
+								<h4 class="card-title col-md-3">${request.getTitle()}</h4>
+								<div class="col-md-6"></div>
+								<h4 class="card-title col-md-3" style="text-align: right;">${request.getPriority()}</h4>
 							</div>
 
-							<div class="col-lg-3">
-								<form action="viewListing" method="POST">
-									<sec:csrfInput />
-									<input type="hidden" id="listingType" name="listingType"
-										value="${request.getListingType()}" /> <input type="hidden"
-										id="listingID" name="listingID"
-										value="${request.getListingID()}" />
-									<button class="btn btn-info btn-block">
-										<span class="fa fa-info"></span> View Details
-									</button>
-								</form>
+							<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},
+								${request.getCounty()}</h6>
+							<p class="card-text">${request.getFormattedDescription()}</p>
+
+							<hr>
+
+							<div class="row">
+								<div class="col-lg-9">
+									<p class="text-muted">Created by ${request.getUsername()}
+										on ${request.getCreatedDate()} at ${request.getCreatedTime()}.</p>
+								</div>
+
+								<div class="col-lg-3">
+									<form action="viewListing" method="POST">
+										<sec:csrfInput />
+										<input type="hidden" id="listingType" name="listingType"
+											value="${request.getListingType()}" /> <input type="hidden"
+											id="listingID" name="listingID"
+											value="${request.getListingID()}" />
+										<button class="btn btn-info btn-block">
+											<span class="fa fa-info"></span> View Details
+										</button>
+									</form>
+								</div>
+
 							</div>
-
 						</div>
-					</div>
 
-				</c:forEach>
+					</c:forEach>
 				</div>
 			</div>
 			<div class="col-lg-2"></div>

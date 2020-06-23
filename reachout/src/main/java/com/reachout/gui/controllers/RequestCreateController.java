@@ -63,11 +63,10 @@ public class RequestCreateController {
 		}
 		userId = userDAO.getUserIdByUsername(username);
 
-
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 
-		if ( (userGroups = groupMemberDAO.getUserGroups(userId)) != null) {
+		if ((userGroups = groupMemberDAO.getUserGroups(userId)) != null) {
 			ArrayList<String> groupNames = new ArrayList<String>();
 
 			for (Group g : userGroups) {
@@ -95,18 +94,17 @@ public class RequestCreateController {
 	@PostMapping
 	public ModelAndView submitForm(@RequestParam(name = "reqTitle") String title,
 			@RequestParam(name = "reqDesc", required = false) String description,
-			@RequestParam(name = "reqCounty") String county,
-			@RequestParam(name = "reqPriority") String priority,
+			@RequestParam(name = "reqCounty") String county, @RequestParam(name = "reqPriority") String priority,
 			@RequestParam(name = "group", required = false) String groupVisibility,
 			@RequestParam(name = "reqCity", required = false) String city,
-			@RequestParam(name = "reqStreet", required = true) String address,HttpServletRequest request) {
+			@RequestParam(name = "reqStreet", required = true) String address, HttpServletRequest request) {
 
 		boolean createSuccess = false;
 		int publicVisibility = 0;
 		Request newRequest = new Request();
 		String listingCreateSuccess = "na";
 		int listingId = 0;
-		
+
 		LocationFactory locationFactory = new LocationFactory();
 		Location location = null;
 		try {
@@ -122,30 +120,37 @@ public class RequestCreateController {
 		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
 
-		//check if user is in any groups, other wise make request public
+		// check if user is in any groups, other wise make request public
 		HibernateGroupMemberDAOImpl groupMemDAO = new HibernateGroupMemberDAOImpl();
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
-			newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
+			newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+					location.getLocId());
 			createSuccess = reqDAO.save(newRequest);
 			logger.info("Public request created");
 		}
 
 		else {
-			//if a user in a member of a group check if they want the post public, private or both.
+			// if a user in a member of a group check if they want the post public, private
+			// or both.
 			boolean listingCreateSuccessBool = false;
-			List<String> visibility= Arrays.asList(request.getParameterValues("reqVisibility")) ;
-			if (visibility.contains("public") && !visibility.contains("group")){
+			List<String> visibility = Arrays.asList(request.getParameterValues("reqVisibility"));
+			if (visibility.isEmpty()) {
+				visibility.add("public");
+			}
+			if (visibility.contains("public") && !visibility.contains("group")) {
 				publicVisibility = 1;
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
+				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+						location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				logger.info("Public request created");
 			}
 
-			//visible to group and public
+			// visible to group and public
 			if (visibility.contains("group") && visibility.contains("public")) {
 				publicVisibility = 1;
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
+				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+						location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				logger.info("Public request created");
 				listingId = reqDAO.getNewRequestId(userId);
@@ -154,16 +159,17 @@ public class RequestCreateController {
 					Group group = groupDAO.selectByName(groupVisibility);
 					GroupListing gl = new GroupListing(group.getId(), listingId);
 					listingCreateSuccessBool = glDAO.save(gl);
-				}
-				catch (Exception e) {
-					logger.error("Could not find group: " + groupVisibility) ;
+				} catch (Exception e) {
+					logger.error("Could not find group: " + groupVisibility);
 				}
 
 			}
 
-			//if they have selected visibile only within a group, get the listingID and save to group listing table
+			// if they have selected visibile only within a group, get the listingID and
+			// save to group listing table
 			if (visibility.contains("group") && !(visibility.contains("public"))) {
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility, location.getLocId());
+				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+						location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				listingId = reqDAO.getNewRequestId(userId);
 				logger.info("Group Request created with ID " + listingId);
@@ -171,34 +177,31 @@ public class RequestCreateController {
 					Group group = groupDAO.selectByName(groupVisibility);
 					GroupListing gl = new GroupListing(group.getId(), listingId);
 					listingCreateSuccessBool = glDAO.save(gl);
+				} catch (Exception e) {
+					logger.error("Could not find group: " + groupVisibility);
 				}
-				catch (Exception e) {
-					logger.error("Could not find group: " + groupVisibility) ;
-				}
-				if(listingCreateSuccessBool == false) {
+				if (listingCreateSuccessBool == false) {
 					logger.error("Could not add entry to GroupListing table");
 					listingCreateSuccess = "unsuccessful";
-				}
-				else {
+				} else {
 					listingCreateSuccess = "success";
 					logger.info("Success, group listing added");
 				}
 			}
 		}
 
-		if((createSuccess == false) && (listingCreateSuccess == "success")) {
+		if ((createSuccess == false) && (listingCreateSuccess == "success")) {
 			logger.error("Error - unable to create service");
-			if(listingCreateSuccess == "success") {
+			if (listingCreateSuccess == "success") {
 				glDAO.groupListingDelete(listingId);
 			}
 		}
 
-		if((listingCreateSuccess == "unsuccessful") && (createSuccess == true)) {
+		if ((listingCreateSuccess == "unsuccessful") && (createSuccess == true)) {
 			if (reqDAO.deleteById(listingId)) {
 				createSuccess = false;
 				logger.debug("Listing deleted as group listing was unable to be created");
-			}
-			else {
+			} else {
 				logger.debug("Unable to delete request listing and unable to create the group listing");
 			}
 		}

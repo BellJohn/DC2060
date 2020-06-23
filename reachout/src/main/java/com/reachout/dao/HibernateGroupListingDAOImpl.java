@@ -4,10 +4,10 @@
 package com.reachout.dao;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
@@ -15,18 +15,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 
-import com.reachout.models.Group;
 import com.reachout.models.GroupListing;
-import com.reachout.models.GroupMember;
 import com.reachout.models.Listing;
-import com.reachout.models.ListingType;
-import com.reachout.models.Service;
 
 /**
  * @author Jessica
  *
  */
-public class HibernateGroupListingDAOImpl{
+public class HibernateGroupListingDAOImpl {
 
 	Logger logger = LogManager.getLogger(HibernateGroupListingDAOImpl.class);
 
@@ -55,7 +51,8 @@ public class HibernateGroupListingDAOImpl{
 	 */
 	public List<Listing> getGroupListings(int groupId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
-			Query query = session.createQuery("SELECT groupListing FROM GroupListing groupListing WHERE GL_GRP_ID = :groupId");
+			Query query = session
+					.createQuery("SELECT groupListing FROM GroupListing groupListing WHERE GL_GRP_ID = :groupId");
 			query.setParameter("groupId", groupId);
 			List<GroupListing> groupListings = (List<GroupListing>) query.getResultList();
 
@@ -64,11 +61,32 @@ public class HibernateGroupListingDAOImpl{
 
 			for (GroupListing gl : groupListings) {
 				listings.add(serviceDAO.selectListingByIDofUnknownType(gl.getListingId()));
-			}		
+			}
 			return listings;
 		}
 	}
 
+	/**
+	 * Returns a collection of listingsIDs which a certain group has rights to see
+	 * 
+	 * @return
+	 */
+	public Set<Integer> getGroupListingsIds(int groupId) {
+		Set<Integer> returnVal = new HashSet<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT groupListing.listingId FROM GroupListing groupListing WHERE GL_GRP_ID = :groupId");
+			query.setParameter("groupId", groupId);
+			List<?> results = query.getResultList();
+
+			for (Object result : results) {
+				if (result instanceof Integer) {
+					returnVal.add((Integer) result);
+				}
+			}
+			return returnVal;
+		}
+	}
 
 	public boolean groupListingDelete(int listingId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
@@ -83,8 +101,5 @@ public class HibernateGroupListingDAOImpl{
 		}
 		return true;
 	}
-
-
-
 
 }

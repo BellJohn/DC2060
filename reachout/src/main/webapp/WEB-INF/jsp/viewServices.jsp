@@ -221,7 +221,7 @@
 				// Clear out the existing visible listings
 				var listingDetailsElement = document.getElementById('fullListingDetails');
 				if(resp.status != 200){
-					listingDetailsElement.innerHTML("Something went wrong with the data recovery, refresh the page and try again");
+					listingDetailsElement.innerHTML = "Something went wrong with the data recovery, refresh the page and try again";
 				}
 				if (resp.responseText == "[]"){   
 					listingDetailsElement.innerHTML = "<p>No data was found for that search. Maybe try a wider search distance or a different area? </p>"
@@ -298,6 +298,16 @@
 				</div>
 				<div id="map"></div>
 				<div id="fullListingDetails">
+					<c:if test="${empty liveServices}">
+						<div class="card card-request">
+							<h4 class="card-title col-md-3">There are no Requests
+								available for you to view!</h4>
+							<h6 class="card-subtitle mb-2 text-muted">
+								<small>Note, your own Requests and Services are not
+									visible to you on the map</small>
+							</h6>
+						</div>
+					</c:if>
 					<c:forEach items="${liveServices}" var="service">
 
 						<div class="card card-request">

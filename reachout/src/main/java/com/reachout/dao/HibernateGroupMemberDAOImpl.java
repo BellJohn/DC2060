@@ -19,9 +19,6 @@ import org.hibernate.Session;
 
 import com.reachout.models.Group;
 import com.reachout.models.GroupMember;
-import com.reachout.models.Listing;
-import com.reachout.models.ListingType;
-import com.reachout.models.Service;
 
 /**
  * @author Jessica
@@ -177,7 +174,7 @@ public class HibernateGroupMemberDAOImpl {
 			query.setParameter("groupId", groupId);
 
 			ArrayList<GroupMember> results = (ArrayList<GroupMember>) query.getResultList();
-			if (results.size() == 0) {
+			if (results.isEmpty()) {
 				return null;
 			} else {
 				return results.get(0);
@@ -201,7 +198,7 @@ public class HibernateGroupMemberDAOImpl {
 	}
 
 	// Get all requests with a value of 0 (pending) for a specific group
-	public ArrayList<GroupMember> getPendingMembers(int groupID) {
+	public List<GroupMember> getPendingMembers(int groupID) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT groupMember FROM GroupMember groupMember WHERE GM_G_ID = :group_id AND GM_U_STATUS_ID = 0");
@@ -210,8 +207,8 @@ public class HibernateGroupMemberDAOImpl {
 			return pendingUsers;
 
 		} catch (NoResultException e) {
-			logger.error(String.format("No pending requests for this group: " + groupID), e);
-			return null;
+			logger.error(String.format("No pending requests for this group: {%s}", groupID), e);
+			return new ArrayList<>();
 		}
 	}
 

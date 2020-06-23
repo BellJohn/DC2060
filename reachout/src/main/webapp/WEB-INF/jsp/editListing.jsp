@@ -39,7 +39,7 @@
 									<label for="Desc">Description</label>
 									<textarea id="Desc" name="Desc" cols="40" rows="5"
 										placeholder="Description" class="form-control"
-										maxlength="2000" minlength="10" required="required">${listing.description}</textarea>
+										maxlength="2000" minlength="10" >${listing.description}</textarea>
 								</div>
 
 								<!-- Remaining Characters -->
@@ -57,7 +57,7 @@
 								<div class="form-group">
 									<label for="City">Street of Listing (e.g. Downing
 										Street)</label> <input id="Street" name="Street" placeholder="Street"
-										required="required" type="text" class="form-control"
+										required="required" type="text" class="form-control" value=" "
 										maxlength="60">
 								</div>
 

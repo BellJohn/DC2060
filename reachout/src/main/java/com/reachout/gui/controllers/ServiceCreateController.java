@@ -134,6 +134,9 @@ public class ServiceCreateController {
 
 			boolean listingCreateSuccessBool = false;
 			List<String> visibility = Arrays.asList(request.getParameterValues("serVisibility"));
+			if(visibility.isEmpty()) {
+				visibility.add("public");
+			}
 			// service to public and group visibility
 			if (visibility.contains("public") && (visibility.contains("group"))) {
 				publicVisibility = 1;

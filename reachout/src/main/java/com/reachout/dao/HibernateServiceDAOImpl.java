@@ -4,7 +4,10 @@
 package com.reachout.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -17,6 +20,7 @@ import org.hibernate.Session;
 
 import com.reachout.models.Listing;
 import com.reachout.models.ListingType;
+import com.reachout.models.Request;
 import com.reachout.models.Service;
 
 /**
@@ -198,8 +202,34 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 			query.setParameter("userId", userId);
 			intFound = (Integer) (query.getSingleResult());
 		} catch (NoResultException e) {
-			logger.debug(String.format("No service found for user: " + userId));
+			logger.debug(String.format("No service found for user: %s", userId));
 		}
 		return intFound;
+	}
+
+	/**
+	 * Fetches all service IDs which the user can view publicly
+	 * @param userId
+	 * @return
+	 */
+	public Set<Integer> getAllServiceIDsForDisplay(int userId) {
+		Set<Integer> returnList = new HashSet<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status AND LST_VISIBILITY = 1",
+					Service.class);
+			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
+			query.setParameter("userId", userId);
+			query.setParameter("status", 0);
+			List<?> results = query.getResultList();
+			System.out.println("Found:" +results.size() + " services");
+			for (Object obj : results) {
+				if (obj instanceof Service) {
+					System.out.println((Service) obj);
+					returnList.add(((Service) obj).getId());
+				}
+			}
+		}
+		return returnList;
 	}
 }
