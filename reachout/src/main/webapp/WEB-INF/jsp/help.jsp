@@ -41,6 +41,24 @@
 						<p>A request is raised by someone that needs help, whereas a service is raised by someone that is offering help to others. Please see What is the 
 							purpose of a Request? and What is the purpose of a Service? for further specific information.</p>
 					</div>
+					<div class="col-lg-12">
+						<h3>How do I send a message?</h3>
+						<p>When you view more details of a Request or Service, you are able to message the user who posted it. You can view messages you have sent in the 
+							<i>My Messages</i> section. This is your personal message page where you are also able to reply to any individuals who have seen your Request or Service 
+							and messaged you.</p>
+					</div>
+					<div class="col-lg-12">
+						<h3>How do I update my status?</h3>
+						<p>Log into your account settings and click <i>update profile</i>, you are then able to update your bio and your status. Status options are:</p>
+						<p>	- Healthy</p>
+						<p>	- Healthy, but mobility restricted</p>
+						<p>	- Self-Isolating, potential COVID-19</p>
+						<p>	- Self-Isolating, due to COVID-19</p>
+					</div>
+					<div class="col-lg-12">
+						<h3>More about the ReachOut team?</h3>
+						<p>If you want to read more about the team behind ReachOut, please click <a href="https://reachoutspace.website/meet-the-team" target="_blank">here</a>.</p>
+					</div>
 				</div>
 			</div>
 			<div class="col-lg-2"></div>
