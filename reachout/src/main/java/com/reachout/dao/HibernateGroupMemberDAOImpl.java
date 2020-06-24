@@ -26,7 +26,8 @@ import com.reachout.models.GroupMember;
  */
 public class HibernateGroupMemberDAOImpl {
 
-	Logger logger = LogManager.getLogger(HibernateGroupMemberDAOImpl.class);
+	private static final Logger logger = LogManager.getLogger(HibernateGroupMemberDAOImpl.class);
+	private static final String USER_ID = "userId";
 
 	/**
 	 * Persists group members into the database
@@ -41,6 +42,7 @@ public class HibernateGroupMemberDAOImpl {
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to save groupMember", e);
 			return false;
 		}
 		return true;
@@ -55,12 +57,17 @@ public class HibernateGroupMemberDAOImpl {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT groupId FROM GroupMember groupMember WHERE GM_G_UID = :userId AND NOT GM_U_STATUS_ID = 0");
-			query.setParameter("userId", userId);
-			List<Integer> groupIds = (List<Integer>) query.getResultList();
-
-			List<Group> results = new ArrayList<Group>();
+			query.setParameter(USER_ID, userId);
+			List<?> returnedData = query.getResultList();
+			ArrayList<Integer> castedData = new ArrayList<>();
+			for (Object result : returnedData) {
+				if (result instanceof Integer) {
+					castedData.add((Integer) result);
+				}
+			}
+			List<Group> results = new ArrayList<>();
 			HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
-			for (int id : groupIds) {
+			for (int id : castedData) {
 				results.add(groupDAO.selectById(id));
 			}
 			return results;
@@ -76,11 +83,16 @@ public class HibernateGroupMemberDAOImpl {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT groupMember.groupId FROM GroupMember groupMember WHERE NOT GM_G_UID = :userId AND NOT GM_U_STATUS_ID = 0");
-			query.setParameter("userId", userId);
-			List<Integer> groupIds = (List<Integer>) query.getResultList();
-
+			query.setParameter(USER_ID, userId);
+			List<Integer> groupIds = new ArrayList<>();
+			List<?> returnedData = query.getResultList();
+			for (Object result : returnedData) {
+				if (result instanceof Integer) {
+					groupIds.add((Integer) result);
+				}
+			}
 			// remove any groups the user is a member of
-			List<Integer> userGroupIds = new ArrayList<Integer>();
+			List<Integer> userGroupIds = new ArrayList<>();
 			for (int id : groupIds) {
 				for (Group g : getUserGroups(userId)) {
 					if (id == g.getId()) {
@@ -89,7 +101,7 @@ public class HibernateGroupMemberDAOImpl {
 				}
 			}
 			// remove any pending groups
-			List<Integer> pendingGroupIds = new ArrayList<Integer>();
+			List<Integer> pendingGroupIds = new ArrayList<>();
 			for (int id : groupIds) {
 				for (int i : getPendingGroups(userId)) {
 					if (i == id) {
@@ -101,7 +113,7 @@ public class HibernateGroupMemberDAOImpl {
 			groupIds.removeAll(pendingGroupIds);
 
 			// make sure no duplicates
-			Set<Integer> results = new HashSet<Integer>();
+			Set<Integer> results = new HashSet<>();
 			for (int id : groupIds) {
 				results.add(id);
 			}
@@ -110,14 +122,19 @@ public class HibernateGroupMemberDAOImpl {
 	}
 
 	public List<Integer> getPendingGroups(int userId) {
+		List<Integer> returnVal = new ArrayList<>();
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT groupMember.groupId FROM GroupMember groupMember WHERE GM_G_UID = :userId AND GM_U_STATUS_ID = 0");
-			query.setParameter("userId", userId);
-			List<Integer> groupIds = (List<Integer>) query.getResultList();
-
-			return groupIds;
+			query.setParameter(USER_ID, userId);
+			List<?> results = query.getResultList();
+			for (Object result : results) {
+				if (result instanceof Integer) {
+					returnVal.add((Integer) result);
+				}
+			}
 		}
+		return returnVal;
 	}
 
 	/**
@@ -136,6 +153,7 @@ public class HibernateGroupMemberDAOImpl {
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to delete groupMember", e);
 			return false;
 		}
 		return true;
@@ -145,7 +163,7 @@ public class HibernateGroupMemberDAOImpl {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT groupMember FROM GroupMember groupMember where id = :userId",
 					GroupMember.class);
-			query.setParameter("userId", userId);
+			query.setParameter(USER_ID, userId);
 			return (GroupMember) query.getSingleResult();
 		} catch (NoResultException | NonUniqueResultException e) {
 			logger.error(String.format("Unable to find Group member with ID: {%s}", userId), e);
@@ -160,27 +178,26 @@ public class HibernateGroupMemberDAOImpl {
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to update groupMember", e);
 			return false;
 		}
 		return true;
 	}
 
 	public GroupMember checkIfGroupMember(int userId, int groupId) {
+		GroupMember groupMember = null;
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT groupMember FROM GroupMember groupMember where userId = :userId AND groupId = :groupId",
 					GroupMember.class);
-			query.setParameter("userId", userId);
+			query.setParameter(USER_ID, userId);
 			query.setParameter("groupId", groupId);
-
-			ArrayList<GroupMember> results = (ArrayList<GroupMember>) query.getResultList();
-			if (results.isEmpty()) {
-				return null;
-			} else {
-				return results.get(0);
+			List<?> results = query.getResultList();
+			if (!results.isEmpty() && (results.get(0) instanceof GroupMember)) {
+				groupMember = (GroupMember) results.get(0);
 			}
-
 		}
+		return groupMember;
 	}
 
 	public boolean groupDelete(int groupID) {
@@ -192,6 +209,7 @@ public class HibernateGroupMemberDAOImpl {
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to remove associated members from group", e);
 			return false;
 		}
 		return true;
@@ -199,26 +217,37 @@ public class HibernateGroupMemberDAOImpl {
 
 	// Get all requests with a value of 0 (pending) for a specific group
 	public List<GroupMember> getPendingMembers(int groupID) {
+		List<GroupMember> returnVal = new ArrayList<>();
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT groupMember FROM GroupMember groupMember WHERE GM_G_ID = :group_id AND GM_U_STATUS_ID = 0");
 			query.setParameter("group_id", groupID);
-			ArrayList<GroupMember> pendingUsers = (ArrayList<GroupMember>) query.getResultList();
-			return pendingUsers;
-
+			List<?> results = query.getResultList();
+			for (Object result : results) {
+				if (result instanceof GroupMember) {
+					returnVal.add((GroupMember) result);
+				}
+			}
 		} catch (NoResultException e) {
 			logger.error(String.format("No pending requests for this group: {%s}", groupID), e);
-			return new ArrayList<>();
 		}
+		return returnVal;
 	}
 
 	public List<Integer> getUserGroupIDs(int userId) {
+		List<Integer> returnVal = new ArrayList<>();
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery(
 					"SELECT groupId FROM GroupMember groupMember WHERE GM_G_UID = :userId AND NOT GM_U_STATUS_ID = 0");
-			query.setParameter("userId", userId);
-			return (List<Integer>) query.getResultList();
+			query.setParameter(USER_ID, userId);
+			List<?> results = query.getResultList();
+			for (Object result : results) {
+				if (result instanceof Integer) {
+					returnVal.add((Integer) result);
+				}
+			}
 		}
+		return returnVal;
 	}
 
 }

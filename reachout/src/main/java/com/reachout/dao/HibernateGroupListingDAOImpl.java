@@ -50,11 +50,18 @@ public class HibernateGroupListingDAOImpl {
 	 * @return
 	 */
 	public List<Listing> getGroupListings(int groupId) {
+
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session
 					.createQuery("SELECT groupListing FROM GroupListing groupListing WHERE GL_GRP_ID = :groupId");
 			query.setParameter("groupId", groupId);
-			List<GroupListing> groupListings = (List<GroupListing>) query.getResultList();
+			List<?> results = query.getResultList();
+			List<GroupListing> groupListings = new ArrayList<>();
+			for (Object result : results) {
+				if (result instanceof GroupListing) {
+					groupListings.add((GroupListing) result);
+				}
+			}
 
 			List<Listing> listings = new ArrayList<>();
 			HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl();

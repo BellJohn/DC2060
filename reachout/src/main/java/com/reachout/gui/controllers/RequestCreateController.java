@@ -67,7 +67,7 @@ public class RequestCreateController {
 		mv.addObject("currentPage", VIEW_NAME);
 
 		if ((userGroups = groupMemberDAO.getUserGroups(userId)) != null) {
-			ArrayList<String> groupNames = new ArrayList<String>();
+			ArrayList<String> groupNames = new ArrayList<>();
 
 			for (Group g : userGroups) {
 				groupNames.add(g.getName());

@@ -1,5 +1,6 @@
 package com.reachout.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -78,15 +79,23 @@ public class HibernateUserProfileDAOImpl {
 	}
 
 	public List<UserProfile> getAllProfiles() {
+		List<UserProfile> returnVal = new ArrayList<>();
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT userprofile from UserProfile userprofile", UserProfile.class);
-			return query.getResultList();
+			List<?> results = query.getResultList();
+			for (Object result : results) {
+				if (result instanceof UserProfile) {
+					returnVal.add((UserProfile) result);
+				}
+			}
 		}
+		return returnVal;
 	}
 
 	/**
-	 * Fetches a profile picture from a user ID in the database
-	 * Failure to find a profile pic returns the default "no-profile-pic.png"
+	 * Fetches a profile picture from a user ID in the database Failure to find a
+	 * profile pic returns the default "no-profile-pic.png"
+	 * 
 	 * @return
 	 */
 	public String getProfilePicById(int userID) {

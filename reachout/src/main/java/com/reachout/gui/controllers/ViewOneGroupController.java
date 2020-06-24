@@ -1,5 +1,6 @@
 package com.reachout.gui.controllers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
 import com.reachout.models.Listing;
 import com.reachout.models.ListingGUIWrapper;
+import com.reachout.processors.SystemPropertiesService;
 
 /**
  * * Controller to display information about a certain group and requests that
@@ -71,8 +73,6 @@ public class ViewOneGroupController {
 
 		boolean isAdmin = checkIfAdmin(userID, groupID);
 
-		// TO DO - display requests for this group
-
 		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
 		List<Listing> allListings = glDAO.getGroupListings(groupID);
 
@@ -91,6 +91,10 @@ public class ViewOneGroupController {
 						locationDAO.selectLocationById(l.getLocationId())));
 			}
 		}
+
+		SystemPropertiesService sps = SystemPropertiesService.getInstance();
+		String uploadDirectory = File.separator + sps.getProperty("IMAGE_DIR") + File.separator;
+		group.setPicture(String.format("%s%s?cache=0", uploadDirectory, group.getPicture()));
 
 		ModelAndView mv;
 		mv = new ModelAndView(VIEW_NAME);
@@ -135,9 +139,6 @@ public class ViewOneGroupController {
 	private boolean checkIfAdmin(int userId, int groupId) {
 		HibernateGroupMemberDAOImpl groupMemberDAO = new HibernateGroupMemberDAOImpl();
 		// check if user is a member of the group and check the status is 2 for admin
-		if (groupMemberDAO.checkIfGroupMember(userId, groupId).getUserStatus() == 2) {
-			return true;
-		} else
-			return false;
+		return groupMemberDAO.checkIfGroupMember(userId, groupId).getUserStatus() == 2;
 	}
 }

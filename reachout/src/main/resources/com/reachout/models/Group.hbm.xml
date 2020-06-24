@@ -14,9 +14,12 @@
 			<generator class="increment" />
 		</id>
 		<property name="name" type="string" column="G_NAME" />
-		<property name="description" type="string"
-			column="G_DESC" />
+		<property name="description" type="string" column="G_DESC" />
 		<property name="locationId" type="int" column="G_LOC_ID" />
+		<property name="city" type="string" column="G_CITY" />
+		<property name="county" type="string" column="G_COUNTY" />
+		<property name="picture" type="string" column="G_PICTURE" />
+
 	</class>
 
 </hibernate-mapping>

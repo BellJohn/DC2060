@@ -27,7 +27,7 @@
 								group or however you please.</h4>
 
 							<!-- New Request Form -->
-							<form action="createGroup" method="POST" id="createGroup">
+							<form action="createGroup" method="POST" id="createGroup" enctype="multipart/form-data">
 								<sec:csrfInput />
 								<fieldset>
 
@@ -63,9 +63,25 @@
 									<!-- Group Picture -->
 									<div class="form-group">
 										<label for="groupPicture">Group Picture (optional)</label><input
-											type="file" name="groupPicture" class="form-control">
+											type="file" id="groupPicture" name="groupPicture" class="form-control">
 									</div>
 
+									<!-- Group Town -->
+									<div class="form-group">
+										<label for="groupCity">City/Town of Group (e.g.
+											Chelsea)</label> <input id="groupCity" name="groupCity"
+											required="required" placeholder="Town/City" type="text"
+											class="form-control" maxlength="60">
+									</div>
+
+									<!-- Group County -->
+									<div class="form-group">
+										<label for="groupCounty">County of Group (e.g.
+											Cambridgeshire)</label> <input id="groupCounty" name="groupCounty"
+											placeholder="County" type="text" class="form-control"
+											required="required" maxlength="30">
+									</div>
+									
 									<!-- Remaining Characters -->
 									<div class="row remainingCounter">
 										<div class="col-sm-3"></div>
@@ -102,6 +118,13 @@
 						</c:choose>
 					</c:otherwise>
 				</c:choose>
+				<c:choose>
+					<c:when test="${not empty error}">
+						<div class="alert alert-warning alert-spacing" role="alert">
+							<p>${error}</p>
+						</div>
+					</c:when>
+				</c:choose>
 			</div>
 		</div>
 	</div>
@@ -111,7 +134,7 @@
 			var len = 0;
 			var maxchar = 2000;
 
-			$('#reqDesc').keyup(function() {
+			$('#groupDesc').keyup(function() {
 				len = this.value.length
 				if (len > maxchar) {
 					return false;
@@ -122,11 +145,11 @@
 				}
 			})
 
-			$("#createRequest").submit(function() {
+			$("#createGroup").submit(function() {
 				$(this).find(':submit').attr('disabled', 'disabled');
 			});
 
-			$("#createRequest").bind("invalid-form.validate", function() {
+			$("#createGroup").bind("invalid-form.validate", function() {
 				$(this).find(':submit').prop('disabled', false);
 			});
 		});

@@ -1,5 +1,6 @@
 package com.reachout.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -27,17 +28,21 @@ public class HibernateHealthStatusDAOImpl {
 	 * 
 	 * @return list of health status
 	 */
-		
+
 	public List<String> getAllHealthStatuses() {
-		List<String> statuses = null;
-		try (Session session = HibernateUtil.getInstance().getSession())
-		{
+		List<String> statuses = new ArrayList<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query q = session.createQuery("SELECT status.status FROM HealthStatus status");
-			statuses = q.getResultList();
+			List<?> results = q.getResultList();
+			for (Object result : results) {
+				if (result instanceof String) {
+					statuses.add((String) result);
+				}
+			}
 		}
 		return statuses;
 	}
-	
+
 	public boolean save(HealthStatus hs) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
@@ -45,10 +50,10 @@ public class HibernateHealthStatusDAOImpl {
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException | ConstraintViolationException e) {
+			logger.error("Unable to save TealthStatus", e);
 			return false;
 		}
 		return true;
 	}
-
 
 }

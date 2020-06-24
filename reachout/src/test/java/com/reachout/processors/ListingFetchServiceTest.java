@@ -5,7 +5,6 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import com.reachout.models.ListingGUIWrapper;
-import com.reachout.models.LocationListingWrapper;
 import com.reachout.processors.exceptions.ListingFetchServiceConstructorException;
 
 class ListingFetchServiceTest {

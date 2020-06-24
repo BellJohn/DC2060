@@ -36,7 +36,7 @@
 										class="rounded-circle" style="max-width: 50%;">
 								</c:when>
 								<c:otherwise>
-									<img src="${proup.getPicture()}" alt="groupPic"
+									<img src="${group.getPicture()}" alt="groupPic"
 										style="max-width: 20%;">
 								</c:otherwise>
 							</c:choose>
@@ -45,7 +45,7 @@
 					<h4>Group Description</h4>
 					<p class="card-text">${group.getDescription()}</p>
 					<hr>
-					<p class="card-text">Location: ${group.getLocationId()}</p>
+					<p class="card-text">Location: ${group.city}, ${group.county}</p>
 					<hr>
 
 					<c:choose>
@@ -116,9 +116,8 @@
 							</div>
 						</div>
 					</div>
+				</c:forEach>
 			</div>
-			</c:forEach>
-
 			<div class="col-lg-12">
 
 

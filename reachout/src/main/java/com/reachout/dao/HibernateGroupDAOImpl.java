@@ -16,15 +16,12 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 
 import com.reachout.models.Group;
-import com.reachout.models.Listing;
-import com.reachout.models.ListingType;
-import com.reachout.models.Service;
 
 /**
  * @author Jessica
  *
  */
-public class HibernateGroupDAOImpl{
+public class HibernateGroupDAOImpl {
 
 	Logger logger = LogManager.getLogger(HibernateGroupDAOImpl.class);
 
@@ -41,6 +38,7 @@ public class HibernateGroupDAOImpl{
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to save group", e);
 			return false;
 		}
 		return true;
@@ -52,10 +50,16 @@ public class HibernateGroupDAOImpl{
 	 * @return
 	 */
 	public List<Group> getAllGroups() {
+		List<Group> returnVal = new ArrayList<>();
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT group FROM Group group");
-			List<Group> results = (List<Group>) query.getResultList();
-			return results;
+			List<?> results = query.getResultList();
+			for (Object result : results) {
+				if (result instanceof Group) {
+					returnVal.add((Group) result);
+				}
+			}
+			return returnVal;
 		}
 	}
 
@@ -72,6 +76,7 @@ public class HibernateGroupDAOImpl{
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to delete group", e);
 			return false;
 		}
 		return true;
@@ -87,8 +92,7 @@ public class HibernateGroupDAOImpl{
 			return null;
 		}
 	}
-	
-	
+
 	public Group selectByName(String name) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT group FROM Group group where name = :groupName", Group.class);
@@ -107,10 +111,10 @@ public class HibernateGroupDAOImpl{
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to update group", e);
 			return false;
 		}
 		return true;
 	}
-
 
 }

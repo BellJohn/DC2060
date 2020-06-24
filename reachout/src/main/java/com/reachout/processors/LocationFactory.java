@@ -40,8 +40,8 @@ public class LocationFactory {
 	 * @param address
 	 * @param city
 	 * @param county
-	 * @return
-	 * @throws MappingAPICallException 
+	 * @return New location object (non-persisted) or null on failure
+	 * @throws MappingAPICallException
 	 */
 	public Location buildLocation(String address, String city, String county) throws MappingAPICallException {
 		Location location = null;
@@ -65,9 +65,10 @@ public class LocationFactory {
 				location.setLocLat(lat);
 				location.setLocLong(lng);
 				logger.debug("Constructed new location for [%s,%s,%s] : [%s,%s]", address, city, county, lat, lng);
-			}
-			else {
-				throw new MappingAPICallException(String.format("Unable to fetch data requested. Response was [%s]. Full content retrieved was [%s]", status, locationData));
+			} else {
+				throw new MappingAPICallException(String.format(
+						"Unable to fetch data requested. Response was [%s]. Full content retrieved was [%s]", status,
+						locationData));
 			}
 		} catch (IOException | JSONException e) {
 			logger.error("Unable to fetch location data", e);
@@ -77,6 +78,15 @@ public class LocationFactory {
 		return location;
 	}
 
+	/**
+	 * Attempts to create a new Location and persist in the database
+	 * 
+	 * @param address
+	 * @param city
+	 * @param county
+	 * @return Persisted Location or Null on failure
+	 * @throws MappingAPICallException
+	 */
 	public Location buildAndSaveLocation(String address, String city, String county) throws MappingAPICallException {
 		Location location = buildLocation(address, city, county);
 
@@ -93,6 +103,16 @@ public class LocationFactory {
 		return location;
 	}
 
+	/**
+	 * Worker method for figuring out the actual geographic location of the address
+	 * details provided
+	 * 
+	 * @param address
+	 * @param city
+	 * @param county
+	 * @return JSON location data
+	 * @throws IOException
+	 */
 	private String fetchData(String address, String city, String county) throws IOException {
 		OkHttpClient client = new OkHttpClient();
 		String locationRequest = String.format("?address=%s,%s,%s,UK", address, city, county);
