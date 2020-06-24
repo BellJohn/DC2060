@@ -4,7 +4,9 @@
 package com.reachout.dao;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -79,6 +81,8 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 			Query query = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
 			query.setParameter("lst_id", service.getId());
 			query.executeUpdate();
+
+			new HibernateGroupListingDAOImpl().groupListingDelete(service.getId());
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
@@ -191,12 +195,37 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 		Integer intFound = -1;
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
-			Query query = session.createNativeQuery("SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
+			Query query = session.createNativeQuery(
+					"SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
 			query.setParameter("userId", userId);
 			intFound = (Integer) (query.getSingleResult());
 		} catch (NoResultException e) {
-			logger.debug(String.format("No service found for user: " + userId));
+			logger.debug(String.format("No service found for user: %s", userId));
 		}
 		return intFound;
+	}
+
+	/**
+	 * Fetches all service IDs which the user can view publicly
+	 * @param userId
+	 * @return
+	 */
+	public Set<Integer> getAllServiceIDsForDisplay(int userId) {
+		Set<Integer> returnList = new HashSet<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT service FROM Service service where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status AND LST_VISIBILITY = 1",
+					Service.class);
+			query.setParameter("lstType", ListingType.SERVICE.getOrdindal());
+			query.setParameter("userId", userId);
+			query.setParameter("status", 0);
+			List<?> results = query.getResultList();
+			for (Object obj : results) {
+				if (obj instanceof Service) {
+					returnList.add(((Service) obj).getId());
+				}
+			}
+		}
+		return returnList;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.dao;
 
@@ -29,14 +29,14 @@ public abstract class HibernateListingDAOImpl {
 
 	/**
 	 * Returns all the possible listings in the system
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract List<Listing> getAllListings();
 
 	/**
 	 * Deletes a request object from the database that has been passed.
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -57,9 +57,9 @@ public abstract class HibernateListingDAOImpl {
 	 * the relevant listing status simultaneously. </br>
 	 * Errors in this result in rollback </br>
 	 * Returns true/false success indicator
-	 * 
+	 *
 	 * @param dao
-	 * 
+	 *
 	 * @param listing
 	 * @param user
 	 * @return
@@ -93,14 +93,31 @@ public abstract class HibernateListingDAOImpl {
 	}
 
 	/**
+	 * Returns the id of the user who accepted a particular listing
+	 * @param listing
+	 * @return int id of user
+	 */
+	public synchronized Integer getUserIdWhoAcceptedListing(Listing listing) {
+		Integer userID = null;
+		try(Session session = HibernateUtil.getInstance().getSession()){
+			Query query = session.createSQLQuery("SELECT AS_USER_ID FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lstID ORDER BY AS_ID DESC LIMIT 1");
+			query.setParameter("lstID", listing.getId());
+			Object result = query.getSingleResult();
+			if(result instanceof Integer) {
+				userID = (Integer) result;
+			}
+		}
+		return userID;
+	}
+
+	/**
 	 * Returns either a <b>Service</b> or <b>Request</b> by ID
 	 * @param listingID
 	 * @return Listing
 	 */
-	public Listing selectListingByIDofUnknownType(int listingID) {
+	public synchronized Listing selectListingByIDofUnknownType(int listingID) {
 		Listing listingToReturn = null;
-		try (Session session = HibernateUtil.getInstance().getSession()) { 
-			session.beginTransaction();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createSQLQuery("SELECT LST_TYPE FROM LISTINGS WHERE LST_ID = :lst_id");
 			query.setParameter("lst_id", listingID);
 			Integer listingType = (Integer) query.getSingleResult();

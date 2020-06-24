@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -30,7 +32,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 
 	/**
 	 * Persists the given request into the database
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -48,7 +50,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 
 	/**
 	 * Returns a collection of all known requests currently in the database
-	 * 
+	 *
 	 * @return
 	 */
 	public List<Request> getAllRequests() {
@@ -69,7 +71,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 
 	/**
 	 * Deletes a request object from the database that has been passed.
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -77,9 +79,11 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(request);
-			Query query = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
-			query.setParameter("lst_id", request.getId());
-			query.executeUpdate();
+			Query assingedListingsQuery = session
+					.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
+			assingedListingsQuery.setParameter("lst_id", request.getId());
+			assingedListingsQuery.executeUpdate();
+			new HibernateGroupListingDAOImpl().groupListingDelete(request.getId());
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
@@ -119,8 +123,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 		allResults.addAll(serDAO.getAllServices());
 		return allResults;
 	}
-	
-	
+
 	public boolean deleteById(int reqId) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createNativeQuery("DELETE FROM LISTINGS WHERE LST_ID = :reqID");
@@ -137,7 +140,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 
 	/**
 	 * Returns all requests made by a specific user based on their ID
-	 * 
+	 *
 	 * @param userId The users ID
 	 * @return List of requests made by a specific user
 	 */
@@ -164,11 +167,11 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	}
 
 	/**
-	 * Returns all open public requests made by anyone other than the current user 
-	 * 
+	 * Returns all open public requests made by anyone other than the current user
+	 *
 	 * @param userId the users ID
 	 * @return List of requests made by all other users
-	 * 
+	 *
 	 */
 	public List<Request> getAllRequestsForDisplay(int userId) {
 		ArrayList<Request> returnList = new ArrayList<>();
@@ -191,7 +194,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 
 	/**
 	 * Returns all requests that a user has offered to help on
-	 * 
+	 *
 	 * @param userId The ID of the user to get the requests for
 	 * @return List of the requests a user has offered to help on
 	 */
@@ -202,29 +205,30 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 				"reach_pass");
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(
-						"SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_USER_ID, LST_STATUS, LST_PRIORITY, LST_VISIBILITY FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = "
+						"SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_USER_ID, LST_STATUS, LST_PRIORITY, LST_VISIBILITY, LST_LOC_ID FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = "
 								+ ListingType.REQUEST.getOrdindal() + " AND al.AS_USER_ID = " + userId)) {
 			while (rs.next()) {
 
 				Request r = new Request(rs.getString("LST_TITLE"), rs.getString("LST_DESCRIPTION"),
 						rs.getString("LST_COUNTY"), rs.getString("LST_CITY"), rs.getInt("LST_USER_ID"),
-						rs.getString("LST_PRIORITY"), rs.getInt("LST_VISIBILITY"));
+						rs.getString("LST_PRIORITY"), rs.getInt("LST_VISIBILITY"), rs.getInt("LST_LOC_ID"));
 				r.setStatus(rs.getInt("LST_STATUS"));
 				r.setId(rs.getInt("LST_ID"));
 				returnList.add(r);
 			}
 		} catch (Exception e) {
-			logger.error("Failed to fetch requests for user",e);
+			logger.error("Failed to fetch requests for user", e);
 		}
 
 		return returnList;
 	}
-	
+
 	public int getNewRequestId(int userId) {
 		Integer intFound = -1;
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
-			Query query = session.createNativeQuery("SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
+			Query query = session.createNativeQuery(
+					"SELECT LST_ID FROM LISTINGS WHERE LST_USER_ID = :userId ORDER BY LST_ID DESC LIMIT 1");
 			query.setParameter("userId", userId);
 			intFound = (Integer) (query.getSingleResult());
 			logger.debug("Request listing found with id: " + intFound);
@@ -232,6 +236,30 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 			logger.debug(String.format("No request found for username %s", userId));
 		}
 		return intFound;
-		
+
+	}
+
+	/**
+	 * Fetches all request IDs which the user can view publicly
+	 * @param userId
+	 * @return
+	 */
+	public Set<Integer> getAllRequestIDsForDisplay(int userId) {
+		Set<Integer> returnList = new HashSet<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery(
+					"SELECT request FROM Request request where LST_TYPE = :lstType AND LST_USER_ID != :userId AND LST_STATUS = :status AND LST_VISIBILITY = 1",
+					Request.class);
+			query.setParameter("lstType", ListingType.REQUEST.getOrdindal());
+			query.setParameter("userId", userId);
+			query.setParameter("status", 0);
+			List<?> results = query.getResultList();
+			for (Object obj : results) {
+				if (obj instanceof Request) {
+					returnList.add(((Request) obj).getId());
+				}
+			}
+		}
+		return returnList;
 	}
 }

@@ -1,5 +1,6 @@
 package com.reachout.gui.controllers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,37 +15,38 @@ import org.springframework.web.servlet.ModelAndView;
 import com.reachout.dao.HibernateGroupDAOImpl;
 import com.reachout.dao.HibernateGroupListingDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
+import com.reachout.dao.HibernateLocationDAO;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
 import com.reachout.models.Listing;
 import com.reachout.models.ListingGUIWrapper;
-
+import com.reachout.processors.SystemPropertiesService;
 
 /**
- *  * Controller to display information about a certain group and requests that are made by users of the group.
+ * * Controller to display information about a certain group and requests that
+ * are made by users of the group.
  * 
  * @author Jessica
  *
  */
 
-
 @Controller
 @RequestMapping("/viewOneGroup")
 public class ViewOneGroupController {
-	public final Logger logger = LogManager.getLogger(ViewOneGroupController.class); 
+	public final Logger logger = LogManager.getLogger(ViewOneGroupController.class);
 
 	private static final String VIEW_NAME = "viewOneGroup";
 
 	/**
-	 * Method for populating the page with details of the group and all requests that
-	 * have been made within the group.
+	 * Method for populating the page with details of the group and all requests
+	 * that have been made within the group.
 	 * 
 	 * @param request
 	 * @return
 	 */
 	@PostMapping
 	public ModelAndView initPage(HttpServletRequest request) {
-		logger.debug("Reached viewOneGroup Controller");					
+		logger.debug("Reached viewOneGroup Controller");
 		Integer groupID = null;
 		String username = null;
 		try {
@@ -61,35 +63,38 @@ public class ViewOneGroupController {
 			return getErrorPage();
 		}
 
-		logger.debug(
-				String.format("Found group " + group.getName() + group.getDescription()));
+		logger.debug(String.format("Found group {%s} : {%s}", group.getName(), group.getDescription()));
 
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 		int userID = userDAO.getUserIdByUsername(username);
 
-		//To find out whether user is admin and if they should be able to delete/authorise requests
+		// To find out whether user is admin and if they should be able to
+		// delete/authorise requests
 
 		boolean isAdmin = checkIfAdmin(userID, groupID);
 
-		//TO DO - display requests for this group
-
-		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl(); 
+		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
 		List<Listing> allListings = glDAO.getGroupListings(groupID);
 
 		List<ListingGUIWrapper> guiReq = new ArrayList<>();
 		List<ListingGUIWrapper> guiSer = new ArrayList<>();
 
-
+		HibernateLocationDAO locationDAO = new HibernateLocationDAO();
 		// Build up data for presenting on the GUI
 		for (Listing l : allListings) {
-			if(l.getListingType().getOrdindal() == 0) {
-				guiReq.add(new ListingGUIWrapper(l, userDAO.selectByID(userID)));
+			if (l.getListingType().getOrdindal() == 0) {
+				guiReq.add(new ListingGUIWrapper(l, userDAO.selectByID(userID),
+						locationDAO.selectLocationById(l.getLocationId())));
 			}
-			if(l.getListingType().getOrdindal() == 1 ) {
-				guiSer.add(new ListingGUIWrapper(l, userDAO.selectByID(userID)));
+			if (l.getListingType().getOrdindal() == 1) {
+				guiSer.add(new ListingGUIWrapper(l, userDAO.selectByID(userID),
+						locationDAO.selectLocationById(l.getLocationId())));
 			}
 		}
 
+		SystemPropertiesService sps = SystemPropertiesService.getInstance();
+		String uploadDirectory = File.separator + sps.getProperty("IMAGE_DIR") + File.separator;
+		group.setPicture(String.format("%s%s?cache=0", uploadDirectory, group.getPicture()));
 
 		ModelAndView mv;
 		mv = new ModelAndView(VIEW_NAME);
@@ -111,7 +116,8 @@ public class ViewOneGroupController {
 	}
 
 	/**
-	 * Finds the group requested based on the groupID provided from the previous page
+	 * Finds the group requested based on the groupID provided from the previous
+	 * page
 	 * 
 	 * @param groupID
 	 * @return the group found
@@ -132,10 +138,7 @@ public class ViewOneGroupController {
 	 */
 	private boolean checkIfAdmin(int userId, int groupId) {
 		HibernateGroupMemberDAOImpl groupMemberDAO = new HibernateGroupMemberDAOImpl();
-		//check if user is a member of the group and check the status is 2 for admin
-		if ( groupMemberDAO.checkIfGroupMember(userId, groupId).getUserStatus() == 2 ){
-			return true;
-		}
-		else return false;
+		// check if user is a member of the group and check the status is 2 for admin
+		return groupMemberDAO.checkIfGroupMember(userId, groupId).getUserStatus() == 2;
 	}
 }

@@ -16,6 +16,13 @@
 			<div class="col-sm-4"></div>
 			<div class="col-md-4">
 				<c:choose>
+					<c:when test="${not empty error}">
+						<div class="alert alert-warning alert-spacing" role="alert">
+							<p>${error}</p>
+						</div>
+					</c:when>
+				</c:choose>
+				<c:choose>
 					<c:when test="${empty postSent}">
 						<div class="card card-bkg">
 							<h2>
@@ -43,7 +50,7 @@
 										<textarea id="serDesc" name="serDesc" cols="40" rows="5"
 											id="serDesc"
 											placeholder="Tell us a little about your service. Please note, everyone on the site will be able to view this information."
-											class="form-control" maxlength="2000" minlength="50"
+											class="form-control" maxlength="2000" minlength="10"
 											required="required"></textarea>
 									</div>
 
@@ -58,12 +65,12 @@
 										</div>
 									</div>
 
-									<!-- Service County -->
+									<!-- Service Street -->
 									<div class="form-group">
-										<label for="serCounty">County of Service (e.g.
-											Cambridgeshire)</label> <input id="serCounty" name="serCounty"
-											placeholder="Countyshire" type="text" class="form-control"
-											required="required" maxlength="26">
+										<label for="serStreet">Street of Service (e.g. Downing
+											Street)</label> <input id="serStreet" name="serStreet"
+											required="required" placeholder="Your street or one nearby"
+											type="text" class="form-control" maxlength="60">
 									</div>
 
 									<!-- Service Town -->
@@ -73,7 +80,14 @@
 											required="required" placeholder="Town city" type="text"
 											class="form-control" maxlength="60">
 									</div>
-
+									<!-- Service County -->
+									<div class="form-group">
+										<label for="serCounty">County of Service (e.g.
+											Cambridgeshire)</label> <input id="serCounty" name="serCounty"
+											placeholder="Countyshire" type="text" class="form-control"
+											required="required" maxlength="30">
+									</div>
+									
 									<c:choose>
 										<c:when test="${!empty userGroups}">
 
@@ -83,7 +97,7 @@
 												<input type="checkbox" name="serVisibility"
 													value="public"> <br>
 											</div>
-											
+
 											<div class="form-group">
 											<label for="groupVisibility">Visible in selected group</label>
 												<input type="checkbox" name="serVisibility"
@@ -119,7 +133,6 @@
 					<c:otherwise>
 						<c:choose>
 							<c:when test="${createSuccess}">
-
 								<!-- Display success message -->
 								<div class="alert alert-success alert-spacing" role="alert">
 									<p>
@@ -127,7 +140,6 @@
 											href="profile">Profile</a> to see your offered services.
 									</p>
 								</div>
-
 							</c:when>
 						</c:choose>
 					</c:otherwise>

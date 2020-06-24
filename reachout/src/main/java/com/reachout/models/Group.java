@@ -15,7 +15,9 @@ public class Group {
 	private String name;
 	private String picture;
 	private int locationId;
-
+	private String city;
+	private String county;
+	
 	/**
 	 * Fully formed constructor for Group.
 	 * 
@@ -27,11 +29,13 @@ public class Group {
 	 * @param visibility
 	
 	 */
-	public Group(String name, String description, String picture, int locationId){
+	public Group(String name, String description, String picture, int locationId, String city, String county){
 		this.name =name;
 		this.description = description;
 		this.picture = picture;
 		this.locationId = locationId;
+		this.setCity(city);
+		this.setCounty(county);
 	}
 
 	/**
@@ -119,6 +123,34 @@ public class Group {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the city
+	 */
+	public String getCity() {
+		return city;
+	}
+
+	/**
+	 * @param city the city to set
+	 */
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	/**
+	 * @return the county
+	 */
+	public String getCounty() {
+		return county;
+	}
+
+	/**
+	 * @param county the county to set
+	 */
+	public void setCounty(String county) {
+		this.county = county;
 	}
 
 	/**

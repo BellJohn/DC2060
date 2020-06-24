@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,14 +21,14 @@ import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateGroupDAOImpl;
 import com.reachout.dao.HibernateGroupListingDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
-import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
 import com.reachout.models.GroupListing;
-import com.reachout.models.Request;
+import com.reachout.models.Location;
 import com.reachout.models.Service;
-import com.reachout.models.User;
+import com.reachout.processors.LocationFactory;
+import com.reachout.processors.exceptions.MappingAPICallException;
 
 @Controller
 @RequestMapping("/createService")
@@ -41,9 +40,9 @@ public class ServiceCreateController {
 
 	/**
 	 * Arrival on page will trigger this
-	 * 
+	 *
 	 * @param request
-	 * @return The create request view 
+	 * @return The create request view
 	 */
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -64,12 +63,11 @@ public class ServiceCreateController {
 
 		userGroups = groupMemberDAO.getUserGroups(userId);
 
-
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 
-		if ( (userGroups = groupMemberDAO.getUserGroups(userId)) != null) { 
-			ArrayList<String> groupNames = new ArrayList<String>();
+		if (userGroups != null) {
+			ArrayList<String> groupNames = new ArrayList<>();
 
 			for (Group g : userGroups) {
 				groupNames.add(g.getName());
@@ -82,7 +80,7 @@ public class ServiceCreateController {
 
 	/**
 	 * Submission of the create new request form will trigger this
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param county
@@ -96,7 +94,8 @@ public class ServiceCreateController {
 			@RequestParam(name = "serDesc", required = false) String description,
 			@RequestParam(name = "serCounty") String county,
 			@RequestParam(name = "group", required = false) String groupVisibility,
-			@RequestParam(name = "serCity", required = false) String city, HttpServletRequest request) {
+			@RequestParam(name = "serCity", required = false) String city,
+			@RequestParam(name = "serStreet", required = true) String address, HttpServletRequest request) {
 
 		int publicVisibility = 0;
 		boolean createSuccess = false;
@@ -104,29 +103,46 @@ public class ServiceCreateController {
 		Service newService = new Service();
 		int listingId = 0;
 
+		LocationFactory locationFactory = new LocationFactory();
+		Location location = null;
+		try {
+			location = locationFactory.buildAndSaveLocation(address, city, county);
+		} catch (MappingAPICallException e) {
+			return returnErrorResult("Unable to determine the location of the address provided");
+
+		}
+		if (location == null) {
+			return returnErrorResult("Something went wrong creating your Service, please try again");
+		}
+
 		HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
 		HibernateGroupListingDAOImpl glDAO = new HibernateGroupListingDAOImpl();
 		HibernateServiceDAOImpl serviceDAO = new HibernateServiceDAOImpl();
 
-		//check if the user is a member of any groups, if not automatically set request as public		
+		// check if the user is a member of any groups, if not automatically set request
+		// as public
 		HibernateGroupMemberDAOImpl groupMemDAO = new HibernateGroupMemberDAOImpl();
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
 			// Build a new request which will be given the status of "new"
-			newService = new Service(title, description, county, city, userId, publicVisibility);
+			newService = new Service(title, description, county, city, userId, publicVisibility, location.getLocId());
 			createSuccess = serviceDAO.save(newService);
 			logger.info("Public service created");
-		}
-		else {
-			//if a user in a member of a group check if they want the post public, private or both.
+		} else {
+			// if a user in a member of a group check if they want the post public, private
+			// or both.
 
 			boolean listingCreateSuccessBool = false;
-			List<String> visibility= Arrays.asList(request.getParameterValues("serVisibility")) ;
-			//service to public and group visibility
-			if (visibility.contains("public") && (visibility.contains("group"))){
+			List<String> visibility = Arrays.asList(request.getParameterValues("serVisibility"));
+			if(visibility.isEmpty()) {
+				visibility.add("public");
+			}
+			// service to public and group visibility
+			if (visibility.contains("public") && (visibility.contains("group"))) {
 				publicVisibility = 1;
 				// Build a new request which will be given the status of "new"
-				newService = new Service(title, description, county, city, userId, publicVisibility);
+				newService = new Service(title, description, county, city, userId, publicVisibility,
+						location.getLocId());
 				createSuccess = serviceDAO.save(newService);
 				logger.info("Public service created");
 				try {
@@ -135,64 +151,61 @@ public class ServiceCreateController {
 					GroupListing gl = new GroupListing(group.getId(), serviceDAO.getNewServiceId(userId));
 					listingCreateSuccessBool = glDAO.save(gl);
 					logger.info("Group service created");
+				} catch (Exception e) {
+					logger.error("Could not find group");
 				}
-				catch (Exception e) {
-					logger.error("Could not find group") ;
-				}	
 			}
 
-			//if it is just for public visibility
-			if (visibility.contains("public") && !(visibility.contains("group"))){
+			// if it is just for public visibility
+			if (visibility.contains("public") && !(visibility.contains("group"))) {
 				publicVisibility = 1;
 				// Build a new request which will be given the status of "new"
-				newService = new Service(title, description, county, city, userId, publicVisibility);
+				newService = new Service(title, description, county, city, userId, publicVisibility,
+						location.getLocId());
 				createSuccess = serviceDAO.save(newService);
-				logger.info("Public service created");				
+				logger.info("Public service created");
 			}
 
-			///if they have selected visibile only within a group, get the listingID and save to group listing table
-			if(visibility.contains("group") && !(visibility.contains("public"))) {
+			/// if they have selected visibile only within a group, get the listingID and
+			/// save to group listing table
+			if (visibility.contains("group") && !(visibility.contains("public"))) {
 				logger.info("Group service created");
-				newService = new Service(title, description, county, city, userId, 0);
+				newService = new Service(title, description, county, city, userId, 0, location.getLocId());
 				createSuccess = serviceDAO.save(newService);
 				try {
 					logger.debug("Group selected from dropdown list: " + groupVisibility);
 					Group group = groupDAO.selectByName(groupVisibility);
 					GroupListing gl = new GroupListing(group.getId(), serviceDAO.getNewServiceId(userId));
 					listingCreateSuccessBool = glDAO.save(gl);
+				} catch (Exception e) {
+					logger.error("Could not find group");
 				}
-				catch (Exception e) {
-					logger.error("Could not find group") ;
-				}
-				if(listingCreateSuccessBool == false) {
+				if (!listingCreateSuccessBool) {
 					logger.error("Could not add entry to GroupListing table");
 					listingCreateSuccess = "unsuccessful";
-				}
-				else {
+				} else {
 					listingCreateSuccess = "success";
 					logger.info("Success, group listing added");
 				}
 			}
-		}	
+		}
 
-		
-		if((createSuccess == false) && (listingCreateSuccess == "success")) {
+		if ((!createSuccess) && (listingCreateSuccess == "success")) {
 			logger.error("Error - unable to create service");
-			if(listingCreateSuccess == "success") {
+			if (listingCreateSuccess == "success") {
 				glDAO.groupListingDelete(listingId);
 			}
 		}
 
-		if((listingCreateSuccess == "unsuccessful") && (createSuccess == true)) {
+		if ((listingCreateSuccess == "unsuccessful") && (createSuccess)) {
 			if (serviceDAO.deleteById(listingId)) {
 				createSuccess = false;
 				logger.debug("Listing deleted as group listing was unable to be created");
-			}
-			else {
+			} else {
 				logger.debug("Unable to delete service listing and unable to create the group listing");
 			}
 		}
-		
+
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		if (createSuccess) {
 			logger.debug(String.format("Built new service as %s", newService.toString()));
@@ -200,6 +213,15 @@ public class ServiceCreateController {
 		mv.addObject("postSent", true);
 		mv.addObject("createSuccess", createSuccess);
 		mv.addObject("currentPage", VIEW_NAME);
+		return mv;
+	}
+
+	private ModelAndView returnErrorResult(String error) {
+		ModelAndView mv = new ModelAndView(VIEW_NAME);
+		mv.addObject("postSent", false);
+		mv.addObject("createSuccess", false);
+		mv.addObject("currentPage", VIEW_NAME);
+		mv.addObject("error", error);
 		return mv;
 	}
 }

@@ -11,6 +11,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
@@ -18,8 +20,11 @@ import com.reachout.dao.HibernateGroupDAOImpl;
 import com.reachout.dao.HibernateGroupMemberDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Group;
+import com.reachout.models.GroupMember;
+import com.reachout.models.Location;
+import com.reachout.processors.LocationFactory;
+import com.reachout.processors.exceptions.MappingAPICallException;
 import com.reachout.utils.ROUtils;
-
 
 /**
  * Controller for editing/deleting a group.
@@ -63,8 +68,15 @@ public class EditGroupController {
 		HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
 		groupRequested = groupDAO.selectById(groupID);
 
-		// if it's null, something went wrong so return to the groups page
-		if (groupRequested == null) {
+		HibernateGroupMemberDAOImpl groupMemberDAO = new HibernateGroupMemberDAOImpl();
+		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
+		int userID = userDAO.getUserIdByUsername(username);
+
+		GroupMember groupMember = groupMemberDAO.checkIfGroupMember(userID, groupID);
+		// User status 2 is an admin
+		if (groupMember == null || groupMember.getUserStatus() != 2 || groupRequested == null) {
+			// User does NOT have rights to view the edit screen for this group.
+			// Or if it's null, something went wrong so return to the groups page
 			return new ViewGroupsController().initPage(request);
 		}
 
@@ -83,14 +95,15 @@ public class EditGroupController {
 	 * @return
 	 */
 	@PostMapping()
-	public ModelAndView postRequest(HttpServletRequest request) {
+	public ModelAndView postRequest(@RequestParam(name = "groupPicture") MultipartFile groupPic,
+			HttpServletRequest request) {
 		String intent = request.getParameter("submit");
 		if (StringUtils.isEmpty(intent)) {
 			return new ViewOneGroupController().initPage(request);
 		}
 
 		if ("update".equals(intent)) {
-			return handleUpdate(request);
+			return handleUpdate(groupPic, request);
 		} else if ("delete".equals(intent)) {
 			return handleDelete(request);
 		} else {
@@ -98,13 +111,15 @@ public class EditGroupController {
 		}
 	}
 
-	private ModelAndView handleUpdate(HttpServletRequest request) {
+	private ModelAndView handleUpdate(MultipartFile groupPic, HttpServletRequest request) {
 		logger.debug("Attempting listing update");
+
+		String city = request.getParameter("groupCity");
+		String county = request.getParameter("groupCounty");
+
 		String groupIDFromRequest = request.getParameter("groupID");
 		String newName = request.getParameter("Name");
 		String newDescription = request.getParameter("Description");
-		String newPicture = request.getParameter("Picture");
-
 
 		if (StringUtils.isEmpty(newName) || StringUtils.isEmpty(newDescription)) {
 			logger.error("A field was empty in the update request");
@@ -136,7 +151,8 @@ public class EditGroupController {
 		groupToUpdate = groupDAO.selectById(groupID);
 
 		if ((groupMemberDAO.checkIfGroupMember(userId, groupID)).getUserStatus() == 0) {
-			// This user should not be able to update this group, they are not admin. Something has gone
+			// This user should not be able to update this group, they are not admin.
+			// Something has gone
 			// wrong, return them to the group with an error message
 			logger.info("A user attempted to update a group which was not theirs");
 			ModelAndView errorReturn = new ViewSingleListingController().initPage(request);
@@ -144,16 +160,44 @@ public class EditGroupController {
 			return errorReturn;
 		}
 
+		LocationFactory locationFactory = new LocationFactory();
+		Location location;
+		try {
+			location = locationFactory.buildAndSaveLocation("", city, county);
+		} catch (MappingAPICallException e) {
+			logger.error("Something went wrong fetching the location data", e);
+			location = null;
+		}
+		if (location == null) {
+			return returnErrorPage("Unable to find location. Please check the address and retry");
+		}
+
 		// If we have made it this far, lets update the record.
 		groupToUpdate.setName(newName);
 		groupToUpdate.setDescription(newDescription);
-		groupToUpdate.setPicture(newPicture);
+		groupToUpdate.setCity(city);
+		groupToUpdate.setCounty(county);
+		groupToUpdate.setLocationId(location.getLocId());
 
+		boolean validPic = false;
+		String extension = "";
+		if (!groupPic.isEmpty() && ROUtils.validPic(groupPic)) {
+			validPic = true;
+			extension = ROUtils.getPictureExtension(groupPic);
+		}
+
+		if (!validPic) {
+			return returnErrorPage("Image uploads must be either [.png, .jpg, .jfif] and below 10mb");
+		}
+		String groupPicName = "GROUP_" + newName + "_" + userId + extension;
+		if (!ROUtils.saveImageToDisk(groupPic, groupPicName)) {
+			return returnErrorPage("Something went wrong saving your group. Please try again");
+		}
+		groupToUpdate.setPicture(groupPicName);
 
 		boolean changeSuccess = false;
 
 		changeSuccess = groupDAO.update((Group) groupToUpdate);
-
 
 		logger.info(String.format("Update success [%s]", changeSuccess));
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
@@ -201,7 +245,8 @@ public class EditGroupController {
 		}
 
 		if ((groupMemberDAO.checkIfGroupMember(userId, groupID)).getUserStatus() == 0) {
-			// This user should not be able to update this group, they are not admin. Something has gone
+			// This user should not be able to update this group, they are not admin.
+			// Something has gone
 			// wrong, return them to the group with an error message
 			logger.info("A user attempted to update a group which was not theirs");
 			ModelAndView errorReturn = new ViewSingleListingController().initPage(request);
@@ -210,9 +255,8 @@ public class EditGroupController {
 		}
 
 		boolean changeSuccess = false;
-		changeSuccess = groupDAO.delete( (Group) groupToDelete);
+		changeSuccess = groupDAO.delete((Group) groupToDelete);
 		changeSuccess = groupMemberDAO.groupDelete(groupToDelete.getId());
-
 
 		logger.info(String.format("Delete success [%s]", changeSuccess));
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
@@ -223,6 +267,15 @@ public class EditGroupController {
 			mv.addObject(ERROR_STRING, "Something went wrong with the deletion. Try again");
 		}
 		mv.addObject("changeType", "deleted");
+		return mv;
+	}
+
+	private ModelAndView returnErrorPage(String errorMessage) {
+		ModelAndView mv = new ModelAndView(VIEW_NAME);
+		mv.addObject(ERROR_STRING, errorMessage);
+		mv.addObject("postSent", false);
+		mv.addObject("changeSuccess", false);
+		mv.addObject("currentPage", VIEW_NAME);
 		return mv;
 	}
 }

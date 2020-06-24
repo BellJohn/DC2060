@@ -48,22 +48,24 @@
 									<h4 class="card-title col-md-3">${request.getName()}</h4>
 									<div class="col-md-6"></div>
 									<!-- Display Group Image -->
-										<c:choose>
-											<c:when test="${empty request.getPicture()}">
-												<img src="images/groupImage.png" alt="GroupLogo"
-													class="rounded-circle" style="max-width: 20%;">
-											</c:when>
-											<c:otherwise>
-												<img src="${groupPic}" alt="groupPic" class="rounded-circle" style="max-width: 20%;">
-											</c:otherwise>
-										</c:choose>
+									<c:choose>
+										<c:when test="${empty request.getPicture()}">
+											<img src="images/groupImage.png" alt="GroupLogo"
+												class="rounded-circle" style="max-width: 20%;">
+										</c:when>
+										<c:otherwise>
+											<img src="${uploadDirectory}${request.getPicture()}?cache=0"
+												alt="groupPic" class="rounded-circle"
+												style="max-width: 10%;">
+										</c:otherwise>
+									</c:choose>
 								</div>
 								<div class="row">
 									<h5 class="card-title col-md-12" style="text-align: center;">${request.getDescription()}</h5>
 								</div>
 
 								Location
-								<h6 class="card-subtitle mb-2 text-muted">${request.getLocationId()}</h6>
+								<h6 class="card-subtitle mb-2 text-muted">${request.city}, ${request.county}</h6>
 								<hr>
 
 								<div class="row">
@@ -88,63 +90,88 @@
 
 
 				<h3>Other groups</h3>
+				<c:choose>
+					<c:when test="${empty pendingGroups}">
+						<div class="card card-request">
+							<div class="row">
+								<h4 class="card-title col-md-3">No pending groups to display</h4>
+							</div>
+						</div>
+					</c:when>
+				</c:choose>
 				
-					<c:forEach items="${pendingGroups}" var="pendingGroup">
-
-
+				<c:forEach items="${pendingGroups}" var="pendingGroup">
 					<div class="card card-request">
 						<div class="row">
-							<h4 class="card-title col-md-3">${pendingGroup.getName()}</h4>
+							<h4 class="card-title col-md-3">Group:
+								${pendingGroup.getName()}</h4>
 							<div class="col-md-6"></div>
 							<!-- Display Group Image -->
-								<c:choose>
-									<c:when test="${empty pendingGroup.getPicture()}">
-										<img src="images/groupImage.png" alt="GroupLogo"
-													class="rounded-circle" style="max-width: 20%;">
-									</c:when>
-									<c:otherwise>
-										<img src="${pendingGroup.getPicture()}" alt="groupPic" style="max-width: 20%;">
-									</c:otherwise>
-								</c:choose>
+							<c:choose>
+								<c:when test="${empty pendingGroup.getPicture()}">
+									<img src="images/groupImage.png" alt="GroupLogo"
+										class="rounded-circle" style="max-width: 20%;">
+								</c:when>
+								<c:otherwise>
+									<img
+										src="${uploadDirectory}${pendingGroup.getPicture()}?cache=0"
+										alt="groupPic" style="max-width: 10%;">
+								</c:otherwise>
+							</c:choose>
 						</div>
-						
+
 						<div class="row">
 							<h5 class="card-title col-md-12" style="text-align: center;">${pendingGroup.getDescription()}</h5>
 						</div>
-						<div class="row"> <h4 class="card-title col-md-3" style="color:#D3D3D3;"> Pending approval</h4> </div>
+						<div class="row">
+							<h4 class="card-title col-md-3" style="color: #D3D3D3;">
+								Pending approval</h4>
+						</div>
 
 						Location
-						<h6 class="card-subtitle mb-2 text-muted">${pendingGroup.getLocationId()}</h6>
+						<h6 class="card-subtitle mb-2 text-muted">${pendingGroup.getCity()},
+							${pendingGroup.getCount()}</h6>
 						<hr>
 					</div>
 				</c:forEach>
 
+				<c:choose>
+					<c:when test="${empty otherGroups}">
+						<div class="card card-request">
+							<div class="row">
+								<h4 class="card-title col-md-3">No new groups to display</h4>
+							</div>
+						</div>
+					</c:when>
+				</c:choose>
+
 
 				<c:forEach items="${otherGroups}" var="otherGroup">
-
-
 					<div class="card card-request">
 						<div class="row">
-							<h4 class="card-title col-md-3">${otherGroup.getName()}</h4>
+							<h4 class="card-title col-md-3">Group:
+								${otherGroup.getName()}</h4>
 							<div class="col-md-6"></div>
 							<!-- Display Group Image -->
-							
-								<c:choose>
-									<c:when test="${empty otherGroup.getPicture()}">
-										<img src="images/groupImage.png" alt="GroupLogo"
-													class="rounded-circle" style="max-width: 20%;">
-									</c:when>
-									<c:otherwise>
-										<img src="${otherGroup.getPicture()}" alt="groupPic" style="max-width: 20%;">
-									</c:otherwise>
-								</c:choose>
-							
+
+							<c:choose>
+								<c:when test="${empty otherGroup.getPicture()}">
+									<img src="images/groupImage.png" alt="GroupLogo"
+										class="rounded-circle" style="max-width: 20%;">
+								</c:when>
+								<c:otherwise>
+									<img src="${otherGroup.getPicture()}" alt="groupPic"
+										style="max-width: 20%;">
+								</c:otherwise>
+							</c:choose>
+
 						</div>
 						<div class="row">
 							<h5 class="card-title col-md-12" style="text-align: center;">${otherGroup.getDescription()}</h5>
 						</div>
 						Location
-						<h6 class="card-subtitle mb-2 text-muted">${otherGroup.getLocationId()}</h6>
+						<h6 class="card-subtitle mb-2 text-muted">${otherGroup.getCity()},
+							${otherGroup.getCount()}</h6>
 						<hr>
 						<div class="row">
 							<div class="col-lg-6">

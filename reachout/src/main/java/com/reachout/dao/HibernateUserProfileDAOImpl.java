@@ -3,6 +3,7 @@ package com.reachout.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
@@ -41,8 +42,6 @@ public class HibernateUserProfileDAOImpl {
 		return true;
 	}
 
-
-
 	/**
 	 * Fetches a profile from a user ID in the database
 	 *
@@ -53,9 +52,11 @@ public class HibernateUserProfileDAOImpl {
 			Query query = session.createQuery("SELECT profile FROM UserProfile profile where USER_ID = :userID ");
 			query.setParameter("userID", userID);
 			return (UserProfile) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug("No user profile found for user id: " + userID);
+			return null;
 		}
 	}
-
 
 	/**
 	 * Deletes from the database where the user has a given ID
@@ -77,25 +78,35 @@ public class HibernateUserProfileDAOImpl {
 		}
 	}
 
-	public List<UserProfile> getAllProfiles(){
-		List<UserProfile> profiles = new ArrayList<>();
-		try( Session session = HibernateUtil.getInstance().getSession()){
+	public List<UserProfile> getAllProfiles() {
+		List<UserProfile> returnVal = new ArrayList<>();
+		try (Session session = HibernateUtil.getInstance().getSession()) {
 			Query query = session.createQuery("SELECT userprofile from UserProfile userprofile", UserProfile.class);
-			profiles = query.getResultList();
-			return profiles;
+			List<?> results = query.getResultList();
+			for (Object result : results) {
+				if (result instanceof UserProfile) {
+					returnVal.add((UserProfile) result);
+				}
+			}
 		}
+		return returnVal;
 	}
 
 	/**
-	 * Fetches a profile picture from a user ID in the database
-	 *
+	 * Fetches a profile picture from a user ID in the database Failure to find a
+	 * profile pic returns the default "no-profile-pic.png"
+	 * 
 	 * @return
 	 */
 	public String getProfilePicById(int userID) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
-			Query query  = session.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
-			query.setParameter("userId", userID);
+			Query query = session
+					.createQuery("SELECT profile.profilePic FROM UserProfile profile where USER_ID = :userID ");
+			query.setParameter("userID", userID);
 			return (String) query.getSingleResult();
+		} catch (NoResultException e) {
+			logger.debug(String.format("No profile pic found for user id {%s}", userID));
+			return "no-profile-pic.png";
 		}
 	}
 
