@@ -137,7 +137,7 @@ public class SignupController {
 		mv.addObject("postSent", true);
 		mv.addObject("postResult", result.getOutcome());
 		mv.addObject("emailAddress", request.getParameter("email"));
-		mv.addObject("validationErrors", result.getErrors());
+		mv.addObject("validationErrors", result.prettyPrintErrors());
 		return mv;
 	}
 }

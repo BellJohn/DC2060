@@ -101,23 +101,33 @@ public class GroupCreateController {
 					"Something went wrong locating your group. Please check the address provided and try again");
 		}
 
-		boolean validPic = false;
+		boolean providedPic = !groupPic.isEmpty();
 		String extension = "";
-		if (!groupPic.isEmpty() && ROUtils.validPic(groupPic)) {
-			validPic = true;
-			extension = ROUtils.getPictureExtension(groupPic);
+		//Default name
+		String groupPicName = "groupImage.png";
+		if (providedPic) {
+			if (ROUtils.validPic(groupPic)) {
+				extension = ROUtils.getPictureExtension(groupPic);
+				//Override with new data
+				groupPicName = "GROUP_" + name + "_" + userId + extension;
+			} else {
+				return returnErrorPage("Image uploads must be either [.png, .jpg, .jfif] and below 10mb");
+			}
 		}
 
-		if (!validPic) {
-			return returnErrorPage("Image uploads must be either [.png, .jpg, .jfif] and below 10mb");
-		}
-		String groupPicName = "GROUP_" + name + "_" + userId + extension;
+		
 
 		Group group = new Group(name, description, groupPicName, location.getLocId(), city, county);
 		boolean createSuccess = false;
 		try {
 			HibernateGroupDAOImpl groupDAO = new HibernateGroupDAOImpl();
-			if (!ROUtils.saveImageToDisk(groupPic, groupPicName)) {
+			boolean successfulChange = false;
+			if (providedPic) {
+				successfulChange = ROUtils.saveImageToDisk(groupPic, groupPicName);
+			} else {
+				successfulChange = true;
+			}
+			if (!successfulChange) {
 				return returnErrorPage("Something went wrong saving your group. Please try again");
 			}
 			createSuccess = groupDAO.save(group);
