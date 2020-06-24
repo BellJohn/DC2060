@@ -181,17 +181,20 @@ public class EditGroupController {
 
 		boolean validPic = false;
 		String extension = "";
+		String groupPicName = groupToUpdate.getPicture();
 		if (!groupPic.isEmpty() && ROUtils.validPic(groupPic)) {
 			validPic = true;
 			extension = ROUtils.getPictureExtension(groupPic);
+			groupPicName = "GROUP_" + newName + "_" + userId + extension;
 		}
 
-		if (!validPic) {
+		if (!groupPic.isEmpty() && !validPic) {
 			return returnErrorPage("Image uploads must be either [.png, .jpg, .jfif] and below 10mb");
 		}
-		String groupPicName = "GROUP_" + newName + "_" + userId + extension;
-		if (!ROUtils.saveImageToDisk(groupPic, groupPicName)) {
-			return returnErrorPage("Something went wrong saving your group. Please try again");
+		if (!groupPic.isEmpty()) {
+			if (!ROUtils.saveImageToDisk(groupPic, groupPicName)) {
+				return returnErrorPage("Something went wrong saving your group. Please try again");
+			}
 		}
 		groupToUpdate.setPicture(groupPicName);
 
