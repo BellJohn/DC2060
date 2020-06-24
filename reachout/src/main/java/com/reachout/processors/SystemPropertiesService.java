@@ -28,7 +28,7 @@ public class SystemPropertiesService {
 	private Map<String, String> systemProperties;
 
 	@PostConstruct
-	public void init(){
+	public void init() {
 		logger.info("SystemPropertiesService Startup begin");
 		String appLocation = new File(".").getAbsolutePath();
 		logger.info(String.format("THIS APPLICATION IS RUNNING WITH A ROOT PATH OF: {%s}", appLocation));
@@ -109,6 +109,8 @@ public class SystemPropertiesService {
 		}
 
 		logger.info("Map update complete");
-		logger.debug("Map content: " + systemProperties.toString());
+		if (logger.isTraceEnabled()) {
+			logger.trace("Map content: " + systemProperties.toString());
+		}
 	}
 }

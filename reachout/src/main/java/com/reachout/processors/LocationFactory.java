@@ -64,7 +64,7 @@ public class LocationFactory {
 				location = new Location();
 				location.setLocLat(lat);
 				location.setLocLong(lng);
-				logger.debug("Constructed new location for [%s,%s,%s] : [%s,%s]", address, city, county, lat, lng);
+				logger.debug(String.format("Constructed new location for [%s,%s,%s] : [%s,%s]", address, city, county, lat, lng));
 			} else {
 				throw new MappingAPICallException(String.format(
 						"Unable to fetch data requested. Response was [%s]. Full content retrieved was [%s]", status,

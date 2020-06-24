@@ -8,18 +8,24 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Logger name="org.springframework.jndi" level="DEBUG">
+		<Logger name="org.springframework.jndi" level="WARN">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="org.springframework.security.web" level="DEBUG">
+		<Logger name="org.springframework.security.web" level="WARN">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="org.springframework.web" level="DEBUG">
+		<Logger name="org.springframework.web" level="WARN">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="org.hibernate" level="DEBUG">
+		<Logger name="org.hibernate" level="WARN">
 			<AppenderRef ref="Console" />
 		</Logger>
+		<Logger
+			name="org.springframework.security.access.vote.AffirmativeBased"
+			level="OFF">
+			<AppenderRef ref="Console" />
+		</Logger>
+
 		<Root level="DEBUG">
 			<AppenderRef ref="Console" />
 		</Root>
