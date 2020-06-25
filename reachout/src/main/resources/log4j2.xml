@@ -25,7 +25,9 @@
 			level="OFF">
 			<AppenderRef ref="Console" />
 		</Logger>
-
+		<Logger name="com.reachout.processors.SystemPropertiesService" level="TRACE">
+			<AppenderRef ref="Console" />
+		</Logger>
 		<Root level="DEBUG">
 			<AppenderRef ref="Console" />
 		</Root>

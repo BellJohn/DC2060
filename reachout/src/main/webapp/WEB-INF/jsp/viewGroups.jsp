@@ -130,7 +130,7 @@
 
 						Location
 						<h6 class="card-subtitle mb-2 text-muted">${pendingGroup.getCity()},
-							${pendingGroup.getCount()}</h6>
+							${pendingGroup.getCounty()}</h6>
 						<hr>
 					</div>
 				</c:forEach>
@@ -171,7 +171,7 @@
 						</div>
 						Location
 						<h6 class="card-subtitle mb-2 text-muted">${otherGroup.getCity()},
-							${otherGroup.getCount()}</h6>
+							${otherGroup.getCounty()}</h6>
 						<hr>
 						<div class="row">
 							<div class="col-lg-6">

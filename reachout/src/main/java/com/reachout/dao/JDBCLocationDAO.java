@@ -28,7 +28,7 @@ public class JDBCLocationDAO {
 			double longMax, ListingType type) {
 
 		Set<ListingGUIWrapper> results = new HashSet<>();
-		String queryString = "SELECT * FROM listings JOIN locations ON listings.LST_LOC_ID = locations.LOC_ID JOIN users on users.USERS_ID = listings.LST_USER_ID WHERE listings.LST_TYPE = ? AND (locations.LOC_LAT >= ? AND locations.LOC_LAT <= ?) AND (locations.LOC_LONG >= ? AND locations.LOC_LONG <= ?)";
+		String queryString = "SELECT * FROM LISTINGS JOIN LOCATIONS ON LISTINGS.LST_LOC_ID = LOCATIONS.LOC_ID JOIN USERS on USERS.USERS_ID = LISTINGS.LST_USER_ID WHERE LISTINGS.LST_TYPE = ? AND (LOCATIONS.LOC_LAT >= ? AND LOCATIONS.LOC_LAT <= ?) AND (LOCATIONS.LOC_LONG >= ? AND LOCATIONS.LOC_LONG <= ?)";
 		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/reach_out", "reach",
 				"reach_pass"); PreparedStatement ps = con.prepareStatement(queryString);) {
 
