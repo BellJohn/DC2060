@@ -127,12 +127,6 @@ class ProfileControllerTest {
 		assertEquals(1, dao.getAllProfiles().size());
 
 	}
-	/**
-	 *
-	 * @Test void invalidImageTypeTest() {
-	 *
-	 *       }
-	 *
-	 */
+
 
 }

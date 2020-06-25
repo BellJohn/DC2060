@@ -21,15 +21,26 @@ public final class Conversation {
 	private final List<InternalMessage> allIMs;
 	private final String otherUserName;
 	private final String browsingUserName;
-
-	public Conversation(int userBrowsing, int userOther, List<InternalMessage> allIMs, String otherUserName, String browsingUserName) {
+	private final String otherProfilePic;
+	private final String browsingProfilePic;
+	
+	public Conversation(int userBrowsing, int userOther, List<InternalMessage> allIMs, String otherUserName, String browsingUserName, String otherProfilePic, String browsingProfilePic) {
 		this.userBrowsing = userBrowsing;
 		this.userOther = userOther;
 		this.allIMs = allIMs;
 		this.otherUserName = otherUserName;
 		this.browsingUserName = browsingUserName;
+		this.otherProfilePic = otherProfilePic;
+		this.browsingProfilePic = browsingProfilePic;
 	}
 
+	public String getBrowsingProfilePic() {
+		return this.browsingProfilePic;
+	}
+	
+	public String getOtherProfilePic() {
+		return this.otherProfilePic;
+	}
 	/**
 	 * @return the userOther
 	 */

@@ -5,6 +5,9 @@ package com.reachout.models;
 
 import java.text.SimpleDateFormat;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Wrapper object for the listing and user data for presentation on the GUI
  * 
@@ -13,12 +16,23 @@ import java.text.SimpleDateFormat;
  */
 public class ListingGUIWrapper {
 
+	Logger logger = LogManager.getLogger(ListingGUIWrapper.class);
 	public final Listing listing;
 	public final User user;
+	public final Location location;
 
-	public ListingGUIWrapper(Listing listing, User user) {
+	public ListingGUIWrapper(Listing listing, User user, Location location) {
 		this.listing = listing;
 		this.user = user;
+		this.location = location;
+	}
+
+	public double getLocationLat() {
+		return location.getLocLat();
+	}
+
+	public double getLocationLong() {
+		return location.getLocLong();
 	}
 
 	public String getUsername() {
@@ -60,7 +74,7 @@ public class ListingGUIWrapper {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		return simpleDateFormat.format(listing.getCreatedDateAsDate());
 	}
-	
+
 	public String getCreatedTime() {
 		String pattern = "HH:mm";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -74,12 +88,13 @@ public class ListingGUIWrapper {
 	public String getFormattedDescription() {
 		return listing.getFormattedDescription();
 	}
-	
+
 	public int getUserID() {
 		return user.getId();
 	}
-	
+
 	public String getPriority() {
 		return listing.getPriority();
 	}
+
 }

@@ -23,7 +23,8 @@ public abstract class Listing implements Serializable {
 	protected long createdDate;
 	protected ListingType listingType;
 	protected String priority;
-
+	protected int locationId;
+	protected int visibility;
 	/*
 	 * Empty request constructor for hibernate to use
 	 */
@@ -41,8 +42,8 @@ public abstract class Listing implements Serializable {
 	 * @param status
 	 * @param priority
 	 */
-	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority) {
-		this(title, description, county, city, userId, priority);
+	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority, int visibility, int locationId) {
+		this(title, description, county, city, userId, priority, visibility, locationId);
 		this.status = status;
 	}
 
@@ -54,24 +55,42 @@ public abstract class Listing implements Serializable {
 	 * @param county
 	 * @param city
 	 */
-	public Listing(String title, String description, String county, String city, int userId, String priority) {
+	public Listing(String title, String description, String county, String city, int userId, String priority, int visibility, int locationId) {
 		this.title = title;
 		this.description = description;
 		this.county = county;
 		this.city = city;
 		this.userId = userId;
 		this.priority = priority;
+		this.visibility = visibility;
 		status = ListingStatus.OPEN;
 		this.createdDate = (System.currentTimeMillis());
+		this.locationId = locationId;
 	}
 
-
+	public int getLocationId() {
+		return locationId;
+	}
 
 	/**
 	 * @return the title
 	 */
 	public String getTitle() {
 		return title;
+	}
+
+	/**
+	 * @return the visibility
+	 */
+	public int getVisibility() {
+		return visibility;
+	}
+
+	/**
+	 * @param visibility the visibility to set
+	 */
+	public void setVisibility(int visibility) {
+		this.visibility = visibility;
 	}
 
 	/**
@@ -82,7 +101,7 @@ public abstract class Listing implements Serializable {
 	}
 
 	/**
-	 * @return the description ready to be dislpayed on a page
+	 * @return the description ready to be displayed on a page
 	 */
 	public String getFormattedDescription() {
 		int strLen = description.length();
@@ -211,7 +230,7 @@ public abstract class Listing implements Serializable {
 	 * @param statusValue
 	 */
 	public void setListingType(int listingType) {
-		status = ListingType.getByOrdinal(listingType);
+		this.listingType = ListingType.getByOrdinal(listingType);
 	}
 
 
@@ -248,6 +267,10 @@ public abstract class Listing implements Serializable {
 
 	public void setPriority(String priority) {
 		this.priority = priority;
+	}
+
+	public void setLocationId(int locationId) {
+		this.locationId = locationId;
 	}
 
 	/*
