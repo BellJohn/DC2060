@@ -56,7 +56,7 @@
 							${bio}
 						</c:otherwise>
 						</c:choose>
-						<br>-<br>
+						<br><hr/><br>
 						<c:choose>
 							<c:when test="${empty healthStatus}">
 							Please Update Profile (below)

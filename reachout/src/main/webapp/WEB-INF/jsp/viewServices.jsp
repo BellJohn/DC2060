@@ -312,8 +312,7 @@
 
 						<div class="card card-request">
 							<h4 class="card-title">${service.getTitle()}</h4>
-							<h6 class="card-subtitle mb-2 text-muted">${service.getCity()},
-								${service.getCounty()}</h6>
+							<h6 class="card-subtitle mb-2 text-muted">${service.getCity()}, ${service.getCounty()}</h6>
 							<p class="card-text">${service.getFormattedDescription()}</p>
 
 							<hr>

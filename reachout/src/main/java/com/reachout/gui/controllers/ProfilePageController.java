@@ -60,20 +60,19 @@ public class ProfilePageController {
 		lastName = userDAO.selectUser(username).getLastName();
 		int userId = userDAO.getUserIdByUsername(username);
 
-		UserProfile profile = null;
-		try {
-			profile = userProfileDAO.getProfileById(userId);
-			if (profile == null) {
-				profile = new UserProfile();
-				profile.generateStartingData();
-				profile.setUserId(userId);
-			}
-			bio = profile.getBio();
-			profilePic = profile.getProfilePic();
-			healthStatus = profile.getHealthStatus();
-		} catch (Exception e) {
-			logger.error("No result found");
+		UserProfile profile = userProfileDAO.getProfileById(userId);
+		// If we don't find one, just build one now and try to save
+		if (profile == null) {
+			logger.error(String.format("No profile found for userID {%s}, generating default one", userId));
+			profile = new UserProfile();
+			profile.generateStartingData();
+			profile.setUserId(userId);
+			userProfileDAO.saveOrUpdateProfile(profile);
 		}
+		
+		bio = profile.getBio();
+		profilePic = profile.getProfilePic();
+		healthStatus = profile.getHealthStatus();
 		SystemPropertiesService sps = SystemPropertiesService.getInstance();
 		String uploadDirectory = sps.getProperty("IMAGE_DIR");
 		// We need an arbitrary random value to assign to the file fetch to ensure the
@@ -107,7 +106,6 @@ public class ProfilePageController {
 			userIDtoUsernameMap.put(uid, userDAO.selectByID(uid).getUsername());
 		}
 
-		
 		mv.addObject("numRequests", reqDAO.getNumRequestsForUser(userId));
 		List<Request> acceptedRequests = reqDAO.getAcceptedRequestsForUser(userId);
 		mv.addObject("acceptedRequests", acceptedRequests);
