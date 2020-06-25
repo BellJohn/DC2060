@@ -28,4 +28,12 @@ public class ValidationResult {
 		errors.put(key, value);
 	}
 
+	public String prettyPrintErrors() {
+		StringBuilder builder = new StringBuilder();
+		for (String key : errors.keySet()) {
+			builder.append(String.format("<p>%s. %s</p>", key, errors.get(key)));
+		}
+		return builder.toString();
+	}
+
 }

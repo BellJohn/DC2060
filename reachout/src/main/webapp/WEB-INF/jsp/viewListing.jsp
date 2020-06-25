@@ -70,7 +70,6 @@
 						<c:choose>
 							<c:when test="${isOwner == true}">
 								<div class="col-lg-4"></div>
-								<div class="col-lg-4">
 									<form action="editListing" method="GET">
 										<input type="hidden" id="action" name="action" value="accept" />
 										<input type="hidden" id="listingID" name="listingID"

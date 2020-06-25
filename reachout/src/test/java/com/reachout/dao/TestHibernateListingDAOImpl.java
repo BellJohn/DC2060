@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.reachout.dao;
 
@@ -50,7 +50,7 @@ class TestHibernateListingDAOImpl {
 	 */
 	@Test
 	void testAssignListingToUser() {
-		Request request = new Request("title", "description", "county", "city", 2, "low");
+		Request request = new Request("title", "description", "county", "city", 2, "low", 1, -1);
 		User user = new User();
 		user.setId(3);
 

@@ -1,23 +1,23 @@
 package com.reachout.gui.controllers;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reachout.utils.CodeGenerator;
-import com.reachout.models.PasswordReset;
-import com.reachout.models.Password;
-import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.dao.HibernatePasswordResetDAOImpl;
 import com.reachout.dao.HibernatePasswordDAOImpl;
+import com.reachout.dao.HibernatePasswordResetDAOImpl;
+import com.reachout.dao.HibernateUserDAOImpl;
+import com.reachout.models.Password;
+import com.reachout.models.PasswordReset;
 import com.reachout.processors.EmailHandler;
+import com.reachout.utils.CodeGenerator;
 
 @Controller
 @RequestMapping("/resetPassword")

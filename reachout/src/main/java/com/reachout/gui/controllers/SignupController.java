@@ -83,6 +83,10 @@ public class SignupController {
 
 		ValidationResult result = SignupValidator.validateSignupForm(userData);
 		// If we failed the validation, log some reasons why to the console for now
+		if(result.getOutcome()) {
+			logger.debug("Validation checks passed");
+		}
+		
 		if (!result.getOutcome()) {
 			for (String s : result.getErrors().keySet()) {
 				logger.error(String.format("%s : %s", s, result.getErrors().get(s)));
@@ -101,6 +105,7 @@ public class SignupController {
 					newPassword.setHashedPasswordString(password);
 					newPassword.setCreatedDate(System.currentTimeMillis());
 					passwordDAO.save(newPassword);
+					logger.info("password saved");
 				}
 				if (!saveUserSuccess) {
 					// Something went wrong building the user
@@ -108,9 +113,10 @@ public class SignupController {
 					result.setOutcome(false);
 				}
 			} catch (Exception e) {
-				result.addError("Duplicate Username", "This username is already taken");
+				result.addError("Duplicate Username", "The username" + username + " is already taken, please try again.");
 				result.setOutcome(false);
-				logger.error("Unable to save the user: This username is already taken");
+				logger.error("Unable to save the user: This username is already taken", e);
+				saveUserSuccess = false;
 			}
 		}
 		// If we saved the new user, we should log them in
@@ -118,20 +124,20 @@ public class SignupController {
 			try {
 				request.login(username, password);
 
+				// send new email to the user to confirm they have signed up
+				EmailHandler.generateAndSendEmail(email, "emails/signupEmail.html", "Welcome to ReachOut...");
 			} catch (ServletException e) {
-				logger.error(e.getStackTrace());
+				logger.error("Unable to log in user after account creation", e);
 			}
 		}
 
-		// send new email to the user to confirm they have signed up
-		EmailHandler.generateAndSendEmail(email, "emails/signupEmail.html", "Welcome to ReachOut...");
 
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("postSent", true);
 		mv.addObject("postResult", result.getOutcome());
 		mv.addObject("emailAddress", request.getParameter("email"));
-		mv.addObject("validationErrors", result.getErrors());
+		mv.addObject("validationErrors", result.prettyPrintErrors());
 		return mv;
 	}
 }
