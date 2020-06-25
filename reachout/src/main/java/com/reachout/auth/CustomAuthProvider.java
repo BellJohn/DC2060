@@ -68,6 +68,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
 			throw new BadCredentialsException("Missing either username or password, cannot log in");
 		}
+		logger.debug("Logging in user " + username + "  with pass: " + password);
 		// Check to see if the user is valid
 		User userFound = null;
 		Password passwordFound = null;

@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -54,11 +53,6 @@ public class ViewMyMessagesController {
 		mv.addObject("currentPage", VIEW_NAME);
 		mv.addObject("user", username);
 		List<Conversation> convos = getAllMyConversations(username);
-
-		//Default to the first conversation
-		if (StringUtils.isEmpty(previousUserSelected) && !convos.isEmpty()) {
-			previousUserSelected = "" + convos.get(0).getUserOther();
-		}
 		mv.addObject("conversations", convos);
 		mv.addObject("previousUser", previousUserSelected);
 

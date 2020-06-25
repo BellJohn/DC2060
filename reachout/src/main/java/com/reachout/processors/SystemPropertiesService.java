@@ -28,7 +28,7 @@ public class SystemPropertiesService {
 	private Map<String, String> systemProperties;
 
 	@PostConstruct
-	public void init() {
+	public void init(){
 		logger.info("SystemPropertiesService Startup begin");
 		String appLocation = new File(".").getAbsolutePath();
 		logger.info(String.format("THIS APPLICATION IS RUNNING WITH A ROOT PATH OF: {%s}", appLocation));
@@ -104,13 +104,11 @@ public class SystemPropertiesService {
 				systemProperties.put(key, value);
 			}
 		} catch (SQLException e) {
-			logger.error("Failed to populate the SystemProperties map fully", e);
+			logger.error("Failed to populate the SystemProperties map fully", (e));
 			throw new SystemPropertiesFunctionException(e);
 		}
 
 		logger.info("Map update complete");
-		if (logger.isTraceEnabled()) {
-			logger.trace("Map content: " + systemProperties.toString());
-		}
+		logger.debug("Map content: " + systemProperties.toString());
 	}
 }

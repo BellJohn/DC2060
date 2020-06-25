@@ -52,9 +52,6 @@
 								<li
 									class="nav-item ${pagina.endsWith('/viewServices') ? 'active' : ''}"><a
 									class="nav-link" href="viewServices">Services${pagina.endsWith('/viewServices') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
-								<li
-									class="nav-item ${pagina.endsWith('/viewGroups') ? 'active' : ''}"><a
-									class="nav-link" href="viewGroups">Groups${pagina.endsWith('/viewGroups') ? '<span class="sr-only">(current)</span>' : ''}</a></li>
 							</ul>
 
 						</div>

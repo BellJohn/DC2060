@@ -21,8 +21,6 @@
 		<property name="city" type="string" column="LST_CITY" />
 		<property name="userId" type="int" column="LST_USER_ID" />
 		<property name="priority" type="string" column="LST_PRIORITY" />
-		<property name="visibility" type="int" column="LST_VISIBILITY" />
-		<property name="locationId" type="int" column="LST_LOC_ID" />
 		<property name="status" column="LST_STATUS">
 			<type name="org.hibernate.type.EnumType">
 				<param name="enumClass">com.reachout.models.ListingStatus</param>
@@ -35,6 +33,7 @@
 		</property>
 		<property name="createdDate" type="long"
 			column="LST_CREATE_DATE" />
+
 	</class>
 
 </hibernate-mapping>

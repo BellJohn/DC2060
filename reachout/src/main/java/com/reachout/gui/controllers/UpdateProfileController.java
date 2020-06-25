@@ -2,6 +2,7 @@ package com.reachout.gui.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -25,11 +26,10 @@ import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
 import com.reachout.models.UserProfile;
 import com.reachout.processors.SystemPropertiesService;
-import com.reachout.utils.ROUtils;
 
 /**
  * Used for converting updating a user's profile
- *
+ * 
  * @author Jess
  *
  */
@@ -41,6 +41,7 @@ public class UpdateProfileController {
 	public final Logger logger = LogManager.getLogger(UpdateProfileController.class);
 
 	private static final String VIEW_NAME = "updateProfile";
+	private static final long TEN_MB_AS_BYTES = 10000000L;
 
 	@GetMapping
 	public ModelAndView initPage(HttpServletRequest request) {
@@ -87,7 +88,7 @@ public class UpdateProfileController {
 			healthStatus = profile.getHealthStatus();
 			profilePic = profile.getProfilePic();
 		} catch (Exception e) {
-			logger.error(String.format("No profile found for userID {%s}", userId), e);
+			logger.error(String.format("No profile found for userID {%s}", userId));
 		}
 
 		SystemPropertiesService sps = SystemPropertiesService.getInstance();
@@ -99,11 +100,12 @@ public class UpdateProfileController {
 		mv.addObject("healthStatus", healthStatus);
 		mv.addObject("profilePic", profilePic);
 		return mv;
+
 	}
 
 	/**
 	 * Update user profile. Parameters are profilePic, bio, healthStatus
-	 *
+	 * 
 	 * @param request
 	 * @return
 	 * @throws IOException
@@ -116,13 +118,24 @@ public class UpdateProfileController {
 		boolean saveUserDetailsSuccess = false;
 
 		// determine picture file extension
-		boolean validPic = ROUtils.validPic(profilePic);
-		String extension = "";
-		boolean changedImage = false;
-		if (!profilePic.isEmpty() && validPic) {
-			validPic = true;
-			extension = ROUtils.getPictureExtension(profilePic);
-			changedImage = true;
+		boolean validPic = true;
+		if (profilePic.getSize() > TEN_MB_AS_BYTES) {
+			logger.info(String.format("Attempted image upload with file size in excess of 10MB: {%s}",
+					profilePic.getSize()));
+			validPic = false;
+		}
+
+		String extension = profilePic.getOriginalFilename()
+				.substring(profilePic.getOriginalFilename().lastIndexOf('.'));
+		if (extension.equalsIgnoreCase(".png")) {
+			extension = ".png";
+		} else if (extension.equalsIgnoreCase(".jpg")) {
+			extension = ".jpg";
+		} else if (extension.equalsIgnoreCase(".jfif")) {
+			extension = ".jfif";
+		} else {
+			logger.info(String.format("Attempted image upload with unuseable file extension: {%s}", extension));
+			validPic = false;
 		}
 
 		if (!validPic) {
@@ -148,26 +161,17 @@ public class UpdateProfileController {
 		int userId = userDAO.getUserIdByUsername(username);
 		String profilePicName = username + "_" + userId + extension;
 
+		UserProfile profile = new UserProfile(profilePicName, bio, healthStatus, userId);
+
 		// Populate the user profile db
 		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
-		UserProfile profile = userProfileDAO.getProfileById(userId);
-		if (profile == null) {
-			profile = new UserProfile();
-			profile.setUserId(userId);
-		}
 
-		profile.setBio(bio);
-		profile.setHealthStatus(healthStatus);
-		if (changedImage) {
-			profile.setProfilePic(profilePicName);
-
-			// save picture to directory
-			if (ROUtils.saveImageToDisk(profilePic, profilePicName)) {
-				saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);
-				if (!saveUserDetailsSuccess) {
-					// Something went wrong updating the profile
-					logger.error("Unable to update profile at this time");
-				}
+		// save picture to directory
+		if (saveImageToDisk(profilePic, profilePicName)) {
+			saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);
+			if (!saveUserDetailsSuccess) {
+				// Something went wrong updating the profile
+				logger.error("Unable to update profile at this time");
 			}
 		}
 
@@ -182,4 +186,39 @@ public class UpdateProfileController {
 		}
 	}
 
+	/**
+	 * Attempts to save the file to disk. On success returns true, failures return
+	 * false
+	 * 
+	 * @param profilePic
+	 * @param profilePicName
+	 * @return
+	 */
+	private boolean saveImageToDisk(MultipartFile profilePic, String profilePicName) {
+
+		SystemPropertiesService sps = SystemPropertiesService.getInstance();
+		String uploadDirectory = sps.getProperty("IMAGE_DIR");
+		File uploadDir = new File(sps.getProperty("ROOT_DIR") + File.separator + "tomcat" + File.separator + "webapps"
+				+ File.separator + uploadDirectory);
+		if (!uploadDir.exists()) {
+			logger.info(String.format("Created new directory at {%s}", uploadDir.getPath()));
+			uploadDir.mkdir();
+		}
+		File fileToWrite = new File(uploadDir.getPath() + File.separator + profilePicName);
+		logger.info(String.format("Attempting uploaded of file to path {%s}", fileToWrite.getPath()));
+
+		try {
+			if (fileToWrite.exists() || fileToWrite.createNewFile()) {
+				Files.write(fileToWrite.toPath(), profilePic.getBytes());
+			}
+		} catch (IOException e) {
+			logger.error("Unable to write file to disk", e);
+			return false;
+		}
+		logger.info(String.format("Successfully uploaded file {%s} with size {%s} bytes", fileToWrite.getPath(),
+				fileToWrite.length()));
+
+		return true;
+
+	}
 }

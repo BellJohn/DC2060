@@ -26,22 +26,13 @@ public enum ListingType {
 	}
 	
 	/**
-	 * Returns the corresponding ListingType by ordindal
+	 * Returns the corresponding ListingStatus by ordindal
 	 * 
 	 * @param statusValue
 	 * @return
 	 */
-	public static ListingType getByOrdinal(int listingType) {
-		return ListingType.values()[listingType];
-	}
-	
-	public static ListingType getByValue(String listingType) {
-		for(ListingType lt : ListingType.values()) {
-			if(lt.name.equalsIgnoreCase(listingType)) {
-				return lt;
-			}
-		}
-		return null;
+	public static ListingStatus getByOrdinal(int listingValue) {
+		return ListingStatus.values()[listingValue];
 	}
 
 	@Override

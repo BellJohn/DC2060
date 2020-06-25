@@ -1,9 +1,6 @@
 package com.reachout.gui.controllers;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +19,6 @@ import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
-import com.reachout.models.ListingStatus;
-import com.reachout.models.Request;
 import com.reachout.models.UserProfile;
 import com.reachout.processors.SystemPropertiesService;
 
@@ -60,14 +55,9 @@ public class ProfilePageController {
 		lastName = userDAO.selectUser(username).getLastName();
 		int userId = userDAO.getUserIdByUsername(username);
 
-		UserProfile profile = null;
+		UserProfile profile = new UserProfile();
 		try {
 			profile = userProfileDAO.getProfileById(userId);
-			if (profile == null) {
-				profile = new UserProfile();
-				profile.generateStartingData();
-				profile.setUserId(userId);
-			}
 			bio = profile.getBio();
 			profilePic = profile.getProfilePic();
 			healthStatus = profile.getHealthStatus();
@@ -88,33 +78,10 @@ public class ProfilePageController {
 		mv.addObject("healthStatus", healthStatus);
 
 		HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();
-		List<Request> myRequests = reqDAO.getAllRequestsForUser(userId);
-		mv.addObject("liveRequests", myRequests);
-		Map<Integer, Integer> acceptedRequestsByUser = new HashMap<>();
-
-		for (Request req : myRequests) {
-			if (req.getStatus().equals(ListingStatus.PENDING)) {
-				Integer userAcceptedRequest = reqDAO.getUserIdWhoAcceptedListing(req);
-				if (userAcceptedRequest != null) {
-					acceptedRequestsByUser.put(req.getId(), userAcceptedRequest);
-				}
-			}
-		}
-		mv.addObject("acceptRequestIDUserIDMap", acceptedRequestsByUser);
-
-		Map<Integer, String> userIDtoUsernameMap = new HashMap<>();
-		for (Integer uid : acceptedRequestsByUser.values()) {
-			userIDtoUsernameMap.put(uid, userDAO.selectByID(uid).getUsername());
-		}
-
-		
+		mv.addObject("liveRequests", reqDAO.getAllRequestsForUser(userId));
 		mv.addObject("numRequests", reqDAO.getNumRequestsForUser(userId));
-		List<Request> acceptedRequests = reqDAO.getAcceptedRequestsForUser(userId);
-		mv.addObject("acceptedRequests", acceptedRequests);
-		for (Request req : acceptedRequests) {
-			userIDtoUsernameMap.put(req.getUserId(), userDAO.selectByID(req.getUserId()).getUsername());
-		}
-		mv.addObject("userIDtoUsernameMap", userIDtoUsernameMap);
+		mv.addObject("acceptedRequests", reqDAO.getAcceptedRequestsForUser(userId));
+
 		HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
 		mv.addObject("liveServices", serDAO.getAllServicesForUser(userId));
 		mv.addObject("numServices", serDAO.getNumServicesForUser(userId));

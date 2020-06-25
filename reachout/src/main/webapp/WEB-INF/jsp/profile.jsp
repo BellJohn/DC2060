@@ -4,17 +4,6 @@
 <title>ReachOut | Profile</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="/components/stylesheets.jsp"%>
-<meta charset="UTF-8">
-<meta name="_csrf" content="${_csrf.token}" />
-<meta name="_csrf_header" content="${_csrf.headerName}" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
-	
-</script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -142,45 +131,6 @@
 										</c:when>
 										<c:when test="${request.getStatus().getOrdinal()==1}">
 											<button class="btn btn-warning btn-block" disabled>PENDING</button>
-											<div class="modal fade"
-												id="modalForm_R_${acceptRequestIDUserIDMap.get(request.getId())}"
-												role="dialog">
-												<div class="modal-dialog">
-													<div class="modal-content">
-														<!-- Modal Header -->
-														<div class="modal-header">
-															<h4 class="modal-title"
-																id="myModalLabel_R_${acceptRequestIDUserIDMap.get(request.getId())}">Message
-																${userIDtoUsernameMap.get(acceptRequestIDUserIDMap.get(request.getId()))}</h4>
-															<button type="button" class="close" data-dismiss="modal">
-																<span aria-hidden="true">&times;</span> <span
-																	class="sr-only">Close</span>
-															</button>
-														</div>
-
-														<!-- Modal Body -->
-														<div class="modal-body">
-															<p class="statusMsg"></p>
-															<form role="form">
-																<div class="form-group">
-																	<textarea class="form-control"
-																		id="inputMessage_R_${acceptRequestIDUserIDMap.get(request.getId())}"
-																		placeholder="Please enter your message to the user. Once you press send, you will see it appear on your My Messages page."></textarea>
-																</div>
-
-															</form>
-														</div>
-
-														<!-- Modal Footer -->
-														<div class="modal-footer">
-															<button type="button" class="btn btn-default"
-																data-dismiss="modal">Cancel</button>
-															<button type="button" class="btn btn-info submitBtn"
-																onclick="submitContactForm('R_${acceptRequestIDUserIDMap.get(request.getId())}')">SEND</button>
-														</div>
-													</div>
-												</div>
-											</div>
 										</c:when>
 										<c:when test="${request.getStatus().getOrdinal()==2}">
 											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
@@ -188,22 +138,7 @@
 									</c:choose>
 								</div>
 
-
-								<c:choose>
-									<c:when test="${request.getStatus().getOrdinal()==1}">
-										<div class="col-lg-4"></div>
-										<div class="col-lg-2">
-											<!-- Button to trigger modal -->
-											<button class="btn btn-warning btn-block" data-toggle="modal"
-												data-target="#modalForm_R_${acceptRequestIDUserIDMap.get(request.getId())}">
-												<span class="fa fa-comments-o"></span> Message ${userIDtoUsernameMap.get(acceptRequestIDUserIDMap.get(request.getId()))}
-											</button>
-										</div>
-									</c:when>
-									<c:otherwise>
-										<div class="col-lg-6"></div>
-									</c:otherwise>
-								</c:choose>
+								<div class="col-lg-6"></div>
 
 								<div class="col-lg-2">
 									<form action="viewListing" method="POST">
@@ -335,14 +270,8 @@
 									</c:choose>
 								</div>
 
-								<div class="col-lg-6"></div>
-								<div class="col-lg-2">
-									<!-- Button to trigger modal -->
-									<button class="btn btn-warning btn-block" data-toggle="modal"
-										data-target="#modalForm_${acceptedRequest.userId}">
-										<span class="fa fa-comments-o"></span> Message ${userIDtoUsernameMap.get(acceptedRequest.getUserId())}
-									</button>
-								</div>
+								<div class="col-lg-8"></div>
+
 								<div class="col-lg-2">
 									<form action="viewListing" method="POST">
 										<sec:csrfInput />
@@ -357,100 +286,12 @@
 								</div>
 							</div>
 						</div>
-						<!-- Modal -->
-						<div class="modal fade" id="modalForm_${acceptedRequest.userId}"
-							role="dialog">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<!-- Modal Header -->
-									<div class="modal-header">
-										<h4 class="modal-title"
-											id="myModalLabel_${acceptedRequest.userId}">Message ${userIDtoUsernameMap.get(acceptedRequest.getUserId())}</h4>
-										<button type="button" class="close" data-dismiss="modal">
-											<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
-										</button>
-									</div>
 
-									<!-- Modal Body -->
-									<div class="modal-body">
-										<p class="statusMsg"></p>
-										<form role="form">
-											<div class="form-group">
-												<textarea class="form-control"
-													id="inputMessage_${acceptedRequest.userId}"
-													placeholder="Please enter your message to the user. Once you press send, you will see it appear on your My Messages page."></textarea>
-											</div>
-
-										</form>
-									</div>
-
-									<!-- Modal Footer -->
-									<div class="modal-footer">
-										<button type="button" class="btn btn-default"
-											data-dismiss="modal">Cancel</button>
-										<button type="button" class="btn btn-info submitBtn"
-											onclick="submitContactForm(${acceptedRequest.userId})">SEND</button>
-									</div>
-								</div>
-							</div>
-						</div>
 					</c:forEach>
 				</div>
 			</div>
 		</div>
 	</div>
 </body>
-<script>
-	//ajax function to send message. Targets the SendUserMessage class
-	//userID may come in with the format "R_####", this is to differentiate the different created modals.
-	//trim off the R_ for the user id that we are targeting but keep the original reference so we can reference the correct modals
-	function submitContactForm(userID) {
-		var targetID = userID;
-		if(userID.includes("R_")){
-			targetID = targetID.replace("R_","");
-		}
-		var message = $('#inputMessage_'+userID).val();
-		var token = $("meta[name='_csrf']").attr("content");
-		var header = $("meta[name='_csrf_header']").attr("content");
-		if (message.trim() == '') {
-			alert('Please enter your message.');
-			$('#inputMessage_'+userID).focus();
-			return false;
-		} else {
-			console.log("sending message id: " + targetID + " message: "
-					+ message);
-			$
-					.ajax({
-						type : 'POST',
-						url : 'SendUserMessage',
-						data : 'contactFrmSubmit=1&message=' + message
-								+ '&targetID=' + targetID,
-						beforeSend : function(xhr) {
-							$('.submitBtn').attr("disabled", "disabled");
-							$('.modal-body').css('opacity', '.5');
-							xhr.setRequestHeader(header, token);
-						},
-						success : function(msg) {
-							if (msg == 'SUCCESS') {
-								$('#inputMessage_'+userID).val('');
-								$('.statusMsg')
-										.html(
-												'<span style="color:green;">Message Sent.</p>');
-							} else {
-								$('.statusMsg')
-										.html(
-												'<span style="color:red;">Some problem occurred, please try again.</span>');
-							}
-							$('.submitBtn').removeAttr("disabled");
-							$('.modal-body').css('opacity', '');
-							$('.statusMsg').html('');
-							$('#modalForm_'+userID).modal('hide');
-							$('body').removeClass('modal-open');
-							$('.modal-backdrop').remove();
-						}
-					});
-		}
-	}
-	
-</script>
+
 </html>

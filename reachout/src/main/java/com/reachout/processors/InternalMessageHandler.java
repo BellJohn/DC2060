@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 
 import com.reachout.dao.HibernateInternalMessageDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
-import com.reachout.dao.HibernateUserProfileDAOImpl;
 import com.reachout.im.Conversation;
 import com.reachout.models.InternalMessage;
 
@@ -109,13 +108,10 @@ public class InternalMessageHandler {
 		String browsingUserName;
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 		otherUserName = userDAO.selectByID(userOther).getUsername();
-		String otherUserProfilePic = new HibernateUserProfileDAOImpl().getProfilePicById(userOther);
 		browsingUserName = userDAO.selectByID(userBrowsing).getUsername();
-		String browsingProfilePic = new HibernateUserProfileDAOImpl().getProfilePicById(userBrowsing);
-
 
 		// If we are here, we have messages to put together into a conversation
-		Conversation conversation = new Conversation(userBrowsing, userOther, allIMs, otherUserName, browsingUserName, otherUserProfilePic, browsingProfilePic);
+		Conversation conversation = new Conversation(userBrowsing, userOther, allIMs, otherUserName, browsingUserName);
 		logger.debug(String.format("Created conversation between users {%s} : {%s}", userBrowsing, userOther));
 		return conversation;
 	}

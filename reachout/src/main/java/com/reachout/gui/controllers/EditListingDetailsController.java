@@ -18,17 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateListingDAOImpl;
-import com.reachout.dao.HibernateLocationDAO;
 import com.reachout.dao.HibernateRequestDAOImpl;
 import com.reachout.dao.HibernateServiceDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.models.Listing;
 import com.reachout.models.ListingStatus;
-import com.reachout.models.Location;
 import com.reachout.models.Request;
 import com.reachout.models.Service;
-import com.reachout.processors.LocationFactory;
-import com.reachout.processors.exceptions.MappingAPICallException;
 import com.reachout.utils.ROUtils;
 
 @Controller
@@ -108,7 +104,6 @@ public class EditListingDetailsController {
 		String listingIDFromRequest = request.getParameter("listingID");
 		String newTitle = request.getParameter("Title");
 		String newDesc = request.getParameter("Desc");
-		String newAddress = request.getParameter("Street");
 		String newCounty = request.getParameter("County");
 		String newCity = request.getParameter("City");
 		String newStatus = request.getParameter("listingStatus");
@@ -151,22 +146,6 @@ public class EditListingDetailsController {
 			return errorReturn;
 		}
 
-		HibernateLocationDAO locDAO = new HibernateLocationDAO();
-		Location location = locDAO.selectLocationById(listingToUpdate.getLocationId());
-		LocationFactory locFac = new LocationFactory();
-		boolean locationUpdated = false;
-		try {
-			Location tempLoc = locFac.buildLocation(newAddress, newCity, newCounty);
-			location.setLocLat(tempLoc.getLocLat());
-			location.setLocLong(tempLoc.getLocLong());
-			locationUpdated = locDAO.saveOrUpdate(location);
-		} catch (MappingAPICallException e) {
-			return returnErrorResult("Unable to determine the location of the address provided");
-		}
-		if (!locationUpdated) {
-			return returnErrorResult("Something went wrong creating your Request, please try again");
-		}
-
 		// If we have made it this far, lets update the record.
 		listingToUpdate.setTitle(newTitle);
 		listingToUpdate.setDescription(newDesc);
@@ -192,16 +171,6 @@ public class EditListingDetailsController {
 			mv.addObject(ERROR_STRING, "Something went wrong with the update. Try again");
 		}
 		mv.addObject("changeType", "updated");
-		return mv;
-	}
-
-	private ModelAndView returnErrorResult(String message) {
-		logger.info(String.format("Update failed [%s]", message));
-		ModelAndView mv = new ModelAndView(VIEW_NAME);
-		mv.addObject("currentPage", VIEW_NAME);
-		mv.addObject("postSent", "FALSE");
-		mv.addObject("changeSuccess", false);
-		mv.addObject(ERROR_STRING, message);
 		return mv;
 	}
 

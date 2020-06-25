@@ -5,7 +5,6 @@
 <head>
 <meta charset="ISO-8859-1">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ include file="/components/stylesheets.jsp"%>
 <title>ReachOut | Create Request</title>
 </head>
@@ -16,13 +15,6 @@
 			<div class="col-sm-4"></div>
 			<div class="col-md-4">
 				<c:choose>
-					<c:when test="${not empty error}">
-						<div class="alert alert-warning alert-spacing" role="alert">
-							<p>${error}</p>
-						</div>
-					</c:when>
-				</c:choose>
-				<c:choose>
 					<c:when test="${empty postSent}">
 						<div class="card card-bkg">
 							<h2>
@@ -30,8 +22,7 @@
 							</h2>
 
 							<!-- New Request Form -->
-							<form:form action="createRequest" method="POST"
-								id="createRequest">
+							<form action="createRequest" method="POST" id="createRequest">
 								<sec:csrfInput />
 								<fieldset>
 
@@ -49,7 +40,7 @@
 										<label for="reqDesc">Description</label>
 										<textarea id="reqDesc" name="reqDesc" cols="40" rows="5"
 											placeholder="Tell us a little about your request. Please note, everyone on the site will be able to view this information."
-											class="form-control" maxlength="2000" minlength="10"
+											class="form-control" maxlength="2000" minlength="50"
 											required="required"></textarea>
 									</div>
 
@@ -64,83 +55,29 @@
 										</div>
 									</div>
 
-
-									<!-- Request Street -->
+									<!-- Request County -->
 									<div class="form-group">
-										<label for="reqStreet">Street of Request (e.g. Downing
-											Street)</label> <input id="reqStreet" name="reqStreet"
-											required="required" placeholder="Your street or one nearby"
-											type="text" class="form-control" maxlength="60">
+										<label for="reqCounty">County of Request (e.g.
+											Cambridgeshire)</label> <input id="reqCounty" name="reqCounty"
+											placeholder="Countyshire" type="text" class="form-control"
+											required="required" maxlength="26">
 									</div>
 
 									<!-- Request Town -->
 									<div class="form-group">
 										<label for="reqCity">City/Town of Request (e.g.
 											Chelsea)</label> <input id="reqCity" name="reqCity"
-											required="required" placeholder="Town/City" type="text"
+											required="required" placeholder="Town city" type="text"
 											class="form-control" maxlength="60">
 									</div>
 
-									<!-- Request County -->
-									<div class="form-group">
-										<label for="reqCounty">County of Request (e.g.
-											Cambridgeshire)</label> <input id="reqCounty" name="reqCounty"
-											placeholder="County" type="text" class="form-control"
-											required="required" maxlength="30">
-									</div>
-
-									<!-- Request Priority -->
-									<div class="form-group row">
-										<label for="reqPriority" class="col-4 col-form-label">Priority
-										</label>
-										<div class="col-8">
-											<select id="reqPrioirty" name="reqPriority">
-												<option>Urgent</option>
-												<option>Medium</option>
-												<option>Low</option>
-											</select>
-										</div>
-									</div>
-
-									<c:choose>
-										<c:when test="${!empty userGroups}">
-
-											<!-- Public Visibility -->
-											<div class="form-group">
-												<label for="publicVsisibility">Visibile to Public</label> <input
-													type="checkbox" name="reqVisibility" value="public">
-
-											</div>
-
-											<div class="form-group">
-												<label for="groupVisibility">Visible in selected group</label> <input type="checkbox" name="reqVisibility"
-													value="group"> <br>
-											</div>
-
-											<!-- Group Visibility -->
-											<div class="form-group">
-												<label for="group">Visible to Group</label><br> <select
-													id="group" name="group" class="form-control">
-													<option disabled selected value>-- select a group
-														--</option>
-													<c:forEach var="hs" items="${userGroups}">
-														<option ${hs == userGroup ? 'selected' : ''}><c:set
-																var="g" value="${hs}" />
-															<c:out value="${g}" /></option>
-													</c:forEach>
-												</select>
-											</div>
-
-										</c:when>
-									</c:choose>
-									<div class="form-group">
 									<!-- Create Button -->
 									<button name="submit" type="submit"
 										class="btn btn-primary btn-large btn-block" id="submit">Create
 										Request</button>
-										</div>
+
 								</fieldset>
-							</form:form>
+							</form>
 						</div>
 					</c:when>
 					<c:otherwise>
