@@ -160,7 +160,7 @@
 										class="rounded-circle" style="max-width: 20%;">
 								</c:when>
 								<c:otherwise>
-									<img src="${otherGroup.getPicture()}" alt="groupPic"
+									<img src="${uploadDirectory}${otherGroup.getPicture()}" alt="groupPic"
 										style="max-width: 20%;">
 								</c:otherwise>
 							</c:choose>
