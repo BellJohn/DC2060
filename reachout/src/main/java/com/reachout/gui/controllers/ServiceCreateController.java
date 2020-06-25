@@ -95,7 +95,7 @@ public class ServiceCreateController {
 			@RequestParam(name = "serCounty") String county,
 			@RequestParam(name = "group", required = false) String groupVisibility,
 			@RequestParam(name = "serCity", required = false) String city,
-			@RequestParam(name = "serStreet", required = true) String address, HttpServletRequest request) {
+			@RequestParam(name = "serStreet", required = true) String street, HttpServletRequest request) {
 
 		int publicVisibility = 0;
 		boolean createSuccess = false;
@@ -106,7 +106,7 @@ public class ServiceCreateController {
 		LocationFactory locationFactory = new LocationFactory();
 		Location location = null;
 		try {
-			location = locationFactory.buildAndSaveLocation(address, city, county);
+			location = locationFactory.buildAndSaveLocation(street, city, county);
 		} catch (MappingAPICallException e) {
 			return returnErrorResult("Unable to determine the location of the address provided");
 
@@ -125,7 +125,7 @@ public class ServiceCreateController {
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
 			// Build a new request which will be given the status of "new"
-			newService = new Service(title, description, county, city, userId, publicVisibility, location.getLocId());
+			newService = new Service(title, description, county, city, street, userId, publicVisibility, location.getLocId());
 			createSuccess = serviceDAO.save(newService);
 			logger.info("Public service created");
 		} else {
@@ -141,7 +141,7 @@ public class ServiceCreateController {
 			if (visibility.contains("public") && (visibility.contains("group"))) {
 				publicVisibility = 1;
 				// Build a new request which will be given the status of "new"
-				newService = new Service(title, description, county, city, userId, publicVisibility,
+				newService = new Service(title, description, county, city, street, userId, publicVisibility,
 						location.getLocId());
 				createSuccess = serviceDAO.save(newService);
 				logger.info("Public service created");
@@ -160,7 +160,7 @@ public class ServiceCreateController {
 			if (visibility.contains("public") && !(visibility.contains("group"))) {
 				publicVisibility = 1;
 				// Build a new request which will be given the status of "new"
-				newService = new Service(title, description, county, city, userId, publicVisibility,
+				newService = new Service(title, description, county, city, street, userId, publicVisibility,
 						location.getLocId());
 				createSuccess = serviceDAO.save(newService);
 				logger.info("Public service created");
@@ -170,7 +170,7 @@ public class ServiceCreateController {
 			/// save to group listing table
 			if (visibility.contains("group") && !(visibility.contains("public"))) {
 				logger.info("Group service created");
-				newService = new Service(title, description, county, city, userId, 0, location.getLocId());
+				newService = new Service(title, description, county, city, street, userId, 0, location.getLocId());
 				createSuccess = serviceDAO.save(newService);
 				try {
 					logger.debug("Group selected from dropdown list: " + groupVisibility);

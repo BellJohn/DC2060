@@ -133,7 +133,7 @@ public class TestUtils {
 	 * @return populated Request
 	 */
 	public static Request makeTestRequestForUser(User user) {
-		return new Request(String.format("testRequestFor%s", user.getUsername()), "Test Request", "count", "city",
+		return new Request(String.format("testRequestFor%s", user.getUsername()), "Test Request", "count", "city", "street",
 				user.getId(), "Urgent", 1, -1);
 	}
 
@@ -147,7 +147,7 @@ public class TestUtils {
 	 * @return populated Service
 	 */
 	public static Service makeTestServiceForUser(User user) {
-		return new Service(String.format("testServiceFor%s", user.getUsername()), "Test Request", "count", "city",
+		return new Service(String.format("testServiceFor%s", user.getUsername()), "Test Request", "count", "city", "street",
 				user.getId(), 0, -1);
 
 	}

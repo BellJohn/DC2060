@@ -24,8 +24,9 @@ public class Service extends Listing {
 	 * @param userId
 	 * @param status
 	 */
-	public Service(String title, String description, String county, String city, int userId, ListingStatus status, int visibility, int locationId) {
-		this(title, description, county, city, userId, visibility, locationId);
+	public Service(String title, String description, String county, String city, String street, int userId,
+			ListingStatus status, int visibility, int locationId) {
+		this(title, description, county, city, street, userId, visibility, locationId);
 		this.status = status;
 	}
 
@@ -38,8 +39,9 @@ public class Service extends Listing {
 	 * @param county
 	 * @param city
 	 */
-	public Service(String title, String description, String county, String city, int userId, int visibility, int locationId) {
-		super(title, description, county, city, userId, priority, visibility, locationId);
+	public Service(String title, String description, String county, String city, String street, int userId,
+			int visibility, int locationId) {
+		super(title, description, county, city, street, userId, priority, visibility, locationId);
 		this.listingType = ListingType.SERVICE;
 	}
 

@@ -97,7 +97,7 @@ public class RequestCreateController {
 			@RequestParam(name = "reqCounty") String county, @RequestParam(name = "reqPriority") String priority,
 			@RequestParam(name = "group", required = false) String groupVisibility,
 			@RequestParam(name = "reqCity", required = false) String city,
-			@RequestParam(name = "reqStreet", required = true) String address, HttpServletRequest request) {
+			@RequestParam(name = "reqStreet", required = true) String street, HttpServletRequest request) {
 
 		boolean createSuccess = false;
 		int publicVisibility = 0;
@@ -108,7 +108,7 @@ public class RequestCreateController {
 		LocationFactory locationFactory = new LocationFactory();
 		Location location = null;
 		try {
-			location = locationFactory.buildAndSaveLocation(address, city, county);
+			location = locationFactory.buildAndSaveLocation(street, city, county);
 		} catch (MappingAPICallException e) {
 			return returnErrorResult("Unable to determine the location of the address provided");
 		}
@@ -124,7 +124,7 @@ public class RequestCreateController {
 		HibernateGroupMemberDAOImpl groupMemDAO = new HibernateGroupMemberDAOImpl();
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
-			newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+			newRequest = new Request(title, description, county, city, street, userId, priority, publicVisibility,
 					location.getLocId());
 			createSuccess = reqDAO.save(newRequest);
 			logger.info("Public request created");
@@ -140,7 +140,7 @@ public class RequestCreateController {
 			}
 			if (visibility.contains("public") && !visibility.contains("group")) {
 				publicVisibility = 1;
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+				newRequest = new Request(title, description, county, city, street, userId, priority, publicVisibility,
 						location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				logger.info("Public request created");
@@ -149,7 +149,7 @@ public class RequestCreateController {
 			// visible to group and public
 			if (visibility.contains("group") && visibility.contains("public")) {
 				publicVisibility = 1;
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+				newRequest = new Request(title, description, county, city, street, userId, priority, publicVisibility,
 						location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				logger.info("Public request created");
@@ -168,7 +168,7 @@ public class RequestCreateController {
 			// if they have selected visibile only within a group, get the listingID and
 			// save to group listing table
 			if (visibility.contains("group") && !(visibility.contains("public"))) {
-				newRequest = new Request(title, description, county, city, userId, priority, publicVisibility,
+				newRequest = new Request(title, description, county, city, street, userId, priority, publicVisibility,
 						location.getLocId());
 				createSuccess = reqDAO.save(newRequest);
 				listingId = reqDAO.getNewRequestId(userId);
