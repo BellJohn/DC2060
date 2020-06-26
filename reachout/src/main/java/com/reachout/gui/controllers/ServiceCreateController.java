@@ -112,6 +112,7 @@ public class ServiceCreateController {
 
 		}
 		if (location == null) {
+			logger.error("Something went wrong between saving and returning the new location");
 			return returnErrorResult("Something went wrong creating your Service, please try again");
 		}
 
@@ -125,7 +126,8 @@ public class ServiceCreateController {
 		if (groupMemDAO.getUserGroups(userId).isEmpty()) {
 			publicVisibility = 1;
 			// Build a new request which will be given the status of "new"
-			newService = new Service(title, description, county, city, street, userId, publicVisibility, location.getLocId());
+			newService = new Service(title, description, county, city, street, userId, publicVisibility,
+					location.getLocId());
 			createSuccess = serviceDAO.save(newService);
 			logger.info("Public service created");
 		} else {
@@ -133,8 +135,19 @@ public class ServiceCreateController {
 			// or both.
 
 			boolean listingCreateSuccessBool = false;
-			List<String> visibility = Arrays.asList(request.getParameterValues("serVisibility"));
-			if(visibility.isEmpty()) {
+			List<String> visibility = new ArrayList<>();
+			String[] serVisibilityValues = request.getParameterValues("serVisibility");
+			if (serVisibilityValues == null) {
+				serVisibilityValues = new String[0];
+			}
+			visibility.addAll(Arrays.asList(serVisibilityValues));
+
+			// If the user selected the group tickbox but provided no groups then ignore the
+			// group selection and treat as though it's public
+			if ((groupVisibility == null || groupVisibility.isEmpty()) && visibility.contains("group")) {
+				visibility.remove("group");
+			}
+			if (visibility.isEmpty()) {
 				visibility.add("public");
 			}
 			// service to public and group visibility

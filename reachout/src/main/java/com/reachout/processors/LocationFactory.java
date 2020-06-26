@@ -98,6 +98,7 @@ public class LocationFactory {
 		Integer result = locationDAO.save(location);
 		if (result != null) {
 			location.setLocId(result);
+			logger.debug(String.format("Saved new location at id %s", result));
 		}
 
 		return location;
