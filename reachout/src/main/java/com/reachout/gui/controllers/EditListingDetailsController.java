@@ -71,7 +71,9 @@ public class EditListingDetailsController {
 			return new ProfilePageController().initPage(request);
 		}
 
-		List<ListingStatus> listingStatusList = Arrays.asList(ListingStatus.values());
+		List<ListingStatus> listingStatusList = new ArrayList<>();
+		listingStatusList.add(ListingStatus.OPEN);
+		listingStatusList.add(ListingStatus.CLOSED);
 		ModelAndView mv = new ModelAndView(VIEW_NAME);
 		mv.addObject("listing", listingRequested);
 		mv.addObject("listingStatusList", listingStatusList);
