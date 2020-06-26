@@ -126,8 +126,7 @@
 
 						<div class="card card-request">
 							<div class="row">
-								<h4 class="card-title col-md-3">${request.getTitle()}</h4>
-								<div class="col-md-6"></div>
+								<h4 class="card-title col-md-9">${request.getTitle()}</h4>
 								<h4 class="card-title col-md-3" style="text-align: right;">${request.getPriority()}</h4>
 							</div>
 							<h6 class="card-subtitle mb-2 text-muted">${request.getCity()},

@@ -21,10 +21,7 @@
 								<strong>Create New Group</strong>
 							</h2>
 
-							<h4>Groups are a way for you to add users into a private
-								space where requests and services can be private within the
-								group. You may use this for a neighbourhood, family, community
-								group or however you please.</h4>
+							<p>Groups are a way for you to add users into a private space where requests and services can be private within the group. You may use this for a neighbourhood, family, community group or however you please.</p>
 
 							<!-- New Request Form -->
 							<form action="createGroup" method="POST" id="createGroup" enctype="multipart/form-data">

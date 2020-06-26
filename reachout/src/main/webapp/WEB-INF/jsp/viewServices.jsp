@@ -300,7 +300,7 @@
 				<div id="fullListingDetails">
 					<c:if test="${empty liveServices}">
 						<div class="card card-request">
-							<h4 class="card-title col-md-3">There are no Requests
+							<h4 class="card-title">There are no Requests
 								available for you to view!</h4>
 							<h6 class="card-subtitle mb-2 text-muted">
 								<small>Note, your own Requests and Services are not
