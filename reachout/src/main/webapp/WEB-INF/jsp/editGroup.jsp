@@ -40,7 +40,6 @@
 										maxlength="2000" minlength="10" required="required">${group.description}</textarea>
 								</div>
 
-								<!-- Group picture -->
 								<!-- Group Picture -->
 								<div class="form-group">
 									<label for="groupPicture">Group Picture (optional)</label><input

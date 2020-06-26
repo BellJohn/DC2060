@@ -292,7 +292,7 @@
 						</div>
 						<div class="col-sm-2">
 							<button type="button" onclick="orchestrate()"
-								class="btn btn-primary" style="text-align: right; float: right;">Search</button>
+								class="btn btn-primary" id="search-btn" style="text-align: right; float: right;">Search</button>
 						</div>
 					</div>
 				</div>
@@ -300,7 +300,7 @@
 				<div id="fullListingDetails">
 					<c:if test="${empty liveServices}">
 						<div class="card card-request">
-							<h4 class="card-title col-md-3">There are no Requests
+							<h4 class="card-title">There are no Requests
 								available for you to view!</h4>
 							<h6 class="card-subtitle mb-2 text-muted">
 								<small>Note, your own Requests and Services are not
@@ -345,6 +345,14 @@
 			<div class="col-lg-2"></div>
 		</div>
 
+		<script>
+			$(document).ready(function() {
+				$('#inputAddress').keypress(function(e) {
+					if (e.keyCode == 13)
+						$('#search-btn').click();
+				});
+			});
+		</script>
 	</div>
 </body>
 </html>

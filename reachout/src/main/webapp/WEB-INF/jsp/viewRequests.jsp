@@ -293,7 +293,7 @@
 						</div>
 						<div class="col-sm-2">
 							<button type="button" onclick="orchestrate()"
-								class="btn btn-primary" style="text-align: right; float: right;">Search</button>
+								class="btn btn-primary" id="search-btn" style="text-align: right; float: right;">Search</button>
 						</div>
 					</div>
 				</div>
@@ -301,7 +301,7 @@
 				<div id="fullListingDetails">
 					<c:if test="${empty liveRequests}">
 						<div class="card card-request">
-							<h4 class="card-title col-md-3">There are no Requests
+							<h4 class="card-title">There are no Requests
 								available for you to view!</h4>
 							<h6 class="card-subtitle mb-2 text-muted">
 								<small>Note, your own Requests and Services are not
@@ -313,8 +313,7 @@
 
 						<div class="card card-request">
 							<div class="row">
-								<h4 class="card-title col-md-3">${request.getTitle()}</h4>
-								<div class="col-md-6"></div>
+								<h4 class="card-title col-md-9">${request.getTitle()}</h4>
 								<h4 class="card-title col-md-3" style="text-align: right;">${request.getPriority()}</h4>
 							</div>
 
@@ -351,6 +350,15 @@
 			<div class="col-lg-2"></div>
 		</div>
 	</div>
+
+	<script>
+		$(document).ready(function() {
+			$('#inputAddress').keypress(function(e) {
+				if (e.keyCode == 13)
+					$('#search-btn').click();
+			});
+		});
+	</script>
 </body>
 
 </html>

@@ -30,6 +30,20 @@
 								back later.</p>
 						</div>
 					</c:when>
+					<c:otherwise>
+						<div class="row pt-3">
+							<div class="col-md-4">
+								<h4 class="card-title">Group</h4>
+							</div>
+							<div class="col-md-4">
+								<h4 class="card-title">User</h4>
+							</div>
+							<div class="col-md-4">
+								<h4 class="card-title">Accept/Reject</h4>
+							</div>
+							<hr>
+						</div>
+					</c:otherwise>
 				</c:choose>
 				<c:choose>
 					<c:when test="${not empty error}">
@@ -40,40 +54,29 @@
 				</c:choose>
 
 				<c:forEach items="${pendingRequests}" var="request">
-
 					<div class="card card-request">
 						<div class="row">
-							<div class="col-md-6"></div>
-							<h4 class="card-title col-md-3" style="text-align: right;">GroupName:
-								${request.getName()}</h4>
-
-							<h4 class="card-title col-md-3" style="text-align: left;">User:
-								${request.getUsername()}</h4>
-						</div>
-						<hr>
-
-
-						<div class="col-lg-3">
-							<div class="form-group">
-								<form action="" method="POST">
-									<sec:csrfInput />
-									<input type="hidden" id="groupMemberID" name="groupMemberID"
-										value="${request.getID()}" />
-									<button name="submit" type=submit " value="accept"
-										class="btn btn-info btn-block">
-										<span class="fa fa-info"></span> Accept Request
-									</button>
-									<button class="btn btn-info btn-block" name="submit"
-										type="submit" value="reject">
-										<span class="fa fa-info"></span> Reject Request
-									</button>
-								</form>
+							<div class="col-md-4">
+								<h4 class="card-title">${request.getName()}</h4>
 							</div>
-
+							<div class="col-md-4">
+								<h4 class="card-title">${request.getUsername()}</h4>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<form class="form-inline" action="" method="POST">
+										<sec:csrfInput />
+										<input type="hidden" id="groupMemberID" name="groupMemberID" value="${request.getID()}" />
+										<button class="btn btn-success btn-block" name="submit" type="submit"  value="accept">Accept Request</button>
+										<button class="btn btn-danger btn-block" name="submit" type="submit" value="reject">Reject Request</button>
+									</form>
+								</div>
+							</div>
 						</div>
 					</div>
-
 				</c:forEach>
+
+
 			</div>
 			<div class="col-lg-2"></div>
 		</div>

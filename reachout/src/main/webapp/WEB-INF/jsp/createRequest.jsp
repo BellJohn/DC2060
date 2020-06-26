@@ -90,16 +90,13 @@
 									</div>
 
 									<!-- Request Priority -->
-									<div class="form-group row">
-										<label for="reqPriority" class="col-4 col-form-label">Priority
-										</label>
-										<div class="col-8">
-											<select id="reqPrioirty" name="reqPriority">
-												<option>Urgent</option>
-												<option>Medium</option>
-												<option>Low</option>
-											</select>
-										</div>
+									<div class="form-group">
+										<label for="reqPriority" class="col-4 col-form-label">Priority</label>
+										<select class="form-control" id="reqPrioirty" name="reqPriority">
+											<option>Urgent</option>
+											<option>Medium</option>
+											<option selected>Low</option>
+										</select>
 									</div>
 
 									<c:choose>
@@ -121,7 +118,7 @@
 											<div class="form-group">
 												<label for="group">Visible to Group</label><br> <select
 													id="group" name="group" class="form-control">
-													<option disabled selected value>-- select a group
+													<option disabled selected value>-- select a group, (only required if checked above)
 														--</option>
 													<c:forEach var="hs" items="${userGroups}">
 														<option ${hs == userGroup ? 'selected' : ''}><c:set
