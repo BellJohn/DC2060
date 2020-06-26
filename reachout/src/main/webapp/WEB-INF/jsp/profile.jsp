@@ -134,13 +134,13 @@
 							<p class="card-text">${request.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-2">
+								<div class="col-lg-3">
 									<c:choose>
 										<c:when test="${request.getStatus().getOrdinal()==0}">
-											<button class="btn btn-success btn-block" disabled>OPEN</button>
+											<button class="btn btn-success btn-block" disabled>Status: OPEN</button>
 										</c:when>
 										<c:when test="${request.getStatus().getOrdinal()==1}">
-											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+											<button class="btn btn-warning btn-block" disabled>Status: PENDING</button>
 											<div class="modal fade"
 												id="modalForm_R_${acceptRequestIDUserIDMap.get(request.getId())}"
 												role="dialog">
@@ -190,7 +190,7 @@
 
 								<c:choose>
 									<c:when test="${request.getStatus().getOrdinal()==1}">
-										<div class="col-lg-4"></div>
+										<div class="col-lg-3"></div>
 										<div class="col-lg-2">
 											<!-- Button to trigger modal -->
 											<button class="btn btn-warning btn-block" data-toggle="modal"
@@ -200,7 +200,7 @@
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div class="col-lg-6"></div>
+										<div class="col-lg-5"></div>
 									</c:otherwise>
 								</c:choose>
 
@@ -255,21 +255,21 @@
 							<p class="card-text">${service.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-2">
+								<div class="col-lg-3">
 									<c:choose>
 										<c:when test="${service.getStatus().getOrdinal()==0}">
-											<button class="btn btn-success btn-block" disabled>OPEN</button>
+											<button class="btn btn-success btn-block" disabled>Status: OPEN</button>
 										</c:when>
 										<c:when test="${service.getStatus().getOrdinal()==1}">
-											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+											<button class="btn btn-warning btn-block" disabled>Status: PENDING</button>
 										</c:when>
 										<c:when test="${service.getStatus().getOrdinal()==2}">
-											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+											<button class="btn btn-danger btn-block" disabled>Status: CLOSED</button>
 										</c:when>
 									</c:choose>
 								</div>
 
-								<div class="col-lg-6"></div>
+								<div class="col-lg-5"></div>
 
 								<div class="col-lg-2">
 									<form action="viewListing" method="POST">
@@ -320,22 +320,22 @@
 							<p class="card-text">${acceptedRequest.getFormattedDescription()}</p>
 
 							<div class="row">
-								<div class="col-lg-2">
+								<div class="col-lg-3">
 									<c:choose>
 										<c:when test="${acceptedRequest.getStatus().getOrdinal()==0}">
-											<button class="btn btn-success btn-block" disabled>OPEN</button>
+											<button class="btn btn-success btn-block" disabled>Status: OPEN</button>
 										</c:when>
 										<c:when test="${acceptedRequest.getStatus().getOrdinal()==1}">
-											<button class="btn btn-warning btn-block" disabled>PENDING</button>
+											<button class="btn btn-warning btn-block" disabled>Status: PENDING</button>
 										</c:when>
 										<c:when test="${acceptedRequest.getStatus().getOrdinal()==2}">
-											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+											<button class="btn btn-danger btn-block" disabled>Status: CLOSED</button>
 										</c:when>
 									</c:choose>
 								</div>
 
-								<div class="col-lg-6"></div>
-								<div class="col-lg-2">
+								<div class="col-lg-4"></div>
+								<div class="col-lg-3">
 									<!-- Button to trigger modal -->
 									<button class="btn btn-warning btn-block" data-toggle="modal"
 										data-target="#modalForm_${acceptedRequest.userId}">

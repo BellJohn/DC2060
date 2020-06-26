@@ -26,8 +26,8 @@
 				<div class="card">
 					<h2>
 						<strong>${group.getName()}</strong>
-						<p class="card-text">${group.city}, ${group.county}</p>
 					</h2>
+					<p class="card-text">${group.city}, ${group.county}</p>
 					<div class="row">
 						<div class="col-md-4"></div>
 						<div class="col-md-4">
@@ -130,33 +130,30 @@
 				</c:if>
 
 				<c:forEach items="${liveServices}" var="service">
-					<div class="col-lg-2"></div>
-					<div class="col-lg-8">
-						<div class="card card-request pt-3">
-							<h4 class="card-title">${service.getTitle()}</h4>
-							<h6 class="card-subtitle mb-2 text-muted">${service.getCity()},
-								${service.getCounty()}</h6>
-							<p class="card-text">${service.getFormattedDescription()}</p>
-							<hr>
+					<div class="card card-request pt-3">
+						<h4 class="card-title">${service.getTitle()}</h4>
+						<h6 class="card-subtitle mb-2 text-muted">${service.getCity()},
+							${service.getCounty()}</h6>
+						<p class="card-text">${service.getFormattedDescription()}</p>
+						<hr>
 
-							<div class="row">
-								<div class="col-lg-9">
-									<p class="text-muted">Created by ${service.getUsername()}
-										on ${service.getCreatedDate()} at ${service.getCreatedTime()}.</p>
-								</div>
+						<div class="row">
+							<div class="col-lg-9">
+								<p class="text-muted">Created by ${service.getUsername()}
+									on ${service.getCreatedDate()} at ${service.getCreatedTime()}.</p>
+							</div>
 
-								<div class="col-lg-3">
-									<form action="viewListing" method="POST">
-										<sec:csrfInput />
-										<input type="hidden" id="listingType" name="listingType"
-											value="${service.getListingType()}" /> <input type="hidden"
-											id="listingID" name="listingID"
-											value="${service.getListingID()}" />
-										<button class="btn btn-info btn-block">
-											<span class="fa fa-info"></span> View Details
-										</button>
-									</form>
-								</div>
+							<div class="col-lg-3">
+								<form action="viewListing" method="POST">
+									<sec:csrfInput />
+									<input type="hidden" id="listingType" name="listingType"
+										value="${service.getListingType()}" /> <input type="hidden"
+										id="listingID" name="listingID"
+										value="${service.getListingID()}" />
+									<button class="btn btn-info btn-block">
+										<span class="fa fa-info"></span> View Details
+									</button>
+								</form>
 							</div>
 						</div>
 					</div>

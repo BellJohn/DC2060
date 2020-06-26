@@ -292,7 +292,7 @@
 						</div>
 						<div class="col-sm-2">
 							<button type="button" onclick="orchestrate()"
-								class="btn btn-primary" style="text-align: right; float: right;">Search</button>
+								class="btn btn-primary" id="search-btn" style="text-align: right; float: right;">Search</button>
 						</div>
 					</div>
 				</div>
@@ -346,6 +346,14 @@
 			<div class="col-lg-2"></div>
 		</div>
 
+		<script>
+			$(document).ready(function() {
+				$('#inputAddress').keypress(function(e) {
+					if (e.keyCode == 13)
+						$('#search-btn').click();
+				});
+			});
+		</script>
 	</div>
 </body>
 </html>
