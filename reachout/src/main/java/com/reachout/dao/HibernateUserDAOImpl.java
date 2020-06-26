@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
@@ -134,7 +135,7 @@ public class HibernateUserDAOImpl {
 			query.setParameter("username", username);
 			userFound = (User) query.getSingleResult();
 		} catch (NoResultException e) {
-			logger.debug("Searched for user with username [" + username + "]. Found none");
+			logger.debug(String.format("Searched for user with username [%s]. Found none", username), e);
 		}
 		return userFound;
 	}
@@ -147,7 +148,7 @@ public class HibernateUserDAOImpl {
 			query.setParameter("userId", userId);
 			userFound = (User) query.getSingleResult();
 		} catch (NoResultException e) {
-			logger.debug("Searched for user with userId [" + userId + "]. Found none");
+			logger.debug(String.format("Searched for user with username [%s]. Found none", userId), e);
 		}
 		return userFound;
 	}
@@ -180,7 +181,10 @@ public class HibernateUserDAOImpl {
 			userFound = (User) query.getSingleResult();
 		} catch (NoResultException e) {
 			logger.debug("Searched for user with email [" + email + "]. Found none");
+		} catch(NonUniqueResultException e) {
+			logger.debug("Searched for user with email [" + email + "]. Found multiple");
 		}
+		
 		return userFound;
 	}
 
