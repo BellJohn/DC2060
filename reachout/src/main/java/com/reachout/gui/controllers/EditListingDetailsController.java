@@ -172,6 +172,7 @@ public class EditListingDetailsController {
 		listingToUpdate.setDescription(newDesc);
 		listingToUpdate.setCounty(newCounty);
 		listingToUpdate.setCity(newCity);
+		listingToUpdate.setStreet(newAddress);
 		listingToUpdate.setStatus(ListingStatus.valueOf(newStatus));
 
 		boolean changeSuccess = false;

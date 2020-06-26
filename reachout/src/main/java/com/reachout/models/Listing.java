@@ -17,6 +17,7 @@ public abstract class Listing implements Serializable {
 	protected String description;
 	protected String county;
 	protected String city;
+	protected String street;
 	protected int userId;
 	protected int id;
 	protected ListingStatus status;
@@ -25,6 +26,7 @@ public abstract class Listing implements Serializable {
 	protected String priority;
 	protected int locationId;
 	protected int visibility;
+
 	/*
 	 * Empty request constructor for hibernate to use
 	 */
@@ -42,8 +44,9 @@ public abstract class Listing implements Serializable {
 	 * @param status
 	 * @param priority
 	 */
-	public Listing(String title, String description, String county, String city, int userId, ListingStatus status, String priority, int visibility, int locationId) {
-		this(title, description, county, city, userId, priority, visibility, locationId);
+	public Listing(String title, String description, String county, String city, String street, int userId,
+			ListingStatus status, String priority, int visibility, int locationId) {
+		this(title, description, county, city, street, userId, priority, visibility, locationId);
 		this.status = status;
 	}
 
@@ -55,11 +58,13 @@ public abstract class Listing implements Serializable {
 	 * @param county
 	 * @param city
 	 */
-	public Listing(String title, String description, String county, String city, int userId, String priority, int visibility, int locationId) {
+	public Listing(String title, String description, String county, String city, String street, int userId,
+			String priority, int visibility, int locationId) {
 		this.title = title;
 		this.description = description;
 		this.county = county;
 		this.city = city;
+		this.street = street;
 		this.userId = userId;
 		this.priority = priority;
 		this.visibility = visibility;
@@ -233,7 +238,6 @@ public abstract class Listing implements Serializable {
 		this.listingType = ListingType.getByOrdinal(listingType);
 	}
 
-
 	/**
 	 * Sets the status by the ListingStatus passed
 	 *
@@ -260,7 +264,6 @@ public abstract class Listing implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-
 	public String getPriority() {
 		return priority;
 	}
@@ -271,6 +274,20 @@ public abstract class Listing implements Serializable {
 
 	public void setLocationId(int locationId) {
 		this.locationId = locationId;
+	}
+
+	/**
+	 * @return the street
+	 */
+	public String getStreet() {
+		return street;
+	}
+
+	/**
+	 * @param street the street to set
+	 */
+	public void setStreet(String street) {
+		this.street = street;
 	}
 
 	/*

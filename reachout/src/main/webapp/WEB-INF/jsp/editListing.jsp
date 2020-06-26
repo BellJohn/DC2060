@@ -57,7 +57,7 @@
 								<div class="form-group">
 									<label for="City">Street of Listing (e.g. Downing
 										Street)</label> <input id="Street" name="Street" placeholder="Street"
-										required="required" type="text" class="form-control" value=" "
+										required="required" type="text" class="form-control" value="${listing.street}"
 										maxlength="60">
 								</div>
 

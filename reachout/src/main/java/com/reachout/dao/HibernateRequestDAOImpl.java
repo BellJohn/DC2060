@@ -205,12 +205,12 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 				"reach_pass");
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(
-						"SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_USER_ID, LST_STATUS, LST_PRIORITY, LST_VISIBILITY, LST_LOC_ID FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = "
+						"SELECT LST_ID, LST_TITLE, LST_DESCRIPTION, LST_COUNTY, LST_CITY, LST_STREET, LST_USER_ID, LST_STATUS, LST_PRIORITY, LST_VISIBILITY, LST_LOC_ID FROM LISTINGS l JOIN ASSIGNED_LISTINGS al ON l.LST_ID = al.AS_LISTING_ID where l.LST_TYPE = "
 								+ ListingType.REQUEST.getOrdindal() + " AND al.AS_USER_ID = " + userId)) {
 			while (rs.next()) {
 
 				Request r = new Request(rs.getString("LST_TITLE"), rs.getString("LST_DESCRIPTION"),
-						rs.getString("LST_COUNTY"), rs.getString("LST_CITY"), rs.getInt("LST_USER_ID"),
+						rs.getString("LST_COUNTY"), rs.getString("LST_CITY"), rs.getString("LST_STREET"), rs.getInt("LST_USER_ID"),
 						rs.getString("LST_PRIORITY"), rs.getInt("LST_VISIBILITY"), rs.getInt("LST_LOC_ID"));
 				r.setStatus(rs.getInt("LST_STATUS"));
 				r.setId(rs.getInt("LST_ID"));

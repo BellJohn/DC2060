@@ -37,6 +37,8 @@ public class HibernateUserProfileDAOImpl {
 			session.saveOrUpdate(userProfile);
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.debug(String.format("Unable to save or update userProfile for userID %s", userProfile.getUserId()),
+					e);
 			return false;
 		}
 		return true;
@@ -53,7 +55,7 @@ public class HibernateUserProfileDAOImpl {
 			query.setParameter("userID", userID);
 			return (UserProfile) query.getSingleResult();
 		} catch (NoResultException e) {
-			logger.debug("No user profile found for user id: " + userID);
+			logger.trace(String.format("No user profile found for user id: %s", userID), e);
 			return null;
 		}
 	}
@@ -105,7 +107,7 @@ public class HibernateUserProfileDAOImpl {
 			query.setParameter("userID", userID);
 			return (String) query.getSingleResult();
 		} catch (NoResultException e) {
-			logger.debug(String.format("No profile pic found for user id {%s}", userID));
+			logger.debug(String.format("No profile pic found for user id {%s}", userID), e);
 			return "no-profile-pic.png";
 		}
 	}
@@ -122,6 +124,7 @@ public class HibernateUserProfileDAOImpl {
 			session.update(userProfile);
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.debug(String.format("Unable to update userProfile for userID %s", userProfile.getUserId()), e);
 			return false;
 		}
 		return true;

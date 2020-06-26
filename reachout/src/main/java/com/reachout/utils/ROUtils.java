@@ -47,9 +47,22 @@ public class ROUtils {
 				.toLowerCase();
 	}
 
+	/**
+	 * Returns true/false whether the picture meets the criteria
+	 * <ul>
+	 * <li><10mb</li>
+	 * <li>extension = .png or .jpg or .jfif</li>
+	 * </ul>
+	 * If the image upload was empty (no image supplied or just an empty image) returns true
+	 * @param pic
+	 * @return
+	 */
 	public static boolean validPic(MultipartFile pic) {
 		// determine picture file extension
 		boolean validPic = true;
+		if(pic.isEmpty()) {
+			return true;
+		}
 		if (pic.getSize() > TEN_MB_AS_BYTES) {
 			logger.info(String.format("Attempted image upload with file size in excess of 10MB: {%s}",
 					pic.getSize()));

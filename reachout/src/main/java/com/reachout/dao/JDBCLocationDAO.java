@@ -56,6 +56,7 @@ public class JDBCLocationDAO {
 		String description = rs.getString("LST_DESCRIPTION");
 		String county = rs.getString("LST_COUNTY");
 		String city = rs.getString("LST_CITY");
+		String street = rs.getString("LST_STREET");
 		int status = rs.getInt("LST_STATUS");
 		long createdDate = rs.getLong("LST_CREATE_DATE");
 		String priority = rs.getString("LST_PRIORITY");
@@ -76,13 +77,13 @@ public class JDBCLocationDAO {
 		case REQUEST:
 			// String title, String description, String county, String city, int userId,
 			// ListingStatus status,String priority
-			listing = new Request(title, description, county, city, userId, ListingStatus.getByOrdinal(status),
+			listing = new Request(title, description, county, city, street, userId, ListingStatus.getByOrdinal(status),
 					priority,visibility, locId);
 			break;
 		case SERVICE:
 			// String title, String description, String county, String city, int userId,
 			// ListingStatus status
-			listing = new Service(title, description, county, city, userId, ListingStatus.getByOrdinal(status),
+			listing = new Service(title, description, county, city, street, userId, ListingStatus.getByOrdinal(status),
 					visibility, locId);
 			break;
 		default:

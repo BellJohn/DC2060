@@ -19,6 +19,7 @@
 			column="LST_DESCRIPTION" />
 		<property name="county" type="string" column="LST_COUNTY" />
 		<property name="city" type="string" column="LST_CITY" />
+		<property name="street" type="string" column="LST_STREET" />
 		<property name="userId" type="int" column="LST_USER_ID" />
 		<property name="visibility" type="int" column="LST_VISIBILITY" />
 		<property name="locationId" type="int" column="LST_LOC_ID" />

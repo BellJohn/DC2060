@@ -23,6 +23,7 @@ import com.reachout.auth.SystemUser;
 import com.reachout.dao.HibernateHealthStatusDAOImpl;
 import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
+import com.reachout.models.User;
 import com.reachout.models.UserProfile;
 import com.reachout.processors.SystemPropertiesService;
 import com.reachout.utils.ROUtils;
@@ -65,38 +66,32 @@ public class UpdateProfileController {
 		healthList = healthDAO.getAllHealthStatuses();
 
 		mv.addObject("healthList", healthList);
-		String firstName = "";
-		String lastName = "";
-		String bio = "";
-		String healthStatus = "";
-		UserProfile profile = null;
-		String profilePic = "";
 
 		// Get all relevant information to display on the page for the user to edit
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
+		User user = userDAO.selectUser(username);
+		String firstName = user.getFirstName();
+		String lastName = user.getLastName();
+		int userId = user.getId();
 
-		firstName = userDAO.selectUser(username).getFirstName();
-		lastName = userDAO.selectUser(username).getLastName();
-		int userId = userDAO.getUserIdByUsername(username);
-
-		profile = new UserProfile();
-		try {
-			profile = userProfileDAO.getProfileById(userId);
-			bio = profile.getBio();
-			healthStatus = profile.getHealthStatus();
-			profilePic = profile.getProfilePic();
-		} catch (Exception e) {
-			logger.error(String.format("No profile found for userID {%s}", userId), e);
+		UserProfile profile = userProfileDAO.getProfileById(userId);
+		// If we don't find one, just build one now and try to save
+		if (profile == null) {
+			logger.error(String.format("No profile found for userID {%s}, generating default one", userId));
+			profile = new UserProfile();
+			profile.generateStartingData();
+			profile.setUserId(userId);
+			userProfileDAO.saveOrUpdateProfile(profile);
 		}
 
 		SystemPropertiesService sps = SystemPropertiesService.getInstance();
 		String uploadDirectory = sps.getProperty("IMAGE_DIR");
-		profilePic = File.separator + uploadDirectory + File.separator + profilePic;
+		String profilePic = File.separator + uploadDirectory + File.separator + profile.getProfilePic();
 		mv.addObject("firstName", firstName);
 		mv.addObject("lastName", lastName);
-		mv.addObject("bio", bio);
-		mv.addObject("healthStatus", healthStatus);
+		mv.addObject("bio", profile.getBio());
+		mv.addObject("healthStatus", profile.getHealthStatus());
 		mv.addObject("profilePic", profilePic);
 		return mv;
 	}
@@ -151,26 +146,33 @@ public class UpdateProfileController {
 		// Populate the user profile db
 		HibernateUserProfileDAOImpl userProfileDAO = new HibernateUserProfileDAOImpl();
 		UserProfile profile = userProfileDAO.getProfileById(userId);
+		// If we don't find one, just build one now and try to save
 		if (profile == null) {
+			logger.error(String.format("No profile found for userID {%s}, generating default one", userId));
 			profile = new UserProfile();
+			profile.generateStartingData();
 			profile.setUserId(userId);
+			userProfileDAO.saveOrUpdateProfile(profile);
 		}
 
 		profile.setBio(bio);
 		profile.setHealthStatus(healthStatus);
+		boolean picChangeSuccess = true;
 		if (changedImage) {
 			profile.setProfilePic(profilePicName);
-
 			// save picture to directory
-			if (ROUtils.saveImageToDisk(profilePic, profilePicName)) {
-				saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);
-				if (!saveUserDetailsSuccess) {
-					// Something went wrong updating the profile
-					logger.error("Unable to update profile at this time");
-				}
-			}
+			picChangeSuccess = ROUtils.saveImageToDisk(profilePic, profilePicName);
 		}
 
+		// Either we didn't need to update it or we successfully updated the picture
+		// Now try updating the profile
+		if (picChangeSuccess) {
+			saveUserDetailsSuccess = userProfileDAO.saveOrUpdateProfile(profile);
+			if (!saveUserDetailsSuccess) {
+				// Something went wrong updating the profile
+				logger.error("Unable to update profile at this time");
+			}
+		}
 		if (saveUserDetailsSuccess) {
 			return new ModelAndView("redirect:/profile");
 		} else {
