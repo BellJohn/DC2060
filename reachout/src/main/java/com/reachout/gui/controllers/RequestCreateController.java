@@ -134,10 +134,23 @@ public class RequestCreateController {
 			// if a user in a member of a group check if they want the post public, private
 			// or both.
 			boolean listingCreateSuccessBool = false;
-			List<String> visibility = Arrays.asList(request.getParameterValues("reqVisibility"));
+			List<String> visibility = new ArrayList<>();
+			String[] serVisibilityValues = request.getParameterValues("reqVisibility");
+			if (serVisibilityValues == null) {
+				serVisibilityValues = new String[0];
+			}
+			visibility.addAll(Arrays.asList(serVisibilityValues));
+
+			// If the user selected the group tickbox but provided no groups then ignore the
+			// group selection and treat as though it's public
+			if ((groupVisibility == null || groupVisibility.isEmpty()) && visibility.contains("group")) {
+				visibility.remove("group");
+			}
+
 			if (visibility.isEmpty()) {
 				visibility.add("public");
 			}
+
 			if (visibility.contains("public") && !visibility.contains("group")) {
 				publicVisibility = 1;
 				newRequest = new Request(title, description, county, city, street, userId, priority, publicVisibility,
@@ -160,7 +173,7 @@ public class RequestCreateController {
 					GroupListing gl = new GroupListing(group.getId(), listingId);
 					listingCreateSuccessBool = glDAO.save(gl);
 				} catch (Exception e) {
-					logger.error("Could not find group: " + groupVisibility);
+					logger.error(String.format("Could not find group: %s", groupVisibility), e);
 				}
 
 			}
@@ -178,7 +191,7 @@ public class RequestCreateController {
 					GroupListing gl = new GroupListing(group.getId(), listingId);
 					listingCreateSuccessBool = glDAO.save(gl);
 				} catch (Exception e) {
-					logger.error("Could not find group: " + groupVisibility);
+					logger.error(String.format("Could not find group: %s", groupVisibility), e);
 				}
 				if (listingCreateSuccessBool == false) {
 					logger.error("Could not add entry to GroupListing table");

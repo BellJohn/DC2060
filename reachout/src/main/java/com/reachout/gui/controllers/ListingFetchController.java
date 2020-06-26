@@ -74,7 +74,7 @@ public class ListingFetchController {
 
 		} catch (NumberFormatException e) {
 			logger.error(String.format("User sent invalid data for search - Lat:%s Long:%s Type:%s Radius:%s", lat, lng,
-					type, radius));
+					type, radius), e);
 		} catch (ListingFetchServiceConstructorException e) {
 			logger.error("An error occured fetching requested data", e);
 		}
@@ -94,13 +94,16 @@ public class ListingFetchController {
 	}
 
 	/**
-	 * Cuts the current collection of listings down to only those the user has the rights to see by visibility
+	 * Cuts the current collection of listings down to only those the user has the
+	 * rights to see by visibility
+	 * 
 	 * @param type
 	 * @param currentData
 	 * @param userId
 	 * @return
 	 */
-	private Set<ListingGUIWrapper> limitResultsByGroupVisibility(String type, Set<ListingGUIWrapper> currentData, int userId) {
+	private Set<ListingGUIWrapper> limitResultsByGroupVisibility(String type, Set<ListingGUIWrapper> currentData,
+			int userId) {
 
 		HibernateGroupMemberDAOImpl gmDAO = new HibernateGroupMemberDAOImpl();
 		List<Integer> usersGroups = gmDAO.getUserGroupIDs(userId);
@@ -109,19 +112,19 @@ public class ListingFetchController {
 		for (Integer groupID : usersGroups) {
 			allListingIDs.addAll(glDAO.getGroupListingsIds(groupID));
 		}
-		if(ListingType.getByValue(type).equals(ListingType.REQUEST)){
+		if (ListingType.getByValue(type).equals(ListingType.REQUEST)) {
 			allListingIDs.addAll(new HibernateRequestDAOImpl().getAllRequestIDsForDisplay(userId));
-		}
-		else {
+		} else {
 			allListingIDs.addAll(new HibernateServiceDAOImpl().getAllServiceIDsForDisplay(userId));
 		}
 
-		// Loop through all the possible listings a user is authorised to view based on visibility.
+		// Loop through all the possible listings a user is authorised to view based on
+		// visibility.
 		// If there is a match within the collection that we found based on location
 		// Add it to the result set
 		Set<ListingGUIWrapper> result = new HashSet<>();
-		for(ListingGUIWrapper wrapper : currentData) {
-			if(allListingIDs.contains(wrapper.listing.getId())){
+		for (ListingGUIWrapper wrapper : currentData) {
+			if (allListingIDs.contains(wrapper.listing.getId())) {
 				result.add(wrapper);
 			}
 		}
@@ -129,7 +132,9 @@ public class ListingFetchController {
 	}
 
 	/**
-	 * We shouldn't send personal datga like email/dob/firstname/lastname to the GUI. Strip that data off.
+	 * We shouldn't send personal datga like email/dob/firstname/lastname to the
+	 * GUI. Strip that data off.
+	 * 
 	 * @param wrapper
 	 */
 	private void sanitizePersonalData(ListingGUIWrapper wrapper) {
@@ -140,22 +145,27 @@ public class ListingFetchController {
 	}
 
 	/**
-	 * Removes own listings from the collection as we don't show own results on the search pages
+	 * Removes own listings from the collection as we don't show own results on the
+	 * search pages
+	 * 
 	 * @param results
 	 * @param userId
 	 * @return
 	 */
 	private Set<ListingGUIWrapper> removeOwnData(Set<ListingGUIWrapper> results, int userId) {
+		logger.trace("removing data: uid:" + userId);
 		Set<ListingGUIWrapper> clean = new HashSet<>();
 		clean.addAll(results);
-
+		logger.trace("Start size: " + clean.size());
 		for (ListingGUIWrapper wrapper : results) {
 			sanitizePersonalData(wrapper);
+			logger.trace("wrapper listing id: " + wrapper.getListingID() + " wrapper uid: " + wrapper.getUserID());
 			if (wrapper.getUserID() == userId) {
+				logger.trace("deleted wrapper");
 				clean.remove(wrapper);
 			}
 		}
-
+		logger.trace("End size: " + clean.size());
 		return clean;
 	}
 

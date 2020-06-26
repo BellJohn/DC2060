@@ -84,7 +84,7 @@
 									<div class="form-group">
 										<label for="serCounty">County of Service (e.g.
 											Cambridgeshire)</label> <input id="serCounty" name="serCounty"
-											placeholder="Countyshire" type="text" class="form-control"
+											placeholder="County" type="text" class="form-control"
 											required="required" maxlength="30">
 									</div>
 									
