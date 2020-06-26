@@ -3,6 +3,7 @@ package com.reachout.gui.controllers;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
@@ -167,6 +168,7 @@ public class EditListingDetailsController {
 			return returnErrorResult("Something went wrong creating your Request, please try again");
 		}
 
+		
 		// If we have made it this far, lets update the record.
 		listingToUpdate.setTitle(newTitle);
 		listingToUpdate.setDescription(newDesc);
@@ -175,6 +177,19 @@ public class EditListingDetailsController {
 		listingToUpdate.setStreet(newAddress);
 		listingToUpdate.setStatus(ListingStatus.valueOf(newStatus));
 
+		//Check to see if setting it to listing is a valid move
+		//If no user has accepted it then it will cause issues in the linkage so prevent it.
+		
+		if(listingToUpdate.getStatus().equals(ListingStatus.PENDING)) {
+			try {
+				listingDAO.getUserIdWhoAcceptedListing(listingToUpdate);
+			} catch (NoResultException e) {
+				logger.error("User tried to set a listing to PENDING when no user has accepted it");
+				return returnErrorResult("Unable to set listing to PENDING when no other user has accepted it. Acceptable states are OPEN or CLOSED");
+			}
+		}
+		
+		
 		boolean changeSuccess = false;
 		if (listingToUpdate instanceof Request) {
 			HibernateRequestDAOImpl reqDAO = new HibernateRequestDAOImpl();

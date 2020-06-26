@@ -36,15 +36,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public synchronized boolean save(Service service) {
-		try (Session session = HibernateUtil.getInstance().getSession()) {
-			session.beginTransaction();
-			session.save(service);
-			session.flush();
-			session.getTransaction().commit();
-		} catch (IllegalStateException | RollbackException e) {
-			return false;
-		}
-		return true;
+		return HibernateServiceDAOImpl.syncronizedSave(service);
 	}
 
 	/**
@@ -75,20 +67,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public boolean delete(Service service) {
-		try (Session session = HibernateUtil.getInstance().getSession()) {
-			session.beginTransaction();
-			session.delete(service);
-			Query query = session.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
-			query.setParameter("lst_id", service.getId());
-			query.executeUpdate();
-
-			new HibernateGroupListingDAOImpl().groupListingDelete(service.getId());
-			session.flush();
-			session.getTransaction().commit();
-		} catch (IllegalStateException | RollbackException e) {
-			return false;
-		}
-		return true;
+		return HibernateServiceDAOImpl.synchronizedDelete(service);
 	}
 
 	public Service selectById(int serId) {
@@ -207,6 +186,7 @@ public class HibernateServiceDAOImpl extends HibernateListingDAOImpl {
 
 	/**
 	 * Fetches all service IDs which the user can view publicly
+	 * 
 	 * @param userId
 	 * @return
 	 */

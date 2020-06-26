@@ -78,7 +78,7 @@ public class TestUtils {
 		ArrayList<Listing> currentStoredListings = (ArrayList<Listing>) listingDAO.getAllListings();
 		for (Listing listing : currentStoredListings) {
 			logger.info("Deleting request with ID: " + listing.getId());
-			assertTrue(listingDAO.delete(listing));
+			assertTrue(listingDAO.nonSynchListingDelete(listing));
 		}
 	}
 

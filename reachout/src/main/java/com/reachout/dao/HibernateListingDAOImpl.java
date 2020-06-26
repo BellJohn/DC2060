@@ -24,8 +24,46 @@ import com.reachout.models.User;
  *
  */
 public abstract class HibernateListingDAOImpl {
-	private Logger logger = LogManager.getLogger(HibernateListingDAOImpl.class);
+	private static Logger logger = LogManager.getLogger(HibernateListingDAOImpl.class);
 
+	protected static synchronized boolean syncronizedSave(Listing listing) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			if (listing instanceof Request) {
+				session.save((Request) listing);
+			} else {
+				session.save((Service) listing);
+			}
+			session.flush();
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Error saving listing", e);
+			return false;
+		}
+		return true;
+	}
+
+	protected static synchronized boolean synchronizedDelete(Listing listing) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			if (listing instanceof Request) {
+				session.delete((Request) listing);
+			} else {
+				session.delete((Service) listing);
+			}
+			Query assingedListingsQuery = session
+					.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
+			assingedListingsQuery.setParameter("lst_id", listing.getId());
+			assingedListingsQuery.executeUpdate();
+			new HibernateGroupListingDAOImpl().groupListingDelete(listing.getId());
+			session.flush();
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Error deleting listing", e);
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Returns all the possible listings in the system
@@ -40,13 +78,14 @@ public abstract class HibernateListingDAOImpl {
 	 * @param request
 	 * @return
 	 */
-	public boolean delete(Listing listing) {
+	public boolean nonSynchListingDelete(Listing listing) {
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
 			session.delete(listing);
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to delete listing", e);
 			return false;
 		}
 		return true;
@@ -94,16 +133,18 @@ public abstract class HibernateListingDAOImpl {
 
 	/**
 	 * Returns the id of the user who accepted a particular listing
+	 * 
 	 * @param listing
 	 * @return int id of user
 	 */
 	public synchronized Integer getUserIdWhoAcceptedListing(Listing listing) {
 		Integer userID = null;
-		try(Session session = HibernateUtil.getInstance().getSession()){
-			Query query = session.createSQLQuery("SELECT AS_USER_ID FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lstID ORDER BY AS_ID DESC LIMIT 1");
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createSQLQuery(
+					"SELECT AS_USER_ID FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lstID ORDER BY AS_ID DESC LIMIT 1");
 			query.setParameter("lstID", listing.getId());
 			Object result = query.getSingleResult();
-			if(result instanceof Integer) {
+			if (result instanceof Integer) {
 				userID = (Integer) result;
 			}
 		}
@@ -112,6 +153,7 @@ public abstract class HibernateListingDAOImpl {
 
 	/**
 	 * Returns either a <b>Service</b> or <b>Request</b> by ID
+	 * 
 	 * @param listingID
 	 * @return Listing
 	 */
@@ -126,8 +168,7 @@ public abstract class HibernateListingDAOImpl {
 			HibernateServiceDAOImpl serDAO = new HibernateServiceDAOImpl();
 			if (ListingType.REQUEST.ordinal() == listingType) {
 				listingToReturn = reqDAO.selectById(listingID);
-			}
-			else {
+			} else {
 				listingToReturn = serDAO.selectById(listingID);
 			}
 		}

@@ -15,7 +15,7 @@ import com.reachout.models.Location;
 
 public class HibernateLocationDAO {
 
-	Logger logger = LogManager.getLogger(HibernateLocationDAO.class);
+	private static Logger logger = LogManager.getLogger(HibernateLocationDAO.class);
 
 	/**
 	 * Persists the given location into the database
@@ -23,7 +23,11 @@ public class HibernateLocationDAO {
 	 * @param location
 	 * @return
 	 */
-	public synchronized Integer save(Location location) {
+	public Integer save(Location location) {
+		return synchSave(location);
+	}
+
+	private static synchronized Integer synchSave(Location location) {
 		Integer id = null;
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
@@ -31,6 +35,7 @@ public class HibernateLocationDAO {
 			session.flush();
 			session.getTransaction().commit();
 		} catch (IllegalStateException | RollbackException e) {
+			logger.error("Failed to save location", e);
 			return null;
 		}
 		return id;
@@ -51,8 +56,9 @@ public class HibernateLocationDAO {
 
 	public Location selectLocationById(int locationId) {
 		Location location = null;
-		try(Session session = HibernateUtil.getInstance().getSession()){
-			Query query = session.createQuery("SELECT location FROM Location location WHERE LOC_ID = :locId", Location.class);
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			Query query = session.createQuery("SELECT location FROM Location location WHERE LOC_ID = :locId",
+					Location.class);
 			query.setParameter("locId", locationId);
 			location = (Location) query.getSingleResult();
 		} catch (NoResultException e) {
@@ -71,7 +77,7 @@ public class HibernateLocationDAO {
 			return false;
 		}
 		return true;
-		
+
 	}
-	
+
 }

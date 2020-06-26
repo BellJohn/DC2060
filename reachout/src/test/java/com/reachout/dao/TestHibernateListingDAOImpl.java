@@ -37,7 +37,7 @@ class TestHibernateListingDAOImpl {
 
 	/**
 	 * Test method for
-	 * {@link com.reachout.dao.HibernateListingDAOImpl#delete(com.reachout.models.Listing)}.
+	 * {@link com.reachout.dao.HibernateListingDAOImpl#nonSynchListingDelete(com.reachout.models.Listing)}.
 	 */
 	@Test
 	void testDelete() {

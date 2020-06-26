@@ -23,7 +23,7 @@ import com.reachout.models.User;
  */
 public class HibernateUserDAOImpl {
 
-	Logger logger = LogManager.getLogger(HibernateUserDAOImpl.class);
+	private static Logger logger = LogManager.getLogger(HibernateUserDAOImpl.class);
 
 	/**
 	 * <p>
@@ -33,8 +33,11 @@ public class HibernateUserDAOImpl {
 	 * @param user
 	 * @return true if successful, false otherwise
 	 */
-
 	public boolean save(User user) {
+		return synchSave(user);
+	}
+
+	private static synchronized boolean synchSave(User user) {
 		boolean success = false;
 		try (Session session = HibernateUtil.getInstance().getSession()) {
 			session.beginTransaction();
@@ -43,6 +46,7 @@ public class HibernateUserDAOImpl {
 			session.getTransaction().commit();
 			success = true;
 		} catch (IllegalStateException | RollbackException | ConstraintViolationException e) {
+			logger.error("Failed to save user", e);
 			success = false;
 		}
 		return success;
@@ -87,7 +91,6 @@ public class HibernateUserDAOImpl {
 				success = false;
 			}
 		}
-
 		return success;
 	}
 
@@ -181,10 +184,10 @@ public class HibernateUserDAOImpl {
 			userFound = (User) query.getSingleResult();
 		} catch (NoResultException e) {
 			logger.debug("Searched for user with email [" + email + "]. Found none");
-		} catch(NonUniqueResultException e) {
+		} catch (NonUniqueResultException e) {
 			logger.debug("Searched for user with email [" + email + "]. Found multiple");
 		}
-		
+
 		return userFound;
 	}
 

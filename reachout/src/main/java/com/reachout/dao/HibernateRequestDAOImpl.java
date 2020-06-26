@@ -37,15 +37,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public synchronized boolean save(Request request) {
-		try (Session session = HibernateUtil.getInstance().getSession()) {
-			session.beginTransaction();
-			session.save(request);
-			session.flush();
-			session.getTransaction().commit();
-		} catch (IllegalStateException | RollbackException e) {
-			return false;
-		}
-		return true;
+		return HibernateRequestDAOImpl.syncronizedSave(request);
 	}
 
 	/**
@@ -76,20 +68,7 @@ public class HibernateRequestDAOImpl extends HibernateListingDAOImpl {
 	 * @return
 	 */
 	public boolean delete(Request request) {
-		try (Session session = HibernateUtil.getInstance().getSession()) {
-			session.beginTransaction();
-			session.delete(request);
-			Query assingedListingsQuery = session
-					.createNativeQuery("DELETE FROM ASSIGNED_LISTINGS WHERE AS_LISTING_ID = :lst_id");
-			assingedListingsQuery.setParameter("lst_id", request.getId());
-			assingedListingsQuery.executeUpdate();
-			new HibernateGroupListingDAOImpl().groupListingDelete(request.getId());
-			session.flush();
-			session.getTransaction().commit();
-		} catch (IllegalStateException | RollbackException e) {
-			return false;
-		}
-		return true;
+		return HibernateRequestDAOImpl.synchronizedDelete(request);
 	}
 
 	public Request selectById(int reqId) {

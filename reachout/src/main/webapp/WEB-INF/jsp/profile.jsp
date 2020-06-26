@@ -388,7 +388,7 @@
 										<button type="button" class="btn btn-default"
 											data-dismiss="modal">Cancel</button>
 										<button type="button" class="btn btn-info submitBtn"
-											onclick="submitContactForm(${acceptedRequest.userId})">SEND</button>
+											onclick="submitContactForm('${acceptedRequest.userId}')">SEND</button>
 									</div>
 								</div>
 							</div>
@@ -404,7 +404,7 @@
 	//userID may come in with the format "R_####", this is to differentiate the different created modals.
 	//trim off the R_ for the user id that we are targeting but keep the original reference so we can reference the correct modals
 	function submitContactForm(userID) {
-		var targetID = userID;
+		var targetID = userID;	
 		if(userID.includes("R_")){
 			targetID = targetID.replace("R_","");
 		}
