@@ -190,9 +190,9 @@
 	function createCard(singleListing){
 		var token = $("meta[name='_csrf']").attr("content");
 		var newCard = '<div class="card card-request">'
-		+ '<div class="row"><h4 class="card-title col-md-3">' + singleListing.title + '</h4><div class="col-md-6"></div>'
+		+ '<div class="row"><h4 class="card-title col-md-9">' + singleListing.title + '</h4>'
 		+ '<h4 class="card-title col-md-3" style="text-align: right;">' + singleListing.priority + '</h4></div>'
-		+ '<h6 class="card-subtitle mb-2 text-muted">' + singleListing.listing.city + ',' + singleListing.listing.county + '</h6>'
+		+ '<h6 class="card-subtitle mb-2 text-muted">' + singleListing.listing.city + ', ' + singleListing.listing.county + '</h6>'
 		+ '<p class="card-text">'+ singleListing.listing.formattedDescription +'</p>'
 		+ '<hr>'
 
