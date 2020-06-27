@@ -37,7 +37,7 @@
 										class="rounded-circle" style="max-width: 50%;">
 								</c:when>
 								<c:otherwise>
-									<img src="${group.getPicture()}" alt="groupPic"
+									<img src="${group.getPicture()}?cache=0" alt="groupPic"
 										style="max-width: 20%;">
 								</c:otherwise>
 							</c:choose>

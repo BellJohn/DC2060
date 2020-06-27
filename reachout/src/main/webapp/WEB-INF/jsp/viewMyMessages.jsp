@@ -147,7 +147,7 @@
 											content += "<div class=\"col-lg-3\" style=\"border-left: 2px solid grey;\">";
 											content += "<img src=\"\\images\\"
 													+ obj[i].browsingProfilePic
-													+ "\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
+													+ "?cache=0\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
 											content += "<h5>You</h5>";
 											content += "<p style=\"font-size: small;margin-bottom: 0px;\">"
 													+ obj[i].allIMsAsList[j].prettyPrintDate
@@ -165,7 +165,7 @@
 											content += "<div class=\"col-lg-3\" style=\"border-right: 2px solid grey;\">";
 											content += "<img src=\"\\images\\"
 													+ obj[i].otherProfilePic
-													+ "\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
+													+ "?cache=0\" class=\"avatar\" style=\"vertical-align: middle; width: 50px; height: 50px; border-radius: 50%;\"/>";
 											content += "<h5>"
 													+ obj[i].otherUserName
 													+ "</h5>";
