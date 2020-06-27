@@ -61,7 +61,8 @@ class InternalMessageHandlerTest {
 		InternalMessageHandler imHandler = InternalMessageHandler.getInstance();
 		assertTrue(imHandler.createAndStoreMessage(origin.getId(), target.getId(), "Test Message"));
 		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
-		InternalMessage im = imDAO.selectById(1);
+		int size = imDAO.getAllMessages().size();
+		InternalMessage im = imDAO.getAllMessages().get(size -1);
 		assertEquals("Test Message", im.getMessage());
 		assertEquals(origin.getId(), im.getOrigin());
 		assertEquals(target.getId(), im.getTarget());
