@@ -48,8 +48,8 @@ class TestHibernatePasswordDAOImpl {
 		userDao.save(userForTest);
 
 		Password password = new Password();
-
-		password.setUserId(1);
+		
+		password.setUserId(userDao.getUserIdByUsername("testUser"));
 		password.setCreatedDate(System.currentTimeMillis());
 		password.setPasswordString("TESTPASSWORDSTRING");
 		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
@@ -88,14 +88,14 @@ class TestHibernatePasswordDAOImpl {
 
 		// And store a password so we can try the deletion
 		Password password = new Password();
-		password.setUserId(1);
+		password.setUserId(userDao.getUserIdByUsername("testUser"));
 		password.setCreatedDate(System.currentTimeMillis());
 		password.setPasswordString("TESTPASSWORDSTRING");
 		HibernatePasswordDAOImpl dao = new HibernatePasswordDAOImpl();
 		assertTrue(dao.save(password));
 
 		// Actual test case here
-		password = dao.selectByID(1);
+		password = dao.selectInUseByUserId(userDao.getUserIdByUsername("testUser"));
 		assertTrue(dao.delete(password));
 
 	}

@@ -19,10 +19,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.reachout.dao.HibernateHealthStatusDAOImpl;
@@ -31,6 +33,7 @@ import com.reachout.dao.HibernateUserDAOImpl;
 import com.reachout.dao.HibernateUserProfileDAOImpl;
 import com.reachout.models.Password;
 import com.reachout.models.User;
+import com.reachout.models.UserProfile;
 
 class ProfileControllerTest {
 
@@ -76,6 +79,7 @@ class ProfileControllerTest {
 		}
 	}
 
+	@BeforeAll
 	@AfterAll
 	public static void tearDown() {
 
@@ -91,10 +95,17 @@ class ProfileControllerTest {
 				dao.delete(p);
 			}
 		}
+		
+		HibernateUserProfileDAOImpl profileDAO = new HibernateUserProfileDAOImpl();
+		List<UserProfile> allProfiles = profileDAO.getAllProfiles();
+		for (UserProfile userProfile : allProfiles) {
+			assertTrue(profileDAO.delete(userProfile));
+		}
+		
 	}
 
 	@Test
-	void initPageTest() throws ServletException{
+	void initPageTest() throws ServletException {
 
 		Authentication auth = new UsernamePasswordAuthenticationToken("User2", "password");
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
@@ -118,8 +129,8 @@ class ProfileControllerTest {
 
 		UpdateProfileController pc = new UpdateProfileController();
 		pc.initPage(mockedRequest);
-		//MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
-		ModelAndView result = pc.saveOrUpdate(mockedRequest, null);
+		MultipartFile firstFile = new MockMultipartFile("data", "filename.png", "text/plain", "some xml".getBytes());
+		ModelAndView result = pc.saveOrUpdate(mockedRequest, firstFile);
 		assertNotNull(result);
 
 		assertEquals("redirect:/profile", result.getViewName());
@@ -127,6 +138,5 @@ class ProfileControllerTest {
 		assertEquals(1, dao.getAllProfiles().size());
 
 	}
-
 
 }

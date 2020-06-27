@@ -26,7 +26,7 @@ public class TestCustomAuthProvider {
 
 	private static final String firstName = "first";
 	private static final String lastName = "last";
-	private static final String username = "testUser";
+	private static final String username = "testUserTCAP";
 	private static final String passwordString = "password";
 	private static final String email = "email@fake.com";
 	private static final String dob = "1987/07/20";
@@ -48,14 +48,14 @@ public class TestCustomAuthProvider {
 	public void testAuthenticateExistingUser() throws GeneralSecurityException, EntityNotFoundException {
 		// Prep the test by building and storing a User and a Password
 		User user = new User(firstName, lastName, username, email, dob);
-		user.setId(1);
 		Password password = new Password();
 		password.setHashedPasswordString(passwordString);
-		password.setUserId(user.getId());
 
 		HibernatePasswordDAOImpl passDAO = new HibernatePasswordDAOImpl();
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 		userDAO.save(user);
+		user = userDAO.selectUser(username);
+		password.setUserId(user.getId());
 		passDAO.save(password);
 
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, passwordString,

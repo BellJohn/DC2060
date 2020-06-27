@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -80,20 +81,22 @@ class InternalMessageHandlerTest {
 		user1.setUsername("user1");
 		HibernateUserDAOImpl userDAO = new HibernateUserDAOImpl();
 		userDAO.save(user1);
+		int user1ID = userDAO.selectUser(user1.getUsername()).getId();
 		// user 2 still doesn't exist
-		assertFalse(imh.createAndStoreMessage(1, 2, "test"));
+		assertFalse(imh.createAndStoreMessage(user1ID, 2, "test"));
 
 		User user2 = TestUtils.makeTestUser();
 		user2.setUsername("user2");
 		userDAO.save(user2);
+		int user2ID = userDAO.selectUser(user2.getUsername()).getId();
 		// All data is valid
-		assertTrue(imh.createAndStoreMessage(1, 2, "test"));
+		assertTrue(imh.createAndStoreMessage(user1ID, user2ID, "test"));
 
 		// Empty Message
-		assertFalse(imh.createAndStoreMessage(1, 2, ""));
+		assertFalse(imh.createAndStoreMessage(user1ID, user2ID, ""));
 
 		// Null Message
-		assertFalse(imh.createAndStoreMessage(1, 2, null));
+		assertFalse(imh.createAndStoreMessage(user1ID, user2ID, null));
 
 	}
 
@@ -193,7 +196,8 @@ class InternalMessageHandlerTest {
 
 		InternalMessage im = null;
 		HibernateInternalMessageDAOImpl imDAO = new HibernateInternalMessageDAOImpl();
-		im = imDAO.selectById(1);
+		List<InternalMessage> allMessages =  imDAO.getAllMessages();
+		im = allMessages.get(allMessages.size()-1);
 
 		assertNotNull(im);
 		assertTrue(dateBeforeCreate.getTime() < im.getCreatedDate());

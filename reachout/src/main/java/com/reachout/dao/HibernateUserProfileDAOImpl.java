@@ -130,4 +130,16 @@ public class HibernateUserProfileDAOImpl {
 		return true;
 	}
 
+	public boolean delete(UserProfile userProfile) {
+		try (Session session = HibernateUtil.getInstance().getSession()) {
+			session.beginTransaction();
+			session.delete(userProfile);
+			session.getTransaction().commit();
+		} catch (IllegalStateException | RollbackException e) {
+			logger.debug(String.format("Unable to delete userProfile for userID %s", userProfile.getUserId()), e);
+			return false;
+		}
+		return true;
+	}
+
 }

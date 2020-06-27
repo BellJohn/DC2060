@@ -6,6 +6,8 @@ package com.reachout.processors;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +63,8 @@ class ListingHandlerTest {
 
 		request = TestUtils.makeTestRequestForUser(userOwner);
 		reqDAO.save(request);
-		request = reqDAO.selectById(1);
+		List<Request> allReqs =  reqDAO.getAllRequests();
+		request = allReqs.get(allReqs.size()-1);
 
 		ListingHandler lh = ListingHandler.getInstance();
 		assertTrue(lh.acceptRequest(userBrowsing, request.getId(), request.getListingType().getName()));

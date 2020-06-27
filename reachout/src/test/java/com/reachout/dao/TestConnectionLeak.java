@@ -72,9 +72,8 @@ public class TestConnectionLeak {
 		System.out.println(afterTitle + ", " + afterValue);
 
 		assertEquals(beforeTitle, afterTitle);
-		// Offset by one as the instance of HibernateUtil needs to actually be created
-		// which will happen with the first DAO
-		assertEquals(beforeValue, afterValue - 1);
+
+		assertEquals(beforeValue, afterValue);
 	}
 
 }
