@@ -19,7 +19,7 @@
 						<h1>ReachOut Help</h1>
 					</div>
 					<div class="col-lg-12">
-						<p>Below you can find further information which may be useful to you when using the application.</p>
+						<p>Below you can find further information which may be useful to you when using the application. There is also an in-depth walkthrough below.</p>
 						<hr>
 					</div>
 					<div class="col-lg-12">
@@ -58,6 +58,17 @@
 					<div class="col-lg-12">
 						<h3>More about the ReachOut team?</h3>
 						<p>If you want to read more about the team behind ReachOut, please click <a href="https://reachoutspace.website/meet-the-team" target="_blank">here</a>.</p>
+					</div>
+					<div class="col-lg-12">
+						<h3>Video Overview</h3>
+						<p>An in-depth walkthrough on everything that ReachOut has to offer.</p>
+						<div class="card">
+							<div class="embed-responsive embed-responsive-16by9">
+								<video controls="true" class="embed-responsive-item">
+								<source src="https://reachoutspace.website/videos/reachout-walkthrough.mp4" type="video/mp4" />
+								</video>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
