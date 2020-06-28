@@ -56,6 +56,12 @@
 						<p>	- Self-Isolating, due to COVID-19</p>
 					</div>
 					<div class="col-lg-12">
+						<h3>What is a Group?</h3>
+						<p>Groups are a way for you and your community to have a private space, where requests and services can be private and only visible to those accepted into the group.</p>
+						<p>On the Groups Landing page you are able to see all groups you are a member of, the groups which are pending your request to join and any other open groups.</p>
+						<p>When you create a group, you are the admin of the group. You are able to accept or decline those requesting to join your group.</p>
+					</div>
+					<div class="col-lg-12">
 						<h3>More about the ReachOut team?</h3>
 						<p>If you want to read more about the team behind ReachOut, please click <a href="https://reachoutspace.website/meet-the-team" target="_blank">here</a>.</p>
 					</div>
