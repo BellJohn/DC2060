@@ -182,7 +182,7 @@
 											</div>
 										</c:when>
 										<c:when test="${request.getStatus().getOrdinal()==2}">
-											<button class="btn btn-danger btn-block" disabled>CLOSED</button>
+											<button class="btn btn-danger btn-block" disabled>Status: CLOSED</button>
 										</c:when>
 									</c:choose>
 								</div>
@@ -190,8 +190,8 @@
 
 								<c:choose>
 									<c:when test="${request.getStatus().getOrdinal()==1}">
-										<div class="col-lg-3"></div>
-										<div class="col-lg-2">
+										<div class="col-lg-1"></div>
+										<div class="col-lg-4">
 											<!-- Button to trigger modal -->
 											<button class="btn btn-warning btn-block" data-toggle="modal"
 												data-target="#modalForm_R_${acceptRequestIDUserIDMap.get(request.getId())}">
